@@ -151,6 +151,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Modules\Console\Logging.h" />
+    <ClInclude Include="Core\Modules\Exception_Manager\Tilia_Exception.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.h" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.h" />
+    <ClInclude Include="Core\Temp\Camera.h" />
+    <ClInclude Include="Core\Temp\Input.h" />
+    <ClInclude Include="Core\Temp\Limit_Fps.h" />
+    <ClInclude Include="Core\Temp\Stopwatch.h" />
+    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.h" />
+    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.h" />
     <ClInclude Include="dependencies\glad\include\glad\glad.h" />
     <ClInclude Include="dependencies\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="dependencies\glfw\include\GLFW\glfw3.h" />
@@ -438,43 +456,25 @@
     <ClInclude Include="dependencies\glm\include\glm\vec4.hpp" />
     <ClInclude Include="dependencies\glm\include\glm\vector_relational.hpp" />
     <ClInclude Include="dependencies\stb_image\include\stb_image\stb_image.h" />
-    <ClInclude Include="headers\Camera.h" />
-    <ClInclude Include="headers\Enums.h" />
-    <ClInclude Include="headers\Error_Handling.h" />
-    <ClInclude Include="headers\Limit_Fps.h" />
-    <ClInclude Include="headers\Logging.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Shader.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Texture.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Batch.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Mesh.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Renderer.h" />
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Vertex.h" />
-    <ClInclude Include="headers\Stopwatch.h" />
-    <ClInclude Include="headers\Tilia_Exception.h" />
-    <ClInclude Include="headers\Utils.h" />
-    <ClInclude Include="headers\Input.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\main.cpp" />
+    <ClCompile Include="Core\Modules\Console\Logging.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Batch.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.cpp" />
+    <ClCompile Include="Core\Temp\Input.cpp" />
+    <ClCompile Include="Core\Temp\Limit_Fps.cpp" />
+    <ClCompile Include="Core\Temp\Stopwatch.cpp" />
+    <ClCompile Include="Core\Values\OpenGL\3.3\Utils.cpp" />
     <ClCompile Include="dependencies\glad\src\glad.c" />
     <ClCompile Include="dependencies\glm\include\glm\detail\glm.cpp" />
     <ClCompile Include="dependencies\stb_image\src\stb_image.cpp" />
-    <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Limit_Fps.cpp" />
-    <ClCompile Include="src\Logging.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Shader.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Texture.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Batch.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Error_Handling.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Renderer.cpp" />
-    <ClCompile Include="src\Stopwatch.cpp" />
-    <ClCompile Include="src\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dependencies\glm\include\glm\detail\func_common.inl" />

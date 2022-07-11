@@ -876,65 +876,62 @@
     <ClInclude Include="dependencies\stb_image\include\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Error_Handling.h">
+    <ClInclude Include="Core\Modules\Console\Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Utils.h">
+    <ClInclude Include="Core\Modules\Exception_Manager\Tilia_Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Logging.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Enums.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Camera.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Input.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Limit_Fps.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Stopwatch.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Shader.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Texture.h">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h">
+    <ClInclude Include="Core\Temp\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Batch.h">
+    <ClInclude Include="Core\Temp\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Mesh.h">
+    <ClInclude Include="Core\Temp\Limit_Fps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Renderer.h">
+    <ClInclude Include="Core\Temp\Stopwatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Rendering\OpenGL\3.3\Vertex.h">
+    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Tilia_Exception.h">
+    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dependencies\glad\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -944,43 +941,46 @@
     <ClCompile Include="dependencies\stb_image\src\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utils.cpp">
+    <ClCompile Include="Core\Modules\Console\Logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Logging.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Limit_Fps.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Stopwatch.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Shader.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Batch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Texture.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp">
+    <ClCompile Include="Core\Temp\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Batch.cpp">
+    <ClCompile Include="Core\Temp\Limit_Fps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Error_Handling.cpp">
+    <ClCompile Include="Core\Temp\Stopwatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL\3.3\Renderer.cpp">
+    <ClCompile Include="Core\Values\OpenGL\3.3\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
