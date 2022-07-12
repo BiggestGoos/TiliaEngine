@@ -152,7 +152,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Modules\Console\Logging.h" />
-    <ClInclude Include="Core\Modules\Exception_Manager\Tilia_Exception.h" />
+    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.h" />
+    <ClInclude Include="Core\Modules\File_System\Windows\File_System.h" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.h" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h" />
@@ -460,6 +461,8 @@
   <ItemGroup>
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="Core\Modules\Console\Logging.cpp" />
+    <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp" />
+    <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp" />

@@ -68,7 +68,7 @@ std::string tilia::render::Texture::Get_Type_String() const
 void tilia::render::Texture::Generate_Texture()
 {
 	GL_CALL(glGenTextures(1, &m_ID));
-	log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly created", m_ID);
+	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly created", m_ID);
 }
 
 /**
@@ -77,7 +77,7 @@ void tilia::render::Texture::Generate_Texture()
 tilia::render::Texture::~Texture()
 {
 	GL_CALL(glDeleteTextures(1, &m_ID));
-	log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was succesfully destroyed", m_ID);
+	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was succesfully destroyed", m_ID);
 }
 
 /**

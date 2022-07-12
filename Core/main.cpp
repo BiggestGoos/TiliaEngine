@@ -165,10 +165,10 @@ int main()
 
         light_shader->Uniform("material.diffuse", 0);
         light_shader->Uniform("material.specular", 1);
-
+        
         constexpr size_t cube_count{ 10 };
         constexpr size_t light_count{ 1 };
-
+        
         // positions all containers
         glm::vec3 cubePositions[] = {
             glm::vec3(0.0f,  0.0f,  0.0f),
@@ -191,7 +191,7 @@ int main()
         };
 
         std::vector<std::shared_ptr<Mesh<9>>> meshes{};
-
+        
         glm::mat4 model{ 1.0f };
 
         for (size_t i = 0; i < cube_count; i++)

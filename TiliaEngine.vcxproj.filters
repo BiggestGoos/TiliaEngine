@@ -879,9 +879,6 @@
     <ClInclude Include="Core\Modules\Console\Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Exception_Manager\Tilia_Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -928,6 +925,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Values\OpenGL\3.3\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\File_System\Windows\File_System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -981,6 +984,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

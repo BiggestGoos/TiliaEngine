@@ -32,6 +32,8 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.h"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
 #include "Core/Modules/Console/Logging.h"
+#include "Core/Modules/File_System/Windows/File_System.h"
+#include "Core/Modules/Exceptions/Tilia_Exception.h"
 
 /**
  * Checks a couple of enums pertaining to the color format, wrapping modes, 
@@ -111,10 +113,10 @@ void tilia::render::Texture_2D::Print_Information() const
 	}
 
 	// Prints to console indented
-	log::Log_Indent("Dimensions", "%dx%d", m_texture_def.width, m_texture_def.height);
-	log::Log_Indent("Format", "%s", format_text);
-	log::Log_Indent("Filter", "Min Filter: %s, Mag Filter: %s", filter_min_text, filter_max_text);
-	log::Log_Indent("Wrapping", "Wrap S: %s, Wrap T: %s", wrap_s_text, wrap_t_text);
+	//log::Log_Indent("Dimensions", "%dx%d", m_texture_def.width, m_texture_def.height);
+	//log::Log_Indent("Format", "%s", format_text);
+	//log::Log_Indent("Filter", "Min Filter: %s, Mag Filter: %s", filter_min_text, filter_max_text);
+	//log::Log_Indent("Wrapping", "Wrap S: %s, Wrap T: %s", wrap_s_text, wrap_t_text);
 
 }
 
@@ -135,7 +137,7 @@ tilia::render::Texture_2D::Texture_2D()
  * the filtering and wrapping options. After that it finally sets the pixel data of the openGL texture and then unbinds the texture. It also prints 
  * information about the texture
  */
-int32_t tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
+void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 {
 	// Copies passed Texture_Def
 	m_texture_def = texture_def;
@@ -164,14 +166,13 @@ int32_t tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def
 		// Copies data
 		std::copy(texture_def.texture_data.get(), texture_def.texture_data.get() + byte_count, m_texture_def.texture_data.get());
 		if (!m_texture_def.texture_data)
-			return 1;
+			throw utils::Tilia_Exception{"", __LINE__, __FILE__};
 	}
 	else if (!texture_def.texture_data) {
 		stbi_set_flip_vertically_on_load(1);
 		// Loads data
-		m_texture_def.texture_data.reset(stbi_load(texture_def.file_path.c_str(), &m_texture_def.width, &m_texture_def.height, &nr_load_channels, 0));
-		if (!m_texture_def.texture_data)
-			return 2;
+		m_texture_def.texture_data.reset(utils::file_system.Load_Image
+		(texture_def.file_path.c_str(), m_texture_def.width, m_texture_def.height, nr_load_channels, 0, true));
 	}
 
 	if (m_texture_def.color_format == enums::Color_Format::None)
@@ -238,7 +239,7 @@ int32_t tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def
  * Calls the overloaded version of Set_Texture that takes a texture def with the file path 
  * set to the given path.
  */
-int32_t tilia::render::Texture_2D::Set_Texture(const std::string& texture_path)
+void tilia::render::Texture_2D::Set_Texture(const std::string& texture_path)
 {
 	Texture_2D_Def def{};
 	def.file_path = texture_path;

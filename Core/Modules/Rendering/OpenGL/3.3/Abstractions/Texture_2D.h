@@ -103,7 +103,7 @@ namespace tilia {
 			 * @exception Code: 1 - Failed to copy data
 			 * @exception Code: 2 - Failed to load data
 			 */
-			int32_t Set_Texture(const Texture_2D_Def& texture_def);
+			void Set_Texture(const Texture_2D_Def& texture_def);
 
 			/**
 			 * @brief Sets the Texture_Def of this Texture to have the path given.
@@ -115,7 +115,7 @@ namespace tilia {
 			 *
 			 * @exception Code: 2 - Failed to load data
 			 */
-			int32_t Set_Texture(const std::string& texture_path);
+			void Set_Texture(const std::string& texture_path);
 
 			/**
 			 * @brief Generates all mipmap levels for the texture
