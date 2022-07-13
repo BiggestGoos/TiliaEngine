@@ -28,19 +28,9 @@
  * 
  * @param x - The openGL function
  */
-#define GL_ASSERT(x) GL_Clear_Error();\
+#define GL_CALL(x) GL_Clear_Error();\
     x;\
     ASSERT(GL_Log_Call(#x, __FILE__, __LINE__))
-
-#define GL_CALL(x) GL_Clear_Error();\
-                      x;\
-                      Handle_GL_Error("", __LINE__, __FILE__, #x);
-
-#define GL_CALL_MESSAGE(y, x) GL_Clear_Error();\
-                      x;\
-                      Handle_GL_Error(y, __LINE__, __FILE__, #x);
-
-void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function);
 
 /**
  * @brief Gets an error string pertaining to an error code.

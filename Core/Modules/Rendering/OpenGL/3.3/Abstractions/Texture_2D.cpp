@@ -146,54 +146,37 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 
 	int32_t nr_channels{ 0 };
 
+	switch (m_texture_def.color_format)
+	{
+	case enums::Color_Format::Red8:
+		nr_channels = 1;
+		break;
+	case enums::Color_Format::RGB8:
+		nr_channels = 3;
+		break;
+	case enums::Color_Format::RGBA8:
+		nr_channels = 4;
+		break;
+	}
+
 	// Copies texture_data or loads new data using file_path
 	if (texture_def.texture_data) {
-
-		switch (m_texture_def.color_format)
-		{
-		case enums::Color_Format::Red8:
-			nr_channels = 1;
-			break;
-		case enums::Color_Format::RGB8:
-			nr_channels = 3;
-			break;
-		case enums::Color_Format::RGBA8:
-			nr_channels = 4;
-			break;
-		default:
-			std::stringstream ss{};
-			ss << "Invalid color format\n" <<
-				"Format: " << *m_texture_def.color_format;
-			throw utils::Tilia_Exception{ ss, LOCATION };
-		}
-
 		uint32_t byte_count{ static_cast<uint32_t>((m_texture_def.width * m_texture_def.height * nr_channels)) };
-
-		if (!byte_count)
-			throw utils::Tilia_Exception{ "Failed to copy texture data for Texture_2D", LOCATION };
-
 		m_texture_def.texture_data = std::make_unique<uint8_t[]>(static_cast<size_t>(byte_count));
 		// Copies data
 		std::copy(texture_def.texture_data.get(), texture_def.texture_data.get() + byte_count, m_texture_def.texture_data.get());
 		if (!m_texture_def.texture_data)
-			throw utils::Tilia_Exception{ "Failed to copy texture data for Texture_2D", LOCATION };
+			throw utils::Tilia_Exception{"", __LINE__, __FILE__};
 	}
 	else if (!texture_def.texture_data) {
+		stbi_set_flip_vertically_on_load(1);
 		// Loads data
-		try
-		{
-			m_texture_def.texture_data.reset(utils::file_system.Load_Image
-			(texture_def.file_path.c_str(), m_texture_def.width, m_texture_def.height, nr_load_channels, 0, true));
-		}
-		catch (utils::Tilia_Exception& e)
-		{
-			e.Add_Message("Texcture_2D data not loaded properly");
-			throw e;
-		}
+		m_texture_def.texture_data.reset(utils::file_system.Load_Image
+		(texture_def.file_path.c_str(), m_texture_def.width, m_texture_def.height, nr_load_channels, 0, true));
 	}
-	
-	if (!texture_def.texture_data)
-		throw utils::Tilia_Exception{ "Texcture_2D data not set properly", LOCATION };
+
+	if (m_texture_def.color_format == enums::Color_Format::None)
+		m_texture_def.color_format = m_texture_def.load_color_format;
 
 	// Sets load_color_format
 	switch (nr_load_channels)
@@ -207,13 +190,10 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	case 4:
 		m_texture_def.load_color_format = enums::Color_Format::RGBA;
 			break;
-	default:
-		m_texture_def.load_color_format = m_texture_def.color_format;
-		break;
 	}
 
-	if (m_texture_def.color_format == enums::Color_Format::None)
-		m_texture_def.color_format = m_texture_def.load_color_format;
+	if (m_texture_def.load_color_format == enums::Color_Format::None)
+		m_texture_def.load_color_format = m_texture_def.color_format;
 
 	// Set unpack alignment
 	if (m_texture_def.load_color_format == enums::Color_Format::RGBA)
@@ -247,9 +227,11 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	// Unbinds texture
 	Rebind();
 
-	//log::Log(log::Type::INFO, "TEXTURE_2D", "Texture { ID: %u } data has been set", m_ID);
+	log::Log(log::Type::INFO, "TEXTURE_2D", "Texture { ID: %u } data has been set", m_ID);
 
-	//Print_Information();
+	Print_Information();
+
+	return 0;
 
 }
 
@@ -259,8 +241,6 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
  */
 void tilia::render::Texture_2D::Set_Texture(const std::string& texture_path)
 {
-	if (texture_path == "")
-		throw utils::Tilia_Exception{ "File path is invalid", LOCATION };
 	Texture_2D_Def def{};
 	def.file_path = texture_path;
 	return Set_Texture(def);
@@ -273,16 +253,16 @@ void tilia::render::Texture_2D::Generate_Mipmaps()
 {
 	Unbind(true);
 	if (m_ID == 0) {
-		throw utils::Tilia_Exception{ "Texture_2D is not generated properly", LOCATION };
+		return log::Log(log::Type::ERROR, "TEXTURE_2D", "Tried to generate mipmap levels for unloaded Texture");
 		Rebind();
 	}
 	if (!m_texture_def.texture_data)
 	{
-		throw utils::Tilia_Exception{ "Texture_2D failed to generate mipmaps because there is no data", LOCATION };
+		return log::Log(log::Type::ERROR, "TEXTURE_2D", "Texture { ID: %u } did not generate mipmap levels because there is no data", m_ID);
 		Rebind();
 	}
 	GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
-	//log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", m_ID);
+	log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", m_ID);
 	Rebind();
 }
 
@@ -291,6 +271,9 @@ void tilia::render::Texture_2D::Generate_Mipmaps()
  */
 void tilia::render::Texture_2D::Set_Parameter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
 {
+	Unbind(true);
+	GL_CALL(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
+	Rebind();
 	switch (filter_size)
 	{
 	case enums::Filter_Size::Magnify:
@@ -300,9 +283,6 @@ void tilia::render::Texture_2D::Set_Parameter(const enums::Filter_Size& filter_s
 		m_texture_def.filter_min = filter_mode;
 		break;
 	}
-	Unbind(true);
-	GL_CALL(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
-	Rebind();
 }
 
 /**
@@ -310,6 +290,9 @@ void tilia::render::Texture_2D::Set_Parameter(const enums::Filter_Size& filter_s
  */
 void tilia::render::Texture_2D::Set_Parameter(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
 {
+	Unbind(true);
+	GL_CALL(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
+	Rebind();
 	switch (wrap_side)
 	{
 	case enums::Wrap_Sides::S:
@@ -318,10 +301,5 @@ void tilia::render::Texture_2D::Set_Parameter(const enums::Wrap_Sides& wrap_side
 	case enums::Wrap_Sides::T:
 		m_texture_def.wrap_t = wrap_mode;
 		break;
-	default:
-		throw utils::Tilia_Exception{ "", LOCATION };
 	}
-	Unbind(true);
-	GL_CALL(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
-	Rebind();
 }

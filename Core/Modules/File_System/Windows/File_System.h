@@ -40,10 +40,6 @@ namespace tilia {
 			 * @param desired_color_channels - The desired amount of color channels to be loaded.
 			 * 
 			 * @return The data of the image in bytes. 
-			 * 
-			 * @exception Throws exception if file not loaded properly.
-			 * @exception Exception params:
-			 * If the loaded data is null or if the width, height or color channels is zero.
 			 */
 			uint8_t* Load_Image(const char* file_path, int& width, int& height, int& color_channels, 
 				const int& desired_color_channels, const bool& flip_image_y);
