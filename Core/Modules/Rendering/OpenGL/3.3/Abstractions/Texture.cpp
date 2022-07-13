@@ -29,6 +29,7 @@
 #include "Core/Values/OpenGL/3.3/Utils.h"
 #include "Core/Modules/Console/Logging.h"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
+#include "Core/Modules/Exceptions/Tilia_Exception.h"
 
 // Initialize static member which holds the bound textures ids
 std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::render::Texture::s_bound_ID{};
@@ -56,6 +57,10 @@ std::string tilia::render::Texture::Get_Type_String() const
 	case tilia::enums::Texture_Type::Cube_Map:
 		strcat_s(texture_type_string, 19, "CUBE_MAP");
 		break;
+	default:
+		std::stringstream ss{};
+		ss << "Texture type is undefined: " << *m_texture_type;
+		throw utils::Tilia_Exception{ ss, LOCATION };
 	}
 
 	return texture_type_string;
@@ -89,7 +94,9 @@ void tilia::render::Texture::Bind(const uint32_t& slot) const
 
 	// Checks if slot is in range and prints errors if not
 	if (slot > utils::Get_Max_Textures() - 1)
-		return log::Log(log::Type::ERROR, Get_Type_String().c_str(), "Texture { Slot: %u } is outside of the texture slot range { Min: 0, Max: %u }", slot, utils::Get_Max_Textures() - 1);
+		throw utils::Tilia_Exception{ "Texture slot is out of range", LOCATION };
+
+		//return log::Log(log::Type::ERROR, Get_Type_String().c_str(), "Texture { Slot: %u } is outside of the texture slot range { Min: 0, Max: %u }", slot, utils::Get_Max_Textures() - 1);
 
 	// Sets slot and binds texture
 	GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));

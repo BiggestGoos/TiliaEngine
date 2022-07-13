@@ -24,6 +24,8 @@
 #include <vector>
 #include <sstream>
 
+#define LOCATION static_cast<size_t>(__LINE__), __FILE__
+
 namespace tilia {
 
 	namespace utils {

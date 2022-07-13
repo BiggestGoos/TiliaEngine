@@ -85,6 +85,7 @@ void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 int main()
 {
 
+    try
     {
         // glfw: initialize and configure
         // ------------------------------
@@ -337,6 +338,10 @@ int main()
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
     }
+    catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
+
     glfwTerminate();
 
     return 0;
