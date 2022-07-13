@@ -26,9 +26,10 @@
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
 #include "Core/Modules/Console/Logging.h"
+#include "Core/Modules/Exceptions/Tilia_Exception.h"
 
 /**
- * Checks what error string pertains to error_code. If there is no 
+ * Checks what error string pertains to error_code. If there is no
  * error string for error_code then it returns "Something went wrong".
  */
 const char* Get_Error_String(const uint32_t& error_code) {
@@ -54,6 +55,21 @@ const char* Get_Error_String(const uint32_t& error_code) {
         return "GL_TABLE_TOO_LARGE1";
     default:
         return "Unknown Error";
+    }
+}
+
+void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function)
+{
+    // Checks errors
+    while (GLenum error = glGetError()) {
+        std::stringstream ss{};
+        ss << "OpenGL [ Error was thrown ]" <<
+              "\nCode: 0x" << error <<
+              "\nName: " << Get_Error_String(error) <<
+              "\nFunc: " << function;
+        if (message != "")
+              ss << "\nMessage: " << message;
+        throw tilia::utils::Tilia_Exception{ "", line, file };
     }
 }
 
