@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "dependencies/glm/include/glm/glm.hpp"
-#include <dependencies/glm/include/glm/gtc/matrix_transform.hpp>
+#include "vendor/glm/include/glm/glm.hpp"
+#include <vendor/glm/include/glm/gtc/matrix_transform.hpp>
 
 #include <vector>
 

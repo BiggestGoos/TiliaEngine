@@ -18,8 +18,8 @@
 #ifndef TILIA_SHADER_DATA_H
 #define TILIA_SHADER_DATA_H
 
- // Dependencies
-#include "dependencies/glm/include/glm/glm.hpp"
+ // Vendor
+#include "vendor/glm/include/glm/glm.hpp"
 
 // Standard
 #include <unordered_map>

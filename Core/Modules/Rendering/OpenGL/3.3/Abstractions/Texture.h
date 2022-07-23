@@ -99,7 +99,7 @@ namespace tilia {
 			 * @param filter_size - The size of filtering for which to set the mode of
 			 * @param filter_mode - The mode of filtreing for which to use for the size
 			 */
-			virtual void Set_Parameter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) = 0;
+			virtual void Set(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) = 0;
 
 			/**
 			 * @brief Set wrapping for the given side
@@ -107,7 +107,7 @@ namespace tilia {
 			 * @param wrap_side - The side of which to set wrapping for
 			 * @param wrap_mode - The wrapping mode to set for the given side
 			 */
-			virtual void Set_Parameter(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) = 0;
+			virtual void Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) = 0;
 
 			/**
 			 * @brief Gets the id of the openGL texture

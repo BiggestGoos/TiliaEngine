@@ -2,9 +2,6 @@
  * @file   Stopwatch.cpp
  * @brief  Defines functions for @Stopwatch class in @include "headers/Stopwatch.h"
  * 
- * Dependencies:
- * @include "dependencies/glfw/include/GLFW/glfw3.h"
- * 
  * Standard:
  * @include <iostream>
  * 
@@ -15,11 +12,9 @@
  * @date   30/06/2022
  *********************************************************************/
 
-// Dependencies
-#include "dependencies/glfw/include/GLFW/glfw3.h"
-
 // Standard
 #include <iostream>
+#include <chrono>
 
 // Headers
 #include "Core/Temp/Stopwatch.h"
@@ -27,9 +22,9 @@
 /**
  * Gets the time values and if specified prints some values.
  */
-float tilia::utils::Stopwatch::operator()(const Mode& mode, const std::string& message, bool should_print)
+int64_t tilia::utils::Stopwatch::operator()(const Mode& mode, const std::string& message, bool should_print)
 {
-	std::pair<float, float> times{};
+	std::pair<int64_t, int64_t> times{};
 	switch (mode)
 	{
 	case Mode::Start:
@@ -48,13 +43,17 @@ float tilia::utils::Stopwatch::operator()(const Mode& mode, const std::string& m
 	return times.second;
 }
 
-std::pair<float, float> tilia::utils::Stopwatch::Start()
+std::pair<int64_t, int64_t> tilia::utils::Stopwatch::Start()
 {
-	m_start_time = static_cast<float>(glfwGetTime());
-	return { static_cast<float>(glfwGetTime()), 0.0f };
+	auto time{ std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) };
+
+	m_start_time = time.count();
+	return { time.count(), 0 };
 }
 
-std::pair<float, float> tilia::utils::Stopwatch::Stop()
+std::pair<int64_t, int64_t> tilia::utils::Stopwatch::Stop()
 {
-	return { static_cast<float>(glfwGetTime()), static_cast<float>(glfwGetTime()) - m_start_time };
+	auto time{ std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) };
+
+	return { time.count(), time.count() - m_start_time };
 }

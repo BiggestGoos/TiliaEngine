@@ -2,11 +2,11 @@
 #ifndef S2D_INPUT_H
 #define S2D_INPUT_H
 
-#include "dependencies/glfw/include/GLFW/glfw3.h"
+#include "vendor/glfw/include/GLFW/glfw3.h"
 
 #include <iostream>
 
-#include "dependencies/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/glm.hpp"
 
 namespace tilia {
 

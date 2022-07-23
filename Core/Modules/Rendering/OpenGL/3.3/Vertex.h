@@ -18,7 +18,7 @@
 #define TILIA_VERTEX_H
 
 // Dependencies
-#include "dependencies/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/glm.hpp"
 
 // Standard
 #include <array>

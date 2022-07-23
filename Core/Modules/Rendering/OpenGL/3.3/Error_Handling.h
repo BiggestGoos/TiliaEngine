@@ -13,62 +13,39 @@
 #define TILIA_ERROR_HANDLING_H
 
 #ifndef NDEBUG
+#include <cstdlib>
 /**
- * @brief Calls abort() if given value is false
+ * @brief Calls std::exit() with code 1 if given expression is false
  */
-#define ASSERT(x) if(!(x)) abort();
+#define ASSERT(x) if(!(x)) std::exit(1);
 #else
 #define ASSERT
 #endif
 
-/**
- * @brief Wrap openGL functions. Clears openGL errors using GL_Clear_Error. 
- * If error is thrown from function, prints errors using GL_Log_Call, and 
- * calls abort() using ASSERT.
- * 
- * @param x - The openGL function
- */
-#define GL_ASSERT(x) GL_Clear_Error();\
-    x;\
-    ASSERT(GL_Log_Call(#x, __FILE__, __LINE__))
+#define GL_ASSERT(x)          tilia::utils::GL_Clear_Error();\
+                              x;\
+                              ASSERT(tilia::utils::GL_Check_Error())
 
-#define GL_CALL(x) GL_Clear_Error();\
-                      x;\
-                      Handle_GL_Error("", __LINE__, __FILE__, #x);
+#define GL_CALL(x)            tilia::utils::GL_Clear_Error();\
+                              x;\
+                              tilia::utils::Handle_GL_Error("", __LINE__, __FILE__, #x);
 
-#define GL_CALL_MESSAGE(y, x) GL_Clear_Error();\
-                      x;\
-                      Handle_GL_Error(y, __LINE__, __FILE__, #x);
+#define GL_CALL_MESSAGE(y, x) tilia::utils::GL_Clear_Error();\
+                              x;\
+                              tilia::utils::Handle_GL_Error(y, __LINE__, __FILE__, #x);
 
-void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function);
+namespace tilia {
 
-/**
- * @brief Gets an error string pertaining to an error code.
- * 
- * @param error_code - The error code for which to get error string from
- * 
- * @return The error string pertaining to the error code.
- */
-const char* Get_Error_String(const uint32_t & error_code);
+    namespace utils {
 
-/**
- * @brief Clears the openGL errors
- */
-void GL_Clear_Error();
+        void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function);
 
-/**
- * @brief Checks if there was an error. If so prints the error string, 
- * function, file, and line of the openGL function and also returns false. 
- * Otherwise returns true.
- * 
- * @param function - The function which is checked for errors
- * @param file - The file containing the function
- * @param line - The line the function is on
- * 
- * @return True if no error, and false if there is.
- */
-bool GL_Log_Call(const char* function, const char* file, int line);
+        bool GL_Check_Error();
+
+        void GL_Clear_Error();
+
+    }
+
+}
 
 #endif
-
-

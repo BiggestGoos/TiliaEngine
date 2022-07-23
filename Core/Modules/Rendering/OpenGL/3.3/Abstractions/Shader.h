@@ -23,7 +23,7 @@
 #define TILIA_SHADER_H
 
 // Dependencies
-#include "dependencies/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/glm.hpp"
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.h"

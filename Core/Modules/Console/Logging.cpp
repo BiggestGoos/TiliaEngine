@@ -1,84 +1,69 @@
-/*****************************************************************//**
- * @file   Logging.cpp
- * @brief  Definitions of functions declared in @include "headers/Logging.h"
- * 
- * Standard:
- * @include <cstdio>
- * @include <cstdarg>
- * 
- * Headers:
- * @include "headers/Logging.h"
- * 
- * @author Gustav Fagerlind
- * @date   16/05/2022
- *********************************************************************/
-
 // Standard
 #include <cstdio>
 #include <cstdarg>
 
-// Headers
+// Tilia
 #include "Core/Modules/Console/Logging.h"
 
-/**
- * First prints log_type, then log_tag and then at last prints text using printf, and
- * vfprintf to print to stdout using variadic functions
- */
-void tilia::log::Log(Type log_type, const char* log_tag, const char* text...)
-{
+static void Print_Log_Type(const tilia::log::Type& log_type) {
 
-	// Prints log_type
 	switch (log_type) {
-	case Type::INFO:
-		printf(":INFO:");
-		break;
-	case Type::DEBUG:
-		printf(":DEBUG:");
-		break;
-	case Type::SUCCESS:
-		printf(":SUCCESS:");
-		break;
-	case Type::ERROR:
-		printf(":ERROR:");
-		break;
+	case tilia::log::Type::INFO:
+		std::printf(":INFO:");
+		return;
+	case tilia::log::Type::DEBUG:
+		std::printf(":DEBUG:");
+		return;
+	case tilia::log::Type::SUCCESS:
+		std::printf(":SUCCESS:");
+		return;
+	case tilia::log::Type::ERROR:
+		std::printf(":ERROR:");
+		return;
 	}
 
+}
+
+void tilia::log::Log(const Type& log_type, const char* log_tag, const char* text...)
+{
+
+	Print_Log_Type(log_type);
+
 	// Prints opening brackets, and log_tag
-	printf(":%s: [ ", log_tag);
+	std::printf(":%s: [ ", log_tag);
 	
-	// Prints text to stdout
 	std::va_list args;
 
+	// Gets the values from the text
 	va_start(args, text);
 
-	vfprintf(stdout, text, args);
+	// Prints text to stdout
+	std::vfprintf(stdout, text, args);
 
 	va_end(args);
 
 	// Prints closing brackets
-	printf(" ]\n");
+	std::printf(" ]\n");
 
 }
 
-/**
- * First prints indentation, then log_tag, and at last prints text using printf, and
- * vfprintf to print to stdout using variadic functions. 
- */
 void tilia::log::Log_Indent(const char* log_tag, const char* text ...)
 {
 
-	// Prints opening braces, log_tag, and indentation
-	printf("  >:%s: { ", log_tag);
+	// Prints indentation, log_tag, and opening braces
+	std::printf("  >:%s: { ", log_tag);
 
-	// Prints text to stdout
-	va_list args;
+	std::va_list args;
+
+	// Gets the values from the text
 	va_start(args, text);
 
-	vfprintf(stdout, text, args);
+	// Prints text to stdout
+	std::vfprintf(stdout, text, args);
 
 	va_end(args);
 
 	// Prints closing braces
-	printf(" }\n");
+	std::printf(" }\n");
 
 }

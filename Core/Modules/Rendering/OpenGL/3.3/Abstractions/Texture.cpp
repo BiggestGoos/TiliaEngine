@@ -19,7 +19,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "dependencies/glad/include/glad/glad.h"
+#include "vendor/glad/include/glad/glad.h"
 
 // Standard
 #include <string.h>
@@ -58,9 +58,11 @@ std::string tilia::render::Texture::Get_Type_String() const
 		strcat_s(texture_type_string, 19, "CUBE_MAP");
 		break;
 	default:
-		std::stringstream ss{};
-		ss << "Texture type is undefined: " << *m_texture_type;
-		throw utils::Tilia_Exception{ ss, LOCATION };
+		utils::Tilia_Exception e{ LOCATION };
+		e.Add_Message("Texture { ID: %v } type is undefined"
+			"\n>>> Type: %v")
+			(m_ID)(*m_texture_type);
+		throw e;
 	}
 
 	return texture_type_string;
@@ -93,10 +95,12 @@ void tilia::render::Texture::Bind(const uint32_t& slot) const
 {
 
 	// Checks if slot is in range and prints errors if not
-	if (slot > utils::Get_Max_Textures() - 1)
-		throw utils::Tilia_Exception{ "Texture slot is out of range", LOCATION };
-
-		//return log::Log(log::Type::ERROR, Get_Type_String().c_str(), "Texture { Slot: %u } is outside of the texture slot range { Min: 0, Max: %u }", slot, utils::Get_Max_Textures() - 1);
+	if (slot > utils::Get_Max_Textures() - 1) {
+		utils::Tilia_Exception e{ LOCATION };
+		e.Add_Message("Texture { Slot: %v } is out of the texture slot range { Min: 0, Max: %v }")
+			(slot)(utils::Get_Max_Textures() - 1);
+		throw e;
+	}
 
 	// Sets slot and binds texture
 	GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));

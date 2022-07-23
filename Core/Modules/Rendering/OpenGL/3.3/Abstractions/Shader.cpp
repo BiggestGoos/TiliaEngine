@@ -20,7 +20,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "dependencies/glad/include/glad/glad.h"
+#include "vendor/glad/include/glad/glad.h"
 
 // Standard
 #include <fstream>

@@ -18,7 +18,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "dependencies/glad/include/glad/glad.h"
+#include "vendor/glad/include/glad/glad.h"
 
 // Standard
 #include <iostream>
@@ -32,7 +32,7 @@
  * Checks what error string pertains to error_code. If there is no
  * error string for error_code then it returns "Something went wrong".
  */
-const char* Get_Error_String(const uint32_t& error_code) {
+static constexpr const char* Get_Error_String(const uint32_t& error_code) {
     switch (error_code)
     {
     case 0x500:
@@ -58,46 +58,35 @@ const char* Get_Error_String(const uint32_t& error_code) {
     }
 }
 
-void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function)
+void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function)
 {
     // Checks errors
     while (GLenum error = glGetError()) {
-        std::stringstream ss{};
-        ss << "OpenGL [ Error was thrown ]" <<
-              "\nCode: 0x" << error <<
-              "\nName: " << Get_Error_String(error) <<
-              "\nFunc: " << function;
+        utils::Tilia_Exception e{ LOCATION };
+        auto x{ e.Add_Message("OpenGL [ Error was thrown ]"
+            "\n>>> Code: %v"
+            "\n>>> Name: %v"
+            "\n>>> Func: %v")
+        (error)(Get_Error_String(error))(function) };
         if (message != "")
-              ss << "\nMessage: " << message;
-        throw tilia::utils::Tilia_Exception{ "", line, file };
+            x("\n>>> Message: ")(message);
+        throw e;
     }
 }
 
-/**
- * Clears the openGL errors.
- */
-void GL_Clear_Error()
-{
-    while (glGetError() != GL_NO_ERROR);
-}
-
-/**
- * Checks if there is an openGL error. If so then it prints errors and 
- * things pertaining to this error using Log and Log_Indent and then 
- * returns false. Else it just returns true.
- */
-bool GL_Log_Call(const char* function, const char* file, int line)
+bool tilia::utils::GL_Check_Error()
 {
     // Checks errors
-    while (GLenum error = glGetError()) {
-        // Prints errors and stuff
-        tilia::log::Log(tilia::log::Type::ERROR, "OpenGL", "Error was thrown");
-        tilia::log::Log_Indent("Code", "0x%x", error);
-        tilia::log::Log_Indent("Name", "%s", Get_Error_String(error));
-        tilia::log::Log_Indent("File", "%s", file);
-        tilia::log::Log_Indent("Line", "%d", line);            
-        tilia::log::Log_Indent("Func", "%s", function);
+    while (glGetError()) {
         return false;
     }
     return true;
+}
+
+/**
+* Clears the openGL errors.
+*/
+void tilia::utils::GL_Clear_Error()
+{
+    while (glGetError() != GL_NO_ERROR);
 }

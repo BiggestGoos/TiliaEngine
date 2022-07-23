@@ -1,12 +1,12 @@
-#include "dependencies/glad/include/glad/glad.h"
-#include "dependencies/glfw/include/GLFW/glfw3.h"
+#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glfw/include/GLFW/glfw3.h"
 
-#include "dependencies/glm/include/glm/glm.hpp"
-#include "dependencies/glm/include/glm/gtc/matrix_transform.hpp"
-#include "dependencies/glm/include/glm/gtc/type_ptr.hpp"
-#include "dependencies/glm/include/glm/gtx/string_cast.hpp"
+#include "vendor/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/gtc/matrix_transform.hpp"
+#include "vendor/glm/include/glm/gtc/type_ptr.hpp"
+#include "vendor/glm/include/glm/gtx/string_cast.hpp"
 
-#include "dependencies/stb_image/include/stb_image/stb_image.h"
+#include "vendor/stb_image/include/stb_image/stb_image.h"
 
 #include <iostream>
 #include <memory>
@@ -23,6 +23,7 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Renderer.h"
 #include "Core/Modules/Rendering/OpenGL/3.3/Mesh.h"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.h"
+#include "Core/Modules/Exceptions/Tilia_Exception.h"
 #include "Core/Values/OpenGL/3.3/Enums.h"
 #include "Core/Temp/Camera.h"
 #include "Core/Temp/Input.h"
@@ -142,7 +143,7 @@ int main()
         std::shared_ptr<Shader> cube_shader{ std::make_shared<Shader>() };
         cube_shader->Init("res/shaders/cube_shader.vert", "res/shaders/cube_shader.frag");
 
-        Cube_Map_Def def{};
+        Cube_Map_Data def{};
 
         def.sides[0].file_path = "res/textures/container2.png";
         def.sides[1].file_path = "res/textures/container2.png";
@@ -152,17 +153,20 @@ int main()
         def.sides[5].file_path = "res/textures/container2.png";
 
         std::shared_ptr<Cube_Map> box_texture{ std::make_shared<Cube_Map>() };
-        box_texture->Set_Texture(def);
+        box_texture->Set(def);
 
         std::shared_ptr<Cube_Map> box_specular_texture{ std::make_shared<Cube_Map>() };
-        box_specular_texture->Set_Texture({
+        box_specular_texture->Set({
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png"
-            });
+        });
+
+        std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
+        tex_2d->Set_Texture("res/teures/container2.png");
 
         light_shader->Uniform("material.diffuse", 0);
         light_shader->Uniform("material.specular", 1);
@@ -262,7 +266,7 @@ int main()
 
                     model = glm::translate(glm::mat4{ 1.0f }, cubePositions[i]);
 
-                    if (axis != glm::bvec3{})
+                    if (axis != glm::zero<glm::bvec3>())
                         model = glm::rotate(model, glm::radians(angle), static_cast<glm::vec3>(axis));
 
                     model = glm::scale(model, glm::vec3{ 2.0f, 1.0f, 1.0f });
@@ -282,7 +286,7 @@ int main()
                 }
 
             }
-
+            
             if (!pause)
                 angle += add_angle * deltaTime;
 
@@ -338,11 +342,22 @@ int main()
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
     }
+    catch (const utils::Tilia_Exception& e) {
+        std::cout << "\n<<<Tilia_Exception>>>\n";
+        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
+                     "File: " << e.Get_Origin_File() << '\n';
+        std::cout << e.what() << '\n';
+    }
     catch (const std::exception& e) {
         std::cout << e.what() << '\n';
     }
 
     glfwTerminate();
+
+    while (true)
+    {
+
+    }
 
     return 0;
 }

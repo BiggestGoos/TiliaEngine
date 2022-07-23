@@ -51,7 +51,7 @@ namespace tilia {
 			 * 
 			 * @return - The active time of the stopwatch.
 			 */
-			float operator()(const Mode& mode, const std::string& message, bool should_print = true);
+			int64_t operator()(const Mode& mode, const std::string& message, bool should_print = true);
 
 		private:
 
@@ -62,7 +62,7 @@ namespace tilia {
 			 * 
 			 * @return The current total passed time along with the stopwatches passed time.
 			 */
-			std::pair<float, float> Start();
+			std::pair<int64_t, int64_t> Start();
 
 			/**
 			 * @brief Gets the current passed time of the opened window along with the current
@@ -71,11 +71,11 @@ namespace tilia {
 			 *
 			 * @return The current total passed time along with the stopwatches passed time.
 			 */
-			std::pair<float, float> Stop();
+			std::pair<int64_t, int64_t> Stop();
 
 			// The passed time relative to the window creation when the () was called with the
 			// starting mode.
-			float m_start_time{}; 
+			int64_t m_start_time{};
 
 		};
 
