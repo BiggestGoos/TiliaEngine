@@ -1,4 +1,4 @@
-#include "Core/Temp/Input.h"
+#include "Core/Temp/Input.hpp"
 
 void tilia::Input_Manager::Init(GLFWwindow* window)
 {

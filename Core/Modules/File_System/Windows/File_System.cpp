@@ -3,8 +3,8 @@
 #include "vendor/stb_image/include/stb_image/stb_image.h"
 
 // Tilia
-#include "Core/Modules/File_System/Windows/File_System.h"
-#include "Core/Modules/Exceptions/Tilia_Exception.h"
+#include "Core/Modules/File_System/Windows/File_System.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 // Global File_System
 tilia::utils::File_System file_system{};
@@ -17,8 +17,7 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 	// Sets the vertical flipping flag
 	stbi_set_flip_vertically_on_load(flip_image_y);
 
-	// Loads the data along with the dimensions and amount of color
-	// channels.
+	// Loads the data along with the dimensions and amount of color channels.
 	std::uint8_t* data{
 		stbi_load(file_path, &width, &height, &color_channels, desired_color_channels)
 	};
@@ -37,8 +36,8 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 			"\n>>> Path: %v"
 			"\n>>> Witdh: %v"
 			"\n>>> Height: %v"
-			"\n>>> Color channels: %v")
-			(file_path)(width)(height)(color_channels);
+			"\n>>> Color channels: %v"
+			)(file_path)(width)(height)(color_channels);
 
 		throw e;
 	}

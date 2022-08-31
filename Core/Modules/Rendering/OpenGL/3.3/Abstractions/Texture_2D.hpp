@@ -25,8 +25,8 @@
 #include <memory>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.h"
-#include "Core/Values/OpenGL/3.3/Enums.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
 
 namespace tilia {
 
@@ -52,8 +52,8 @@ namespace tilia {
 			std::unique_ptr<uint8_t[]>		   texture_data{};
 			int32_t							   width{};
 			int32_t							   height{};
-			enums::Color_Format			       color_format{ enums::Color_Format::RGBA8 };
-			enums::Color_Format				   load_color_format{ enums::Color_Format::None };
+			enums::Color_Format	   color_format{ enums::Color_Format::RGBA8 };
+			enums::Data_Color_Format				   load_color_format{ enums::Data_Color_Format::None };
 			enums::Filter_Mode				   filter_min{ enums::Filter_Mode::Point };
 			enums::Filter_Mode				   filter_mag{ enums::Filter_Mode::Point };
 			enums::Wrap_Mode				   wrap_s{ enums::Wrap_Mode::Repeat };
@@ -145,6 +145,10 @@ namespace tilia {
 			 */
 			inline const int32_t& Get_Height() const { return m_texture_def.height; }
 
+		private:
+
+			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
+			
 			/**
 			 * @brief Sets the filtering mode for the given filtering size
 			 *
@@ -160,10 +164,6 @@ namespace tilia {
 			 * @param wrap_mode - The wrapping mode to set for the given side
 			 */
 			void Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
-
-		private:
-
-			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
 
 			/**
 			 * @brief Prints information about the shader indented. Prints the dimensions, color format,

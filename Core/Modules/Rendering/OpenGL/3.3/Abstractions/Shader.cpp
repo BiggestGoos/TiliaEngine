@@ -28,9 +28,9 @@
 #include <memory>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.h"
-#include "Core/Modules/Console/Logging.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Console/Logging.hpp"
 
 // Initialize static member which holds the bound shader id
 uint32_t tilia::render::Shader::s_bound_ID{};

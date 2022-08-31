@@ -27,12 +27,12 @@
 #include <stdexcept>
 
 // Headers
-#include "Core/Values/OpenGL/3.3/Utils.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Modules/Console/Logging.h"
-#include "Core/Modules/File_System/Windows/File_System.h"
-#include "Core/Modules/Exceptions/Tilia_Exception.h"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Console/Logging.hpp"
+#include "Core/Modules/File_System/Windows/File_System.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 extern tilia::utils::File_System file_system;
 
@@ -213,24 +213,24 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	switch (nr_load_channels)
 	{
 	case 1:
-		m_texture_def.load_color_format = enums::Color_Format::Red;
+		m_texture_def.load_color_format = enums::Data_Color_Format::Red;
 		break;
 	case 3:
-		m_texture_def.load_color_format = enums::Color_Format::RGB;
+		m_texture_def.load_color_format = enums::Data_Color_Format::RGB;
 			break;
 	case 4:
-		m_texture_def.load_color_format = enums::Color_Format::RGBA;
+		m_texture_def.load_color_format = enums::Data_Color_Format::RGBA;
 			break;
 	default:
-		m_texture_def.load_color_format = m_texture_def.color_format;
+		//m_texture_def.load_color_format = m_texture_def.color_format;
 		break;
 	}
 
 	if (m_texture_def.color_format == enums::Color_Format::None)
-		m_texture_def.color_format = m_texture_def.load_color_format;
+		//m_texture_def.color_format = m_texture_def.load_color_format;
 
 	// Set unpack alignment
-	if (m_texture_def.load_color_format == enums::Color_Format::RGBA)
+	if (m_texture_def.load_color_format == enums::Data_Color_Format::RGBA)
 	{
 		GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
 	}

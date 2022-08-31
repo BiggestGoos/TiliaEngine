@@ -13,22 +13,22 @@
 #include <vector>
 #include <map>
 
-#include "Core/Values/OpenGL/3.3/Utils.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Modules/Console/Logging.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Batch.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.h"
-#include "Core/Modules/Exceptions/Tilia_Exception.h"
-#include "Core/Values/OpenGL/3.3/Enums.h"
-#include "Core/Temp/Camera.h"
-#include "Core/Temp/Input.h"
-#include "Core/Temp/Limit_Fps.h"
-#include "Core/Temp/Stopwatch.h"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Console/Logging.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Temp/Camera.hpp"
+#include "Core/Temp/Input.hpp"
+#include "Core/Temp/Limit_Fps.hpp"
+#include "Core/Temp/Stopwatch.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -153,20 +153,20 @@ int main()
         def.sides[5].file_path = "res/textures/container2.png";
 
         std::shared_ptr<Cube_Map> box_texture{ std::make_shared<Cube_Map>() };
-        box_texture->Set(def);
-
+        box_texture->Set<Cube_Map_Var::Cube_Map_Data>()(def, true);
+        
         std::shared_ptr<Cube_Map> box_specular_texture{ std::make_shared<Cube_Map>() };
-        box_specular_texture->Set({
+        box_specular_texture->Set<Cube_Map_Var::Paths>()({
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png"
-        });
+        }, true);
 
-        std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
-        tex_2d->Set_Texture("res/teures/container2.png");
+        //std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
+        //tex_2d->Set_Texture("res/teures/container2.png");
 
         light_shader->Uniform("material.diffuse", 0);
         light_shader->Uniform("material.specular", 1);
@@ -250,7 +250,7 @@ int main()
         while (!glfwWindowShouldClose(window))
         {
 
-            S2D::utils::Sleep_Program(60);
+            //S2D::utils::Sleep_Program(60);
 
             if (!pause)
                 light_z += 1.0f * deltaTime;

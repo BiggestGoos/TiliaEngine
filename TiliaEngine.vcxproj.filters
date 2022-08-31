@@ -15,63 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Modules\Console\Logging.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Temp\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Temp\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Temp\Limit_Fps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Temp\Stopwatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\File_System\Windows\File_System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\glad\include\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -933,6 +876,63 @@
     <ClInclude Include="vendor\stb_image\include\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Console\Logging.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Temp\Camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Temp\Input.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Temp\Limit_Fps.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Temp\Stopwatch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Modules\Console\Logging.cpp">
@@ -992,10 +992,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vertex.vert" />
-    <None Include="x64\Release\res\shaders\fragment.frag" />
-    <None Include="x64\Release\res\shaders\skybox.frag" />
-    <None Include="x64\Release\res\shaders\skybox.vert" />
-    <None Include="x64\Release\res\shaders\vertex.vert" />
     <None Include="x64\Debug\res\shaders\cube_shader.frag" />
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
     <None Include="x64\Debug\res\shaders\light_shader.frag" />
@@ -1412,5 +1408,9 @@
     <None Include="vendor\glm\include\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="x64\Release\res\shaders\cube_shader.frag" />
+    <None Include="x64\Release\res\shaders\cube_shader.vert" />
+    <None Include="x64\Release\res\shaders\light_shader.frag" />
+    <None Include="x64\Release\res\shaders\light_shader.vert" />
   </ItemGroup>
 </Project>

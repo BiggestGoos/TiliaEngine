@@ -1,4 +1,4 @@
-#include "Core/Temp/Limit_Fps.h"
+#include "Core/Temp/Limit_Fps.hpp"
 #include <thread>
 
 void S2D::utils::Sleep_Program(const unsigned int& target_frames) {

@@ -17,7 +17,7 @@
 #include <chrono>
 
 // Headers
-#include "Core/Temp/Stopwatch.h"
+#include "Core/Temp/Stopwatch.hpp"
 
 /**
  * Gets the time values and if specified prints some values.

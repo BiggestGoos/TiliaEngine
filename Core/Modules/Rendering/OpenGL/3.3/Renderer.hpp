@@ -25,8 +25,8 @@
 #include <memory>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Batch.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
 
 namespace tilia {
 

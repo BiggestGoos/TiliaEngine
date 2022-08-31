@@ -40,15 +40,19 @@ namespace tilia {
 		};
 
 		// Different types of color formats. Underlying value is the value defined by openGL.
+		enum class Data_Color_Format {
+			None = 0x0000,	// None.
+			Red  = 0x1903, // The red color channel.
+			RGB  = 0x1907, // The red, green, and blue color channels.
+			RGBA = 0x1908, // The red, green, and blue color channels and the alpha channel.
+		};
+
+		// Different types of color formats used internally by openGL. Underlying value is the value defined by openGL.
 		enum class Color_Format {
 			None  = 0x0000,	// None.
-			Red   = 0x1903, // The red color channel.
-			Alpha = 0x1906, // The alpha channel.
-			RGB   = 0x1907, // The red, green, and blue color channels.
-			RGBA  = 0x1908, // The red, green, and blue color channels and the alpha channel.
 			Red8  = 0x8229, // The red color channel, consists of 8 bits(1 byte).
 			RGB8  = 0x8051, // The red, green, and blue color channels, consists of 24 bits(3 bytes).
-			RGBA8 = 0x8058  // The red, green, and blue color channels and the alpha channel, consists of 32 bits(4 bytes).
+			RGBA8 = 0x8058, // The red, green, and blue color channels and the alpha channel, consists of 32 bits(4 bytes).
 		};
 
 		// Different types of filtering modes for textures. Underlying value is the value defined by openGL.

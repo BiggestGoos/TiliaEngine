@@ -21,7 +21,7 @@
 #include <cstdint>
 
 // Headers
-#include "Core/Values/OpenGL/3.3/Enums.h"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
 
 namespace tilia {
 
@@ -39,7 +39,14 @@ namespace tilia {
 		 * 
 		 * @return The amount of indices needed for primitve
 		 */
-		constexpr uint32_t Get_Primitive_Index_Count(const uint32_t& primitve);
+		uint32_t Get_Primitive_Index_Count(const uint32_t& primitve);
+
+		uint32_t Get_Color_Format_Count(const uint32_t& color_format);
+
+		const char* Get_Cube_Map_Side(const uint32_t& cube_map_side);
+
+		enums::Data_Color_Format Get_Data_Color_Format(const uint32_t& color_format_count);
+		enums::Color_Format Get_Color_Format(const uint32_t& color_format_count);
 
 	}
 

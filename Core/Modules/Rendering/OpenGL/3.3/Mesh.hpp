@@ -25,13 +25,13 @@
 #include <vector>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Vertex.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.h"
-#include "Core/Values/OpenGL/3.3/Enums.h"
-#include "Core/Modules/Console/Logging.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Vertex.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Modules/Console/Logging.hpp"
 
 namespace tilia {
 

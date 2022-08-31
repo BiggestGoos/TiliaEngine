@@ -123,6 +123,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,25 +152,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Modules\Console\Logging.h" />
-    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.h" />
-    <ClInclude Include="Core\Modules\File_System\Windows\File_System.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.h" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.h" />
-    <ClInclude Include="Core\Temp\Camera.h" />
-    <ClInclude Include="Core\Temp\Input.h" />
-    <ClInclude Include="Core\Temp\Limit_Fps.h" />
-    <ClInclude Include="Core\Temp\Stopwatch.h" />
-    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.h" />
-    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.h" />
+    <ClInclude Include="Core\Modules\Console\Logging.hpp" />
+    <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.hpp" />
+    <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Vertex.hpp" />
+    <ClInclude Include="Core\Temp\Camera.hpp" />
+    <ClInclude Include="Core\Temp\Input.hpp" />
+    <ClInclude Include="Core\Temp\Limit_Fps.hpp" />
+    <ClInclude Include="Core\Temp\Stopwatch.hpp" />
+    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.hpp" />
+    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.hpp" />
     <ClInclude Include="vendor\glad\include\glad\glad.h" />
     <ClInclude Include="vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
@@ -624,10 +625,10 @@
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
     <None Include="x64\Debug\res\shaders\light_shader.frag" />
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
-    <None Include="x64\Release\res\shaders\fragment.frag" />
-    <None Include="x64\Release\res\shaders\skybox.frag" />
-    <None Include="x64\Release\res\shaders\skybox.vert" />
-    <None Include="x64\Release\res\shaders\vertex.vert" />
+    <None Include="x64\Release\res\shaders\cube_shader.frag" />
+    <None Include="x64\Release\res\shaders\cube_shader.vert" />
+    <None Include="x64\Release\res\shaders\light_shader.frag" />
+    <None Include="x64\Release\res\shaders\light_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,7 +11,7 @@
  *********************************************************************/
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 
 void tilia::render::Shader_Data::Uniform(const std::string& location, const float& v0)
 {

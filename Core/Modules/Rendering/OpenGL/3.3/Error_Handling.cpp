@@ -24,9 +24,9 @@
 #include <iostream>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Modules/Console/Logging.h"
-#include "Core/Modules/Exceptions/Tilia_Exception.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Console/Logging.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 /**
  * Checks what error string pertains to error_code. If there is no
@@ -62,7 +62,7 @@ void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, cons
 {
     // Checks errors
     while (GLenum error = glGetError()) {
-        utils::Tilia_Exception e{ LOCATION };
+        utils::Tilia_Exception e{ line, file };
         auto x{ e.Add_Message("OpenGL [ Error was thrown ]"
             "\n>>> Code: %v"
             "\n>>> Name: %v"

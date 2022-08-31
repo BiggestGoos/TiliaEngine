@@ -27,10 +27,10 @@
 #include <map>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Batch.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Values/OpenGL/3.3/Enums.h"
-#include "Core/Values/OpenGL/3.3/Utils.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
 
 #include <iostream>
 

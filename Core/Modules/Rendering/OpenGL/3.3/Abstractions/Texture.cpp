@@ -25,11 +25,11 @@
 #include <string.h>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.h"
-#include "Core/Values/OpenGL/3.3/Utils.h"
-#include "Core/Modules/Console/Logging.h"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.h"
-#include "Core/Modules/Exceptions/Tilia_Exception.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Modules/Console/Logging.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 // Initialize static member which holds the bound textures ids
 std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::render::Texture::s_bound_ID{};
@@ -83,8 +83,19 @@ void tilia::render::Texture::Generate_Texture()
  */
 tilia::render::Texture::~Texture()
 {
-	GL_CALL(glDeleteTextures(1, &m_ID));
-	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was succesfully destroyed", m_ID);
+	try
+	{
+		GL_CALL(glDeleteTextures(1, &m_ID));
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("%v { ID: %v } failed to be destroyed")
+			(Get_Type_String())(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
 }
 
 /**

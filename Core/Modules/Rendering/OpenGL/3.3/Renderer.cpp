@@ -16,7 +16,7 @@
 #include <map>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.h"
+#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.hpp"
 
 #include <iostream>
 
