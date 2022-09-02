@@ -38,17 +38,17 @@ uint32_t tilia::utils::Get_Primitive_Index_Count(const uint32_t& primitve)
 	switch (primitve)
 	{
 	case GL_POINTS:
-		return 1ui32;
+		return 1;
 	case GL_LINES:
 	case GL_LINE_LOOP:
 	case GL_LINE_STRIP:
-		return 2ui32;
+		return 2;
 	case GL_TRIANGLES:
 	case GL_TRIANGLE_STRIP:
 	case GL_TRIANGLE_FAN:
-		return 3ui32;
+		return 3;
 	default:
-		return 1ui32;
+		return 1;
 	}
 }
 
@@ -58,16 +58,16 @@ uint32_t tilia::utils::Get_Color_Format_Count(const uint32_t& color_format)
 	{
 	case GL_RED:
 	case GL_R8:
-		return 1ui32;
+		return 1;
 	case GL_RGB:
 	case GL_RGB8:
-		return 3ui32;
+		return 3;
 	case GL_RGBA:
 	case GL_RGBA8:
-		return 4ui32;
+		return 4;
 	case GL_NONE:
 	default:
-		return 0ui32;
+		return 0;
 	}
 }
 

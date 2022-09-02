@@ -4,6 +4,7 @@
 
 // Standard
 #include <stdexcept>
+#include <cmath>
 
 // Headers
 #include "Core/Values/OpenGL/3.3/Utils.hpp"

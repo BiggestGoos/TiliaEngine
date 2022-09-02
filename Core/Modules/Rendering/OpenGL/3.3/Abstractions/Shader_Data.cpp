@@ -10,6 +10,9 @@
  * @date   05/07/2022
  *********************************************************************/
 
+// Standard
+#include <cstring>
+
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 

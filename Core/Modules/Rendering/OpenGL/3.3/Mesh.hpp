@@ -36,27 +36,6 @@
 namespace tilia {
 
 	namespace render {
-		
-		enum class Mesh_Var {
-			Vertex_Size,
-			Shader,
-			Shader_Data,
-			Transparent,
-			Primitive,
-			Polymode,
-			Cull_Face,
-			Depth_Func,
-			Color_Mask,
-			Stencil_Mask,
-			Stencil_Func,
-			Stencil_Op,
-			Blend_Color,
-			Blend_Func,
-			Blend_Equation,
-			Postion_Offsets,
-			Texture_Offset,
-			Vertex_Info
-		};
 
 		/**
 		 * @brief Holds information about the mesh. Used to pass data to the Renderer
@@ -136,25 +115,18 @@ namespace tilia {
 				size_t index{};
 				for (size_t i = 0; i < size; i++)
 				{
-					if (m_textures[i] == texture)
+					if (m_textures[i].lock().get() == texture)
 						index = i;
 				}
 				m_textures.erase(m_textures.begin() + index);
 			}
-
-			template<Mesh_Var variable>
-			inline auto Set_Var();
-
-			template<Mesh_Var variable>
-			inline auto Get_Var();
 
 			/**
 			 * @brief Gets the amount of floats in a vertex.
 			 *
 			 * @return The amount of floats in a vertex.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Vertex_Size>() {
+			inline auto Get_Var_Vertex_Size() {
 				return vert_size;
 			}
 
@@ -162,9 +134,8 @@ namespace tilia {
 			 * @brief Sets m_shader to the given shader.
 			 *
 			 * @param shader - The shader to set m_shader to.
-			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Shader>() {
+			 */			
+			inline auto Set_Shader() {
 				return [this](std::weak_ptr<Shader> shader) { m_shader = shader; };
 			}
 			/**
@@ -172,8 +143,7 @@ namespace tilia {
 			 * 
 			 * @return m_shader - The shader of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Shader>() {
+			inline auto Get_Shader() {
 				return m_shader;
 			}
 
@@ -182,8 +152,7 @@ namespace tilia {
 			 * 
 			 * @param shader_data - The new shader data which m_shader_data is set to.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Shader_Data>() {
+			inline auto Set_Shader_Data() {
 				return [this](std::weak_ptr<Shader_Data> shader_data) { m_shader_data = shader_data; };
 			}
 			/**
@@ -191,8 +160,7 @@ namespace tilia {
 			 * 
 			 * @return m_shader_data - The shader data of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Shader_Data>() {
+			inline auto Get_Shader_Data() {
 				return m_shader_data;
 			}
 
@@ -201,17 +169,15 @@ namespace tilia {
 			 *
 			 * @param transparent - Set m_transparent to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Transparent>() {
-				return [this](const bool& transparent) { m_transparent = transparent; }
+			inline auto Set_Transparent() {
+				return [this](const bool& transparent) { m_transparent = transparent; };
 			}
 			/**
 			 * @brief Gets m_transparent.
 			 *
 			 * @return m_transparent - Wheter the mesh is transparent or not.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Transparent>() {
+			inline auto Get_Transparent() {
 				return m_transparent;
 			}
 
@@ -220,8 +186,7 @@ namespace tilia {
 			 *
 			 * @param primitive - Set m_primitive to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Primitive>() {
+			inline auto Set_Primitive() {
 				return [this](const enums::Primitive& primitive) { m_primitive = primitive; };
 			}
 			/**
@@ -229,8 +194,7 @@ namespace tilia {
 			 *
 			 * @return m_primitive - The primitive of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Primitive>() {
+			inline auto Get_Primitive() {
 				return m_primitive;
 			}
 
@@ -239,8 +203,7 @@ namespace tilia {
 			 *
 			 * @param polymode - Set m_polymode to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Polymode>() {
+			inline auto Set_Polymode() {
 				return [this](const enums::Polymode& polymode) { m_polymode = polymode; };
 			}
 			/**
@@ -248,8 +211,7 @@ namespace tilia {
 			 *
 			 * @return m_polymode - The polymode of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Polymode>() {
+			inline auto Get_Polymode() {
 				return m_polymode;
 			}
 
@@ -258,8 +220,7 @@ namespace tilia {
 			 *
 			 * @param cull_face - Set m_cull_face to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Cull_Face>() {
+			inline auto Set_Cull_Face() {
 				return [this](const enums::Face& cull_face) { m_cull_face = cull_face; };
 			}
 			/**
@@ -267,8 +228,7 @@ namespace tilia {
 			 *
 			 * @return m_cull_face - The culling face of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Cull_Face>() {
+			inline auto Get_Cull_Face() {
 				return m_cull_face;
 			}
 
@@ -277,8 +237,7 @@ namespace tilia {
 			 *
 			 * @param depth_func - Set m_depth_func to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Depth_Func>() {
+			inline auto Set_Depth_Func() {
 				return [this](const enums::Test_Func& depth_func) { m_depth_func = depth_func; };
 			}
 			/**
@@ -286,8 +245,7 @@ namespace tilia {
 			 *
 			 * @return m_depth_func - The depth function of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Depth_Func>() {
+			inline auto Get_Depth_Func() {
 				return m_depth_func;
 			}
 			
@@ -297,8 +255,7 @@ namespace tilia {
 			 * @param face - The face for the mask to affect.
 			 * @param stencil_mask - The mask to set this meshes mask to.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Stencil_Mask>() {
+			inline auto Set_Stencil_Mask() {
 				return [this](const enums::Face& face, const uint8_t& stencil_mask) 
 				{ 
 					if (face == enums::Face::Front)
@@ -309,15 +266,14 @@ namespace tilia {
 						return;
 					m_stencil_masks.first = stencil_mask;
 					m_stencil_masks.second = stencil_mask;
-				}
+				};
 			}
 			/**
 			 * @brief Gets the stencil mask of the mesh.
 			 * 
 			 * @return m_stencil_mask - The stencil mask of the mesh.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Stencil_Mask>() {
+			inline auto Get_Stencil_Mask() {
 				return m_stencil_masks;
 			}
 
@@ -329,9 +285,8 @@ namespace tilia {
 			 * @param compare_stencil_value - The comparison value to be used.
 			 * @param compare_stencil_mask - The comparison mask to be used.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Stencil_Func>() {
-				return [this](const enums::Face& face, const Test_Func& stencil_func, const uint8_t& compare_stencil_value, const uint8_t& compare_stencil_mask)
+			inline auto Set_Stencil_Func() {
+				return [this](const enums::Face& face, const enums::Test_Func& stencil_func, const uint8_t& compare_stencil_value, const uint8_t& compare_stencil_mask)
 				{ 
 					if (face == enums::Face::Front)
 					{
@@ -360,10 +315,9 @@ namespace tilia {
 			 * 
 			 * @return The stencil func variables.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Stencil_Func>() {
+			inline auto Get_Stencil_Func() {
 				struct Stencil_Test_Container {
-					std::pair<utils::Test_Func, utils::Test_Func> stencil_funcs{};
+					std::pair<enums::Test_Func, enums::Test_Func> stencil_funcs{};
 					std::pair<uint8_t, uint8_t> compare_values{};
 					std::pair<uint8_t, uint8_t> compare_masks{};
 				} container{ m_stencil_funcs, m_compare_s_values, m_compare_s_masks };
@@ -378,9 +332,8 @@ namespace tilia {
 			 * @param action_2 - The action to take if the stencil test passes but the depth test fails.
 			 * @param action_3 - The action to take if both the stencil- and depth test passes.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Stencil_Op>() {
-				return [this](const enums::Face& face, const Test_Action& action_1, const Test_Action& action_2, const Test_Action& action_3)
+			inline auto Set_Stencil_Op() {
+				return [this](const enums::Face& face, const enums::Test_Action& action_1, const enums::Test_Action& action_2, const enums::Test_Action& action_3)
 				{
 					if (face == enums::Face::Front)
 					{
@@ -409,12 +362,11 @@ namespace tilia {
 			 * 
 			 * @return The stencil actions.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Stencil_Op>() {
+			inline auto Get_Stencil_Op() {
 				struct Stencil_Actions_Container {
-					std::pair<utils::Test_Action, utils::Test_Action> stencil_fail{};
-					std::pair<utils::Test_Action, utils::Test_Action> depth_fail{};
-					std::pair<utils::Test_Action, utils::Test_Action> depth_pass{};
+					std::pair<enums::Test_Action, enums::Test_Action> stencil_fail{};
+					std::pair<enums::Test_Action, enums::Test_Action> depth_fail{};
+					std::pair<enums::Test_Action, enums::Test_Action> depth_pass{};
 				} container{ m_stencil_actions[0], m_stencil_actions[1], m_stencil_actions[2] };
 				return container;
 			}
@@ -426,21 +378,19 @@ namespace tilia {
 			 * @param start_offset - The offset to the start of the position in amount of floats.
 			 * @param end_offset - The offset to the end of the position in amount of floats.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Postion_Offsets>() {
+			inline auto Set_Postion_Offsets() {
 				return [this](const uint32_t& start_offset, const uint32_t& end_offset)
 				{
 					m_vertex_pos_start = start_offset;
 					m_vertex_pos_end = end_offset;
-				}
+				};
 			}
 			/**
 			 * @brief Gets the offsets to the start and the end of the position in the vertex data.
 			 * 
 			 * @return - The offsets to the start and end of the position.
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Postion_Offsets>() {
+			inline auto Get_Postion_Offsets() {
 				struct Offsets_Container {
 					uint32_t start_offset{};
 					uint32_t end_offset{};
@@ -455,20 +405,18 @@ namespace tilia {
 			 *
 			 * @param texture_offset - Set m_texture_index_offset to this.
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Texture_Offset>() {
+			inline auto Set_Texture_Offset() {
 				return [this](const uint32_t& texture_offset)
 				{
 					m_texture_index_offset = texture_offset;
-				}
+				};
 			}
 			/**
 			 * @brief Gets m_texture_index_offset
 			 *
 			 * @return m_texture_index_offset - The texture index offset of the mesh
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Texture_Offset>() {
+			inline auto Get_Texture_Offset() {
 				return m_texture_index_offset;
 			}
 
@@ -477,8 +425,7 @@ namespace tilia {
 			 *
 			 * @param vertex_info - The vertex layout which will be used to set m_vertex_info
 			 */
-			template<>
-			inline auto Set_Var<Mesh_Var::Vertex_Info>() {
+			inline auto Set_Vertex_Info() {
 				return [this](const Vertex_Info& vertex_info)
 				{
 					m_vertex_info = vertex_info;
@@ -489,8 +436,7 @@ namespace tilia {
 			 *
 			 * @return The vertex layout
 			 */
-			template<>
-			inline auto Get_Var<Mesh_Var::Vertex_Info>() {
+			inline auto Get_Vertex_Info() {
 				return m_vertex_info;
 			}
 

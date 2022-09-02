@@ -46,9 +46,8 @@ bool firstMouse = true;
 using namespace tilia;
 using namespace tilia::utils;
 using namespace tilia::render;
-using namespace tilia::enums;
 
-Polymode polymode{ Polymode::Fill };
+enums::Polymode polymode{ enums::Polymode::Fill };
 
 bool pause{ true };
 
@@ -119,7 +118,7 @@ int main()
             std::cout << "Failed to initialize GLAD" << std::endl;
             return -1;
         }
-
+        
         input.Init(window);
 
         glEnable(GL_BLEND);
@@ -153,10 +152,10 @@ int main()
         def.sides[5].file_path = "res/textures/container2.png";
 
         std::shared_ptr<Cube_Map> box_texture{ std::make_shared<Cube_Map>() };
-        box_texture->Set<Cube_Map_Var::Cube_Map_Data>()(def, true);
+        box_texture->Set_Cube_Map_Data()(def, true);
         
         std::shared_ptr<Cube_Map> box_specular_texture{ std::make_shared<Cube_Map>() };
-        box_specular_texture->Set<Cube_Map_Var::Paths>()({
+        box_specular_texture->Set_Paths()({
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
             "res/textures/container2_specular.png",
@@ -204,14 +203,14 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Var<Mesh_Var::Shader>()(light_shader);
+            new_mesh->Set_Shader()(light_shader);
 
             new_mesh->Add_Texture(box_texture);
             //new_mesh->Add_Texture(box_specular_texture);
 
-            new_mesh->Set_Var<Mesh_Var::Cull_Face>()(Face::Back);
+            new_mesh->Set_Cull_Face()(enums::Face::Back);
 
-            new_mesh->Set_Var<Mesh_Var::Primitive>()(Primitive::Triangles);
+            new_mesh->Set_Primitive()(enums::Primitive::Triangles);
 
             model = glm::translate(glm::mat4{ 1.0f }, cubePositions[i]);
 
@@ -228,11 +227,11 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Var<Mesh_Var::Shader>()(cube_shader);
+            new_mesh->Set_Shader()(cube_shader);
 
-            new_mesh->Set_Var<Mesh_Var::Cull_Face>()(Face::Back);
+            new_mesh->Set_Cull_Face()(enums::Face::Back);
 
-            new_mesh->Set_Var<Mesh_Var::Primitive>()(Primitive::Triangles);
+            new_mesh->Set_Primitive()(enums::Primitive::Triangles);
 
             model = glm::translate(glm::mat4{ 1.0f }, pointLightPositions[i]);
             model = glm::scale(model, { 0.2f, 0.2f, 0.2f });
@@ -260,7 +259,7 @@ int main()
             for (size_t i = 0; i < cube_count + light_count; i++)
             {
 
-                meshes[i]->Set_Var<Mesh_Var::Polymode>()(polymode);
+                meshes[i]->Set_Polymode()(polymode);
 
                 if (i < cube_count) {
 
@@ -369,10 +368,10 @@ void processInput()
 
     if (input.Get_Key_Pressed(KEY_ENTER))
     {
-        if (polymode == Polymode::Fill)
-            polymode = Polymode::Line;
-        else if (polymode == Polymode::Line)
-            polymode = Polymode::Fill;
+        if (polymode == enums::Polymode::Fill)
+            polymode = enums::Polymode::Line;
+        else if (polymode == enums::Polymode::Line)
+            polymode = enums::Polymode::Fill;
     }
 
     if (input.Get_Key_Pressed(KEY_BACKSPACE))
@@ -520,7 +519,7 @@ void create_square(Mesh<size>& mesh, glm::mat4 model)
     v_info.strides = { static_cast<int32_t>(size) };
     v_info.offsets = { 0, 3 };
 
-    mesh.Set_Var<Mesh_Var::Vertex_Info>()(v_info);
+    mesh.Set_Vertex_Info()(v_info);
 
 }
 
@@ -706,7 +705,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex)
         v_info.strides = { static_cast<int32_t>(size) };
         v_info.offsets = { 0, 3, 6 };
 
-        mesh.Set_Var<Mesh_Var::Vertex_Info>()(v_info);
+        mesh.Set_Vertex_Info()(v_info);
 
     }
     else
@@ -780,7 +779,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex)
         v_info.strides = { static_cast<int32_t>(size) };
         v_info.offsets = { 0 };
 
-        mesh.Set_Var<Mesh_Var::Vertex_Info>()(v_info);
+        mesh.Set_Vertex_Info()(v_info);
 
     }
 

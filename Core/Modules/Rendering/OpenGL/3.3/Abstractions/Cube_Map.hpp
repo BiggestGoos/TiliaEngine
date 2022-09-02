@@ -31,20 +31,7 @@
 namespace tilia {
 
     namespace render {
-
-        // Can be used to set and or get specific data from the Cube_Map class.
-        enum class Cube_Map_Var {
-            Cube_Map_Data,
-            Paths,
-            Path,
-            Data,
-            Format,
-            Data_Format,
-            Size,
-            Filter,
-            Wrapping,
-        };
-
+        
         /**
          * @brief A struct which holds information for the Cube_Map class.
          */
@@ -161,19 +148,12 @@ namespace tilia {
              */
             void Generate_Mipmaps() override;
 
-            template<Cube_Map_Var variable>
-            inline auto Set();
-
-            template<Cube_Map_Var variable>
-            inline auto Get();
-
             /**
              * @brief w
              * 
              * @return 
              */
-            template<>
-            inline auto Set<Cube_Map_Var::Cube_Map_Data>() {
+            inline auto Set_Cube_Map_Data() {
                 return [this](const Cube_Map_Data& cube_map_data, const bool& reload = false) 
                 { 
                     m_cube_map_data = cube_map_data; 
@@ -185,13 +165,11 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Cube_Map_Data>() {
+            inline auto Get_Cube_Map_Data() {
                 return m_cube_map_data;
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Paths>() {
+            inline auto Set_Paths() {
                 return [this](const std::array<std::string, *enums::Misc::Cube_Sides>& file_paths, const bool& reload = false)
                 {
                     for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
@@ -206,8 +184,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Paths>() {
+            inline auto Get_Paths() {
                 std::array<std::string, *enums::Misc::Cube_Sides> ret_file_paths{};
                 for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
                 {
@@ -216,8 +193,7 @@ namespace tilia {
                 return ret_file_paths;
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Path>() {
+            inline auto Set_Path() {
                 return [this](const std::size_t& index, const std::string& file_path, const bool& reload = false)
                 {
                     m_cube_map_data.sides[index].file_path = file_path;
@@ -231,16 +207,14 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Path>() {
+            inline auto Get_Path() {
                 return [this](const std::size_t& index)
                 {
                     return m_cube_map_data.sides[index].file_path;
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Data>() {
+            inline auto Set_Data() {
                 return [this](const std::size_t& index, uint8_t* data, const bool& release_ownership = false, 
                     const uint32_t& byte_count = 0)
                 {
@@ -254,8 +228,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Data>() {
+            inline auto Get_Data() {
                 return [this](const std::size_t& index, const bool& take_ownership = false)
                 {
                     if (take_ownership)
@@ -265,8 +238,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Format>() {
+            inline auto Set_Format() {
                 return [this](const std::size_t& index, const enums::Color_Format& color_format, const bool& reload = false)
                 {
                     m_cube_map_data.sides[index].color_format = color_format;
@@ -275,16 +247,14 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Format>() {
+            inline auto Get_Format() {
                 return [this](const std::size_t& index)
                 {
                     return m_cube_map_data.sides[index].color_format;
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Data_Format>() {
+            inline auto Set_Data_Format() {
                 return [this](const std::size_t& index, const enums::Data_Color_Format& data_color_format, const bool& reload = false)
                 {
                     m_cube_map_data.sides[index].data_color_format = data_color_format;
@@ -293,16 +263,14 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Data_Format>() {
+            inline auto Get_Data_Format() {
                 return [this](const std::size_t& index)
                 {
                     return m_cube_map_data.sides[index].data_color_format;
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Size>() {
+            inline auto Set_Size() {
                 return [this](const std::int32_t size, const bool& reload = false)
                 {
                     m_cube_map_data.size = size;
@@ -311,16 +279,14 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Size>() {
+            inline auto Get_Size() {
                 return [this]()
                 {
                     return m_cube_map_data.size;
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Filter>() {
+            inline auto Set_Filter() {
                 return [this](const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode, const bool& reload = false)
                 {
                     Set(filter_size, filter_mode);
@@ -329,8 +295,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Filter>() {
+            inline auto Get_Filter() {
                 return [this](const enums::Filter_Size& filter_size)
                 {
                     switch (filter_size)
@@ -343,8 +308,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Set<Cube_Map_Var::Wrapping>() {
+            inline auto Set_Wrapping() {
                 return [this](const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode, const bool& reload = false)
                 {
                     Set(wrap_side, wrap_mode);
@@ -353,8 +317,7 @@ namespace tilia {
                 };
             }
 
-            template<>
-            inline auto Get<Cube_Map_Var::Wrapping>() {
+            inline auto Get_Wrapping() {
                 return [this](const enums::Wrap_Sides& wrap_side)
                 {
                     switch (wrap_side)

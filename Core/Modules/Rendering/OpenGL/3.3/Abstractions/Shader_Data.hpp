@@ -10,6 +10,7 @@
  * 
  * Standard:
  * @include <unordered_map>
+ * @include <string>
  * 
  * @author Gustav Fagerlind
  * @date   05/07/2022
@@ -23,6 +24,7 @@
 
 // Standard
 #include <unordered_map>
+#include <string>
 
 namespace tilia {
 

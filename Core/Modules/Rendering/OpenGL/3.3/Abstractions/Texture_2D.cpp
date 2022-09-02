@@ -25,6 +25,7 @@
 
 // Standard
 #include <stdexcept>
+#include <cstring>
 
 // Headers
 #include "Core/Values/OpenGL/3.3/Utils.hpp"

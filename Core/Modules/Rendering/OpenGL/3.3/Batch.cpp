@@ -25,6 +25,7 @@
 // Standard
 #include <unordered_map>
 #include <map>
+#include <cstring>
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
@@ -376,7 +377,7 @@ void tilia::render::Batch::Map_Data() const
 	GL_CALL(void* vertex_buffer{ glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t vertex_byte_count{ m_vertex_count * sizeof(float) };
-	memcpy_s(vertex_buffer, vertex_byte_count, m_vertex_data.begin()._Ptr, vertex_byte_count);
+	memcpy_s(vertex_buffer, vertex_byte_count, m_vertex_data.begin().base(), vertex_byte_count);
 
 	GL_CALL(glUnmapBuffer(GL_ARRAY_BUFFER));
 
@@ -385,7 +386,7 @@ void tilia::render::Batch::Map_Data() const
 	GL_CALL(void* index_buffer{ glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t index_byte_count{ m_index_count * sizeof(uint32_t) };
-	memcpy_s(index_buffer, index_byte_count, m_index_data.begin()._Ptr, index_byte_count);
+	memcpy_s(index_buffer, index_byte_count, m_index_data.begin().base(), index_byte_count);
 
 	GL_CALL(glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER));
 
