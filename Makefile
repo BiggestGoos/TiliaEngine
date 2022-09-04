@@ -27,12 +27,12 @@ C_SRCS := \
 OBJS := $(CXX_SRCS:%.cpp=$(BUILD_DIR)%.o)
 OBJS += $(C_SRCS:%.c=$(BUILD_DIR)%.o)
 
-LIBS := -lglfw3 -lopengl32 -lgdi32
+LIBS := -lglfw3 -lopengl32 -lgdi32 -lpthread
 LIBS_DIR := -L.\vendor\glfw\lib
 
 CXX := g++
 EXE_FLAGS := $(OBJS) -o $(BUILD_DIR)$(EXECUTABLE).exe $(LIBS_DIR) $(LIBS)
-C_FLAGS := -O3 -g
+C_FLAGS := -O3 -g -static -static-libgcc -static-libstdc++
 CPP_FLAGS := -I.
 
 RM := del
