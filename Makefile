@@ -32,12 +32,20 @@ LIBS_DIR := -L.\vendor\glfw\lib
 
 CXX := g++
 EXE_FLAGS := $(OBJS) -o $(BUILD_DIR)$(EXECUTABLE).exe $(LIBS_DIR) $(LIBS)
-C_FLAGS := -O3 -g0
+C_FLAGS := -O3 -g
 CPP_FLAGS := -I.
 
 RM := del
 
+.PHONY: all force clean
+
 all: $(BUILD_DIR)$(EXECUTABLE).exe
+
+force: 
+	make -B
+
+run: $(BUILD_DIR)$(EXECUTABLE).exe
+	$(BUILD_DIR)$(EXECUTABLE).exe
 
 $(BUILD_DIR)$(EXECUTABLE).exe: $(OBJS)
 	$(CXX) $(C_FLAGS) $(CPP_FLAGS) $(EXE_FLAGS)

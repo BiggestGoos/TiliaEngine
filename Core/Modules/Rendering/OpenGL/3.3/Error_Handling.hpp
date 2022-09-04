@@ -12,7 +12,7 @@
 #ifndef TILIA_ERROR_HANDLING_H
 #define TILIA_ERROR_HANDLING_H
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(_DEBUG)
 #include <cstdlib>
 /**
  * @brief Calls std::exit() with code 1 if given expression is false

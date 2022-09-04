@@ -1,3 +1,4 @@
+
 #include "vendor/glad/include/glad/glad.h"
 #include "vendor/glfw/include/GLFW/glfw3.h"
 
@@ -7,7 +8,6 @@
 #include "vendor/glm/include/glm/gtx/string_cast.hpp"
 
 #include "vendor/stb_image/include/stb_image/stb_image.h"
-
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -105,7 +105,7 @@ int main()
         }
         glfwMakeContextCurrent(window);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+        
         // tell GLFW to capture our mouse
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -132,14 +132,15 @@ int main()
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_STENCIL_TEST);
 
-        camera.Reset();
-
         Renderer renderer{};
 
+        camera.Reset();
+
         std::shared_ptr<Shader> light_shader{ std::make_shared<Shader>() };
+        std::shared_ptr<Shader> cube_shader{ std::make_shared<Shader>() };
+
         light_shader->Init("res/shaders/light_shader.vert", "res/shaders/light_shader.frag");
 
-        std::shared_ptr<Shader> cube_shader{ std::make_shared<Shader>() };
         cube_shader->Init("res/shaders/cube_shader.vert", "res/shaders/cube_shader.frag");
 
         Cube_Map_Data def{};
@@ -211,7 +212,7 @@ int main()
             new_mesh->Set_Cull_Face()(enums::Face::Back);
 
             new_mesh->Set_Primitive()(enums::Primitive::Triangles);
-
+            
             model = glm::translate(glm::mat4{ 1.0f }, cubePositions[i]);
 
             create_cube(*new_mesh, model, true);
@@ -353,10 +354,8 @@ int main()
 
     glfwTerminate();
 
-    while (true)
-    {
-
-    }
+    // int w{};
+    // std::cin >> w;
 
     return 0;
 }
@@ -444,6 +443,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
     SCR_WIDTH = width;
     SCR_HEIGHT = height;
+
 }
 
 template<size_t size>
