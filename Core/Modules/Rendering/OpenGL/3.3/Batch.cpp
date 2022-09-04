@@ -377,7 +377,7 @@ void tilia::render::Batch::Map_Data() const
 	GL_CALL(void* vertex_buffer{ glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t vertex_byte_count{ m_vertex_count * sizeof(float) };
-	memcpy_s(vertex_buffer, vertex_byte_count, m_vertex_data.begin().base(), vertex_byte_count);
+	std::copy(m_vertex_data.begin(), m_vertex_data.end(), static_cast<float*>(vertex_buffer));
 
 	GL_CALL(glUnmapBuffer(GL_ARRAY_BUFFER));
 
@@ -386,7 +386,7 @@ void tilia::render::Batch::Map_Data() const
 	GL_CALL(void* index_buffer{ glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t index_byte_count{ m_index_count * sizeof(uint32_t) };
-	memcpy_s(index_buffer, index_byte_count, m_index_data.begin().base(), index_byte_count);
+	std::copy(m_index_data.begin(), m_index_data.end(), static_cast<uint32_t*>(index_buffer));
 
 	GL_CALL(glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER));
 
