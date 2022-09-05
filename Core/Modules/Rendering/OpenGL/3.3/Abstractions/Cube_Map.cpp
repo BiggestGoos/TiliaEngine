@@ -1,18 +1,18 @@
 // Vendor
-#include "vendor/glad/include/glad/glad.h"
 #include "vendor/stb_image/include/stb_image/stb_image.h"
+#include "vendor/glad/include/glad/glad.h"
 
 // Standard
 #include <stdexcept>
 #include <cmath>
 
 // Headers
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Console/Logging.hpp"
 #include "Core/Modules/File_System/Windows/File_System.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Modules/Console/Logging.hpp"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
@@ -85,7 +85,6 @@ tilia::render::Cube_Map_Data::Cube_Map_Data(const Cube_Map_Data& other) noexcept
         return;
 
     *this = other;
-
 }
 
 tilia::render::Cube_Map_Data::Cube_Map_Data(Cube_Map_Data&& other) noexcept
@@ -95,12 +94,12 @@ tilia::render::Cube_Map_Data::Cube_Map_Data(Cube_Map_Data&& other) noexcept
         return;
 
     *this = std::move(other);
-
 }
 
 void tilia::render::Cube_Map_Data::Reload(const std::size_t& index)
 {
 
+    // Loads in the data from the stored path with the given index
     if (this->sides[index].file_path != "") {
         int32_t temp{};
         int32_t format{};
@@ -126,6 +125,7 @@ void tilia::render::Cube_Map_Data::Reload(const std::size_t& index)
 void tilia::render::Cube_Map_Data::Reload()
 {
 
+    // Loads in the data from the stored paths
     for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
     {
 
@@ -172,19 +172,23 @@ tilia::render::Cube_Map::Cube_Map()
 
     m_texture_type = enums::Texture_Type::Cube_Map;
 
-    try
-    {
-        Generate_Texture();
-    }
-    catch (utils::Tilia_Exception& e)
-    {
+    Generate_Texture();
 
-        e.Add_Message("Cube map { ID: %v } failed to be generated"
-        )(m_ID);
+}
 
-        throw e;
+tilia::render::Cube_Map::Cube_Map(const Cube_Map_Data& cube_map_data) noexcept
+    : Cube_Map()
+{
 
-    }
+    m_cube_map_data = cube_map_data;
+
+}
+
+tilia::render::Cube_Map::Cube_Map(Cube_Map_Data&& cube_map_data) noexcept
+    : Cube_Map()
+{
+
+    m_cube_map_data = std::move(cube_map_data);
 
 }
 

@@ -32,6 +32,8 @@ namespace tilia {
 
     namespace render {
         
+        class Cube_Map;
+
         /**
          * @brief A struct which holds information for the Cube_Map class.
          */
@@ -140,7 +142,21 @@ namespace tilia {
              */
             Cube_Map();
 
-            //~Cube_Map();
+            /**
+             * @brief Copy-constructor which calls the default constructor and then copies the
+             *        data of the given cube map data.
+             * 
+             * @param cube_map_data - The cube map data which will be copied.
+             */
+            Cube_Map(const Cube_Map_Data& cube_map_data) noexcept;
+
+            /**
+             * @brief Move-constructor which calls the default constructor and then moves the
+             *        data of the given cube map data.
+             *
+             * @param cube_map_data - The cube map data which will be moved from.
+             */
+            Cube_Map(Cube_Map_Data&& cube_map_data) noexcept;
 
             inline operator Cube_Map_Data&()             { return m_cube_map_data; }
             inline operator const Cube_Map_Data&() const { return m_cube_map_data; }
@@ -153,6 +169,14 @@ namespace tilia {
              * @exception Data is faulty or incorrect.
              */
             void Reload();
+
+            /**
+             * @brief Reloads the texture data of the cube map data to the loaded textures from the
+             *        contained paths.
+             */
+            inline void Reload_Cube_Map_Data() {
+                m_cube_map_data.Reload();
+            }
 
             /**
              * @brief Generates all mipmap levels for the cube map.
@@ -169,7 +193,7 @@ namespace tilia {
              *        load the texture data from the paths.
              * 
              * @param cube_map_data - The data for which to copy.
-             * @param reload - Wheter or not to reload the texture data from the paths.
+             * @param reload - Wheter or not to reload the texture data.
              */
             inline void Set_Cube_Map_Data(const Cube_Map_Data& cube_map_data, const bool& reload = false) {
                 m_cube_map_data = cube_map_data;
@@ -181,7 +205,7 @@ namespace tilia {
              *        load the texture data from the paths.
              *
              * @param cube_map_data - The data for which to move from.
-             * @param reload - Wheter or not to reload the texture data from the paths.
+             * @param reload - Wheter or not to reload the texture data.
              */
             inline void Set_Cube_Map_Data(Cube_Map_Data&& cube_map_data, const bool& reload = false) {
                 m_cube_map_data = std::move(cube_map_data);
@@ -189,10 +213,21 @@ namespace tilia {
                     m_cube_map_data.Reload();
             }
 
+            /**
+             * @brief Gets the cube map data.
+             * 
+             * @return The cube map data of the cube map.
+             */
             inline auto Get_Cube_Map_Data() const {
                 return m_cube_map_data;
             }
 
+            /**
+             * @brief Sets the paths of the sides of the cube map to the given sides.
+             * 
+             * @param file_paths - The paths to be set to.
+             * @param reload - Wheter or not to reload the texture data.
+             */
             inline void Set_Paths(const std::array<std::string, *enums::Misc::Cube_Sides>& file_paths, const bool& reload = false) {
                 for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
                 {
@@ -201,6 +236,12 @@ namespace tilia {
                 if (reload)
                     m_cube_map_data.Reload();
             }
+            /**
+             * @brief Sets the paths of the sides of the cube map to the given sides.
+             *
+             * @param file_paths - The paths to be set to.
+             * @param reload - Wheter or not to reload the texture data.
+             */
             inline void Set_Paths(std::array<std::string, *enums::Misc::Cube_Sides>&& file_paths, const bool& reload = false) {
                 for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
                 {
@@ -210,6 +251,11 @@ namespace tilia {
                     m_cube_map_data.Reload();
             }
 
+            /**
+             * @brief Gets the paths of the cube map.
+             * 
+             * @return The paths.
+             */
             inline auto Get_Paths() const {
                 std::array<std::string, *enums::Misc::Cube_Sides> ret_file_paths{};
                 for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
@@ -219,32 +265,72 @@ namespace tilia {
                 return ret_file_paths;
             }
 
+            /**
+             * @brief Sets the path of the given index to the given path.
+             * 
+             * @param index - The path of the path to set.
+             * @param file_path - The path to be set to.
+             * @param reload - Wheter or not to reload the texture data.
+             */
             inline void Set_Path(const std::size_t& index, const std::string& file_path, const bool& reload = false) {
                 m_cube_map_data.sides[index].file_path = file_path;
                 if (reload)
-                {
                     m_cube_map_data.Reload(index);
-                }
             }
-
+            /**
+             * @brief Sets the path of the given index to the given path.
+             *
+             * @param index - The path of the path to set.
+             * @param file_path - The path to be set to.
+             * @param reload - Wheter or not to reload the texture data.
+             */
             inline void Set_Path(const std::size_t& index, std::string&& file_path, const bool& reload = false) {
                 m_cube_map_data.sides[index].file_path = std::move(file_path);
                 if (reload)
                     m_cube_map_data.Reload(index);
             }
 
+            /**
+             * @brief Gets the path of the given index.
+             * 
+             * @param index - The index of the path to get.
+             * 
+             * @return The path of the given index.
+             */
             inline auto Get_Path(const std::size_t& index) const {
                 return m_cube_map_data.sides[index].file_path;
             }
 
+            /**
+             * @brief Copies the texture data for the side of the given index from the given data.
+             * 
+             * @param index - The index of the side of which data to set.
+             * @param data - The data for which to copy from.
+             * @param byte_count - The amount of bytes the data is made up of. If zero then will
+             *                     use the square of the already stored size.
+             */
             inline void Set_Data(const std::size_t& index, uint8_t*& data, const uint32_t& byte_count = 0) {
                 m_cube_map_data.Copy_Data(index, data, byte_count);
             }
-
+            /**
+             * @brief Moves the texture data for the side of the given index from the given data.
+             *
+             * @param index - The index of the side of which data to set.
+             * @param data - The data for which to move from.
+             */
             inline void Set_Data(const std::size_t& index, uint8_t*&& data) {
                 m_cube_map_data.sides[index].texture_data.reset(data);
             }
 
+            /**
+             * @brief Gets the data from the given index. If specified then the ownership of the
+             *        data will be released.
+             * 
+             * @param index - The index of the side of which data to get.
+             * @param take_ownership - Wheter or not to release the ownership of the data.
+             * 
+             * @return The texture data of the index.
+             */
             inline auto Get_Data(const std::size_t& index, const bool& take_ownership = false) {
                 if (take_ownership)
                     return m_cube_map_data.sides[index].texture_data.release();
@@ -252,26 +338,62 @@ namespace tilia {
                     return m_cube_map_data.sides[index].texture_data.get();
             }
 
+            /**
+             * @brief Sets the color format of the given index.
+             * 
+             * @param index - The index of the color format to set.
+             * @param color_format - The color format of which to be set to.
+             */
             inline void Set_Format(const std::size_t& index, const enums::Color_Format& color_format) {
                 m_cube_map_data.sides[index].color_format = color_format;
             }
 
+            /**
+             * @brief Gets the color format of the given index.
+             * 
+             * @param index - The index of the color format to get.
+             * 
+             * @return The color format of the index.
+             */
             inline auto Get_Format(const std::size_t& index) const {
                 return m_cube_map_data.sides[index].color_format;
             }
 
+            /**
+             * @brief Sets the color format of the data of the given index.
+             * 
+             * @param index - The index of the color format of the data to set.
+             * @param data_color_format - The color format to set the color format of the data to.
+             */
             inline void Set_Data_Format(const std::size_t& index, const enums::Data_Color_Format& data_color_format) {
                 m_cube_map_data.sides[index].data_color_format = data_color_format;
             }
 
+            /**
+             * @brief Gets the color format of the data of the given index.
+             * 
+             * @param index - The index of the color format of the data to get.
+             * 
+             * @return The color format of the data of the given index.
+             */
             inline auto Get_Data_Format(const std::size_t& index) const {
                 return m_cube_map_data.sides[index].data_color_format;
             }
 
+            /**
+             * @brief Sets the size of the cube map sides to the given size.
+             * 
+             * @param size - The size to set the size of the cube map sides to.
+             */
             inline void Set_Size(const std::int32_t size) {
                 m_cube_map_data.size = size;
             }
 
+            /**
+             * @brief Gets the size of the sides of the cube map.
+             * 
+             * @return The size of the sides of the cube map.
+             */
             inline auto Get_Size() const {
                 return m_cube_map_data.size;
             }
@@ -284,6 +406,13 @@ namespace tilia {
              */
             void Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
 
+            /**
+             * @brief Gets the filter mode of the given filter size.
+             * 
+             * @param filter_size - The filter size of the filter mode to get.
+             * 
+             * @return The filter mode of the given filter size.
+             */
             inline auto Get_Filter(const enums::Filter_Size& filter_size) const {
                 switch (filter_size)
                 {
@@ -302,6 +431,13 @@ namespace tilia {
              */
             void Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
 
+            /**
+             * @brief Gets the wrapping mode of the given wrapping side.
+             * 
+             * @param wrap_side - The wrapping side of the wrapping mode to get.
+             * 
+             * @return The wrapping mode of the given wrapping side.
+             */
             inline auto Get_Wrapping(const enums::Wrap_Sides& wrap_side) const {
                 switch (wrap_side)
                 {

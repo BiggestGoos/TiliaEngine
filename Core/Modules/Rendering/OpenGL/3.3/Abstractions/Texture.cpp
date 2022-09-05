@@ -74,7 +74,7 @@ std::string tilia::render::Texture::Get_Type_String() const
  */
 void tilia::render::Texture::Generate_Texture()
 {
-	GL_CALL(glGenTextures(1, &m_ID));
+	GL_ASSERT(glGenTextures(1, &m_ID));
 	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly created", m_ID);
 }
 
