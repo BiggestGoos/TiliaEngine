@@ -17,7 +17,7 @@
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
-const tilia::render::Cube_Map_Data& tilia::render::Cube_Map_Data::operator=(const Cube_Map_Data& other)
+const tilia::render::Cube_Map_Data& tilia::render::Cube_Map_Data::operator=(const Cube_Map_Data& other) noexcept
 {
     // Self check
     if (&other == this)
@@ -48,13 +48,53 @@ const tilia::render::Cube_Map_Data& tilia::render::Cube_Map_Data::operator=(cons
     return *this;
 }
 
-tilia::render::Cube_Map_Data::Cube_Map_Data(const Cube_Map_Data& other)
+const tilia::render::Cube_Map_Data& tilia::render::Cube_Map_Data::operator=(Cube_Map_Data&& other) noexcept
+{
+    // Self check
+    if (&other == this)
+        return *this;
+
+    // Moves the data for each side.
+    constexpr std::size_t side_count{ *enums::Misc::Cube_Sides };
+    for (std::size_t i = 0; i < side_count; i++)
+    {
+        this->sides[i].file_path = std::move(other.sides[i].file_path);
+        // If there is any, moves the data of that side
+        if (other.sides[i].texture_data) {
+            this->sides[i].texture_data.reset(other.sides[i].texture_data.get());
+            other.sides[i].texture_data.reset();
+        }
+        this->sides[i].color_format = other.sides[i].color_format;
+        this->sides[i].data_color_format = other.sides[i].data_color_format;
+    }
+
+    this->size = other.size;
+    this->filter_min = other.filter_min;
+    this->filter_mag = other.filter_mag;
+    this->wrap_s = other.wrap_s;
+    this->wrap_t = other.wrap_t;
+    this->wrap_r = other.wrap_r;
+
+    return *this;
+}
+
+tilia::render::Cube_Map_Data::Cube_Map_Data(const Cube_Map_Data& other) noexcept
 {
     // Self check
     if (&other == this)
         return;
 
     *this = other;
+
+}
+
+tilia::render::Cube_Map_Data::Cube_Map_Data(Cube_Map_Data&& other) noexcept
+{
+    // Self check
+    if (&other == this)
+        return;
+
+    *this = std::move(other);
 
 }
 
@@ -278,7 +318,7 @@ void tilia::render::Cube_Map::Generate_Mipmaps()
         e.Add_Message("Cube map { ID: %v } failed to generate mipmaps");
 
         Rebind();
-
+        
         throw e;
     }
     Rebind();
@@ -287,7 +327,7 @@ void tilia::render::Cube_Map::Generate_Mipmaps()
 /**
  * Sets the filtering mode for the given size
  */
-void tilia::render::Cube_Map::Set(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
+void tilia::render::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
 {
     Unbind(true);
     try
@@ -324,7 +364,7 @@ void tilia::render::Cube_Map::Set(const enums::Filter_Size& filter_size, const e
 /**
  * Sets the wrapping mode for the given side
  */
-void tilia::render::Cube_Map::Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
+void tilia::render::Cube_Map::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
 {
     Unbind(true);
     try

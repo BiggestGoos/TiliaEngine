@@ -145,17 +145,13 @@ namespace tilia {
 			 */
 			inline const int32_t& Get_Height() const { return m_texture_def.height; }
 
-		private:
-
-			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
-			
 			/**
 			 * @brief Sets the filtering mode for the given filtering size
 			 *
 			 * @param filter_size - The size of filtering for which to set the mode of
 			 * @param filter_mode - The mode of filtreing for which to use for the size
 			 */
-			void Set(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
+			void Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
 
 			/**
 			 * @brief Set wrapping for the given side
@@ -163,8 +159,12 @@ namespace tilia {
 			 * @param wrap_side - The side of which to set wrapping for
 			 * @param wrap_mode - The wrapping mode to set for the given side
 			 */
-			void Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
+			void Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
 
+		private:
+
+			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
+			
 			/**
 			 * @brief Prints information about the shader indented. Prints the dimensions, color format,
 			 * filtering modes and wrapping modes.

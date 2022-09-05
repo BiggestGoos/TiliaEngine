@@ -314,7 +314,7 @@ void tilia::render::Texture_2D::Generate_Mipmaps()
 /**
  * Sets the filtering mode for the given size
  */
-void tilia::render::Texture_2D::Set(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
+void tilia::render::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
 {
 	switch (filter_size)
 	{
@@ -333,7 +333,7 @@ void tilia::render::Texture_2D::Set(const enums::Filter_Size& filter_size, const
 /**
  * Sets the wrapping mode for the given side
  */
-void tilia::render::Texture_2D::Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
+void tilia::render::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
 {
 	switch (wrap_side)
 	{

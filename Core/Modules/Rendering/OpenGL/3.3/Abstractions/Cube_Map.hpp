@@ -73,7 +73,15 @@ namespace tilia {
              * 
              * @param other - The Cube_Map_Data for which to copy from.
              */
-            const Cube_Map_Data& operator=(const Cube_Map_Data& other);
+            const Cube_Map_Data& operator=(const Cube_Map_Data& other) noexcept;
+
+            /**
+             * @brief Move-assignment. Copies everything except for the data of all the
+             *        sides. It will instead be reset to the pointer of the other data.
+             *
+             * @param other - The Cube_Map_Data for which to move from.
+             */
+            const Cube_Map_Data& operator=(Cube_Map_Data&& other) noexcept;
 
             Cube_Map_Data() = default;
 
@@ -82,17 +90,25 @@ namespace tilia {
              * 
              * @param other - The Cube_Map_Data for which to copy from.
              */
-            Cube_Map_Data(const Cube_Map_Data& other);
+            Cube_Map_Data(const Cube_Map_Data& other) noexcept;
 
             /**
-             * @brief Reloads the texture data of the side with the given index.
+             * @brief Simple move-constructor which calls move-assignment.
+             *
+             * @param other - The Cube_Map_Data for which to move from.
+             */
+            Cube_Map_Data(Cube_Map_Data&& other) noexcept;
+
+            /**
+             * @brief Reloads the texture data of the side with the given index with the path of
+             *        the index.
              * 
              * @param index - The index of the side to reload the data of.
              */
             void Reload(const std::size_t& index);
 
             /**
-             * @brief Reloads the texture data of all of the sides.
+             * @brief Reloads the texture data of all of the sides with the paths of all the sides.
              */
             void Reload();
 
@@ -149,42 +165,52 @@ namespace tilia {
             void Generate_Mipmaps() override;
 
             /**
-             * @brief w
+             * @brief Copies all of the data from the given cube map data. If told so will also
+             *        load the texture data from the paths.
              * 
-             * @return 
+             * @param cube_map_data - The data for which to copy.
+             * @param reload - Wheter or not to reload the texture data from the paths.
              */
-            inline auto Set_Cube_Map_Data() {
-                return [this](const Cube_Map_Data& cube_map_data, const bool& reload = false) 
-                { 
-                    m_cube_map_data = cube_map_data; 
-                    if (reload)
-                    {
-                        m_cube_map_data.Reload();
-                        Reload();
-                    }
-                };
+            inline void Set_Cube_Map_Data(const Cube_Map_Data& cube_map_data, const bool& reload = false) {
+                m_cube_map_data = cube_map_data;
+                if (reload)
+                    m_cube_map_data.Reload();
+            }
+            /**
+             * @brief Moves all of the data from the given cube map data. If told so will also
+             *        load the texture data from the paths.
+             *
+             * @param cube_map_data - The data for which to move from.
+             * @param reload - Wheter or not to reload the texture data from the paths.
+             */
+            inline void Set_Cube_Map_Data(Cube_Map_Data&& cube_map_data, const bool& reload = false) {
+                m_cube_map_data = std::move(cube_map_data);
+                if (reload)
+                    m_cube_map_data.Reload();
             }
 
-            inline auto Get_Cube_Map_Data() {
+            inline auto Get_Cube_Map_Data() const {
                 return m_cube_map_data;
             }
 
-            inline auto Set_Paths() {
-                return [this](const std::array<std::string, *enums::Misc::Cube_Sides>& file_paths, const bool& reload = false)
+            inline void Set_Paths(const std::array<std::string, *enums::Misc::Cube_Sides>& file_paths, const bool& reload = false) {
+                for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
                 {
-                    for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
-                    {
-                        m_cube_map_data.sides[i].file_path = file_paths[i];
-                    }
-                    if (reload)
-                    {
-                        m_cube_map_data.Reload();
-                        Reload();
-                    }
-                };
+                    m_cube_map_data.sides[i].file_path = file_paths[i];
+                }
+                if (reload)
+                    m_cube_map_data.Reload();
+            }
+            inline void Set_Paths(std::array<std::string, *enums::Misc::Cube_Sides>&& file_paths, const bool& reload = false) {
+                for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
+                {
+                    m_cube_map_data.sides[i].file_path = std::move(file_paths[i]);
+                }
+                if (reload)
+                    m_cube_map_data.Reload();
             }
 
-            inline auto Get_Paths() {
+            inline auto Get_Paths() const {
                 std::array<std::string, *enums::Misc::Cube_Sides> ret_file_paths{};
                 for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
                 {
@@ -193,149 +219,62 @@ namespace tilia {
                 return ret_file_paths;
             }
 
-            inline auto Set_Path() {
-                return [this](const std::size_t& index, const std::string& file_path, const bool& reload = false)
+            inline void Set_Path(const std::size_t& index, const std::string& file_path, const bool& reload = false) {
+                m_cube_map_data.sides[index].file_path = file_path;
+                if (reload)
                 {
-                    m_cube_map_data.sides[index].file_path = file_path;
-                    if (reload)
-                    {
-                        m_cube_map_data.Reload(index);
-                    }
-                    return [this]() {
-                        Reload();
-                    };
-                };
+                    m_cube_map_data.Reload(index);
+                }
             }
 
-            inline auto Get_Path() {
-                return [this](const std::size_t& index)
-                {
-                    return m_cube_map_data.sides[index].file_path;
-                };
+            inline void Set_Path(const std::size_t& index, std::string&& file_path, const bool& reload = false) {
+                m_cube_map_data.sides[index].file_path = std::move(file_path);
+                if (reload)
+                    m_cube_map_data.Reload(index);
             }
 
-            inline auto Set_Data() {
-                return [this](const std::size_t& index, uint8_t* data, const bool& release_ownership = false, 
-                    const uint32_t& byte_count = 0)
-                {
-                    if (release_ownership)
-                        m_cube_map_data.sides[index].texture_data.reset(data);
-                    else
-                        m_cube_map_data.Copy_Data(index, data, byte_count);
-                    return [this]() {
-                        Reload();
-                    };
-                };
+            inline auto Get_Path(const std::size_t& index) const {
+                return m_cube_map_data.sides[index].file_path;
             }
 
-            inline auto Get_Data() {
-                return [this](const std::size_t& index, const bool& take_ownership = false)
-                {
-                    if (take_ownership)
-                        return m_cube_map_data.sides[index].texture_data.release();
-                    else
-                        return m_cube_map_data.sides[index].texture_data.get();
-                };
+            inline void Set_Data(const std::size_t& index, uint8_t*& data, const uint32_t& byte_count = 0) {
+                m_cube_map_data.Copy_Data(index, data, byte_count);
             }
 
-            inline auto Set_Format() {
-                return [this](const std::size_t& index, const enums::Color_Format& color_format, const bool& reload = false)
-                {
-                    m_cube_map_data.sides[index].color_format = color_format;
-                    if (reload)
-                        Reload();
-                };
+            inline void Set_Data(const std::size_t& index, uint8_t*&& data) {
+                m_cube_map_data.sides[index].texture_data.reset(data);
             }
 
-            inline auto Get_Format() {
-                return [this](const std::size_t& index)
-                {
-                    return m_cube_map_data.sides[index].color_format;
-                };
+            inline auto Get_Data(const std::size_t& index, const bool& take_ownership = false) {
+                if (take_ownership)
+                    return m_cube_map_data.sides[index].texture_data.release();
+                else
+                    return m_cube_map_data.sides[index].texture_data.get();
             }
 
-            inline auto Set_Data_Format() {
-                return [this](const std::size_t& index, const enums::Data_Color_Format& data_color_format, const bool& reload = false)
-                {
-                    m_cube_map_data.sides[index].data_color_format = data_color_format;
-                    if (reload)
-                        Reload();
-                };
+            inline void Set_Format(const std::size_t& index, const enums::Color_Format& color_format) {
+                m_cube_map_data.sides[index].color_format = color_format;
             }
 
-            inline auto Get_Data_Format() {
-                return [this](const std::size_t& index)
-                {
-                    return m_cube_map_data.sides[index].data_color_format;
-                };
+            inline auto Get_Format(const std::size_t& index) const {
+                return m_cube_map_data.sides[index].color_format;
             }
 
-            inline auto Set_Size() {
-                return [this](const std::int32_t size, const bool& reload = false)
-                {
-                    m_cube_map_data.size = size;
-                    if (reload)
-                        Reload();
-                };
+            inline void Set_Data_Format(const std::size_t& index, const enums::Data_Color_Format& data_color_format) {
+                m_cube_map_data.sides[index].data_color_format = data_color_format;
             }
 
-            inline auto Get_Size() {
-                return [this]()
-                {
-                    return m_cube_map_data.size;
-                };
+            inline auto Get_Data_Format(const std::size_t& index) const {
+                return m_cube_map_data.sides[index].data_color_format;
             }
 
-            inline auto Set_Filter() {
-                return [this](const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode, const bool& reload = false)
-                {
-                    Set(filter_size, filter_mode);
-                    if (reload)
-                        Reload();
-                };
+            inline void Set_Size(const std::int32_t size) {
+                m_cube_map_data.size = size;
             }
 
-            inline auto Get_Filter() {
-                return [this](const enums::Filter_Size& filter_size)
-                {
-                    switch (filter_size)
-                    {
-                    case enums::Filter_Size::Magnify:
-                        return m_cube_map_data.filter_mag;
-                    case enums::Filter_Size::Minify:
-                        return m_cube_map_data.filter_min;
-                    }
-                };
+            inline auto Get_Size() const {
+                return m_cube_map_data.size;
             }
-
-            inline auto Set_Wrapping() {
-                return [this](const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode, const bool& reload = false)
-                {
-                    Set(wrap_side, wrap_mode);
-                    if (reload)
-                        Reload();
-                };
-            }
-
-            inline auto Get_Wrapping() {
-                return [this](const enums::Wrap_Sides& wrap_side)
-                {
-                    switch (wrap_side)
-                    {
-                    case enums::Wrap_Sides::S:
-                        return m_cube_map_data.wrap_s;
-                    case enums::Wrap_Sides::T:
-                        return m_cube_map_data.wrap_t;
-                    case enums::Wrap_Sides::R:
-                        return m_cube_map_data.wrap_r;
-                    }
-                };
-            }
-
-        private:
-
-            // The info pertaining to this Texture
-            Cube_Map_Data m_cube_map_data;
 
             /**
              * @brief Sets the filtering mode for the given filtering size.
@@ -343,7 +282,17 @@ namespace tilia {
              * @param filter_size - The size of filtering for which to set the mode of.
              * @param filter_mode - The mode of filtreing for which to use for the size.
              */
-            void Set(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
+            void Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
+
+            inline auto Get_Filter(const enums::Filter_Size& filter_size) const {
+                switch (filter_size)
+                {
+                case enums::Filter_Size::Magnify:
+                    return m_cube_map_data.filter_mag;
+                case enums::Filter_Size::Minify:
+                    return m_cube_map_data.filter_min;
+                }
+            }
 
             /**
              * @brief Set wrapping for the given side.
@@ -351,8 +300,24 @@ namespace tilia {
              * @param wrap_side - The side of which to set wrapping for.
              * @param wrap_mode - The wrapping mode to set for the given side.
              */
-            void Set(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
+            void Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
 
+            inline auto Get_Wrapping(const enums::Wrap_Sides& wrap_side) const {
+                switch (wrap_side)
+                {
+                case enums::Wrap_Sides::S:
+                    return m_cube_map_data.wrap_s;
+                case enums::Wrap_Sides::T:
+                    return m_cube_map_data.wrap_t;
+                case enums::Wrap_Sides::R:
+                    return m_cube_map_data.wrap_r;
+                }
+            }
+
+        private:
+
+            // The info pertaining to this Texture
+            Cube_Map_Data m_cube_map_data;
 
         }; // Cube_Map
 
