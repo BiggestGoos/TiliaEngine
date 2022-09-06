@@ -30,7 +30,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		class Renderer {
 		public:

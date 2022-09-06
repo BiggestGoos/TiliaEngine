@@ -38,7 +38,7 @@
 /**
  * Sets the batch to be compatible with the given mesh_data. Also calls Set_Vertex_Attribs, generates some buffers, and allocates memory for them.
  */
-tilia::render::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
+tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	: // Sets batch to be compatible
 	m_textures{  },
 	m_shader		  { *mesh_data.lock()->shader },
@@ -82,7 +82,7 @@ tilia::render::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 /**
  * Deletes openGL buffers
  */
-tilia::render::Batch::~Batch()
+tilia::gfx::Batch::~Batch()
 {
 
 	GL_CALL(glDeleteVertexArrays(1, &m_vao));
@@ -94,7 +94,7 @@ tilia::render::Batch::~Batch()
 /**
  * Makes the batch compatible with mesh_data, clears some data, and then calls Set_Vertex_Attribs
  */
-void tilia::render::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
+void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 {
 	// Sets batch to be compatible
 	m_shader		   = *mesh_data.lock()->shader;
@@ -124,7 +124,7 @@ void tilia::render::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 
 }
 
-void tilia::render::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::render::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets) {
+void tilia::gfx::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets) {
 
 	const size_t vertex_count{ mesh_data.lock()->vertex_data->size() };
 	const size_t index_count{ mesh_data.lock()->indices->size() };
@@ -155,7 +155,7 @@ void tilia::render::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::render:
  * First checks mesh_data for compatibility. Adds the textures, buffers the vertex- and 
  * index-data and then adds the mesh-, vertex-, and index-count.
  */
-bool tilia::render::Batch::Push_Mesh(std::weak_ptr<Mesh_Data> mesh_data, float distance)
+bool tilia::gfx::Batch::Push_Mesh(std::weak_ptr<Mesh_Data> mesh_data, float distance)
 {
 	// Checks mesh_data for compatibility
 	if (!Check_Mesh(mesh_data))
@@ -231,7 +231,7 @@ bool tilia::render::Batch::Push_Mesh(std::weak_ptr<Mesh_Data> mesh_data, float d
 /**
  * Sets the vertex-, index-, and texture-count to 0.
  */
-void tilia::render::Batch::Clear()
+void tilia::gfx::Batch::Clear()
 {
 
 	m_vertex_data.resize(0);
@@ -250,7 +250,7 @@ void tilia::render::Batch::Clear()
  * vertex buffer and element buffer, then binds the shader, sets the 
  * polygonmode and then at last draws everything.
  */
-void tilia::render::Batch::Render()
+void tilia::gfx::Batch::Render()
 {
 
 	//if (m_transparent)
@@ -367,7 +367,7 @@ void tilia::render::Batch::Render()
 
 }
 
-void tilia::render::Batch::Map_Data() const
+void tilia::gfx::Batch::Map_Data() const
 {
 
 	GL_CALL(glBindVertexArray(m_vao));
@@ -392,7 +392,7 @@ void tilia::render::Batch::Map_Data() const
 
 }
 
-void tilia::render::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data, std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end)
+void tilia::gfx::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data, std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end)
 {
 
 	const size_t seq_length{ 6 };
@@ -474,7 +474,7 @@ void tilia::render::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data,
  * m_vertex_info. Then it sets the size, stride, and offset of each attribute to be set. If there
  * only is one stride in the .strides vector then it sets that stride for every attribute.
  */
-void tilia::render::Batch::Set_Vertex_Attribs() const
+void tilia::gfx::Batch::Set_Vertex_Attribs() const
 {
 
 	// Gets attribute count
@@ -497,7 +497,7 @@ void tilia::render::Batch::Set_Vertex_Attribs() const
 /**
  * Checks if the mesh is compatible with this batch. If so then returns true.
  */
-bool tilia::render::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
+bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 {
 	std::shared_ptr<Mesh_Data> temp{ mesh_data };
 	// Checks if vertex count is too big

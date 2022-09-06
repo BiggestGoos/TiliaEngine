@@ -30,7 +30,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		/**
 		 * @brief A struct that holds information for the Texture_2D class

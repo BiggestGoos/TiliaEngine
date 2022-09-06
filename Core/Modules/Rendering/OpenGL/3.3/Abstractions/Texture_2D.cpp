@@ -42,7 +42,7 @@ extern tilia::utils::File_System file_system;
  * and filtering modes and sets some C-string with the information. Then
  * prints it all using Log_Indent.
  */
-void tilia::render::Texture_2D::Print_Information() const
+void tilia::gfx::Texture_2D::Print_Information() const
 {
 
 	// Color format C-string
@@ -125,7 +125,7 @@ void tilia::render::Texture_2D::Print_Information() const
 /**
  * Calls Generate_Texture function
  */
-tilia::render::Texture_2D::Texture_2D()
+tilia::gfx::Texture_2D::Texture_2D()
 {
 	m_texture_type = enums::Texture_Type::TwoD;
 	Generate_Texture();
@@ -141,7 +141,7 @@ tilia::render::Texture_2D::Texture_2D()
  * the filtering and wrapping options. After that it finally sets the pixel data of the openGL texture and then unbinds the texture. It also prints 
  * information about the texture
  */
-void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
+void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 {
 	// Copies passed Texture_Def
 	m_texture_def = texture_def;
@@ -272,7 +272,7 @@ void tilia::render::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
  * Calls the overloaded version of Set_Texture that takes a texture def with the file path 
  * set to the given path.
  */
-void tilia::render::Texture_2D::Set_Texture(const std::string& texture_path)
+void tilia::gfx::Texture_2D::Set_Texture(const std::string& texture_path)
 {
 	if (texture_path == "") {
 		utils::Tilia_Exception e{ LOCATION };
@@ -290,7 +290,7 @@ void tilia::render::Texture_2D::Set_Texture(const std::string& texture_path)
 /**
  * Generates mipmaps for the openGL texture using glGenerateMipmap
  */
-void tilia::render::Texture_2D::Generate_Mipmaps()
+void tilia::gfx::Texture_2D::Generate_Mipmaps()
 {
 	Unbind(true);
 	if (m_ID == 0) {
@@ -314,7 +314,7 @@ void tilia::render::Texture_2D::Generate_Mipmaps()
 /**
  * Sets the filtering mode for the given size
  */
-void tilia::render::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
+void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
 {
 	switch (filter_size)
 	{
@@ -333,7 +333,7 @@ void tilia::render::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size
 /**
  * Sets the wrapping mode for the given side
  */
-void tilia::render::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
+void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
 {
 	switch (wrap_side)
 	{

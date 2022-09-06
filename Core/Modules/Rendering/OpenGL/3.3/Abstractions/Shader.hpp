@@ -1,54 +1,54 @@
-/*****************************************************************//**
- * @file   Shader.h
- * @brief  Declares and defines a class called @see @Shader which works as an abstraction for an openGL shader 
- *		   containing a vertex shader and a fragment shader.
+/*****************************************************************//*******************************
+ * @file   Shader.hpp
  * 
- * @define TILIA_SHADER_H
+ * @brief  Declares and defines a class called Shader which works as an abstraction for an openGL
+ *		   shader containing a vertex shader and a fragment shader.
  * 
- * Dependencies:
- * @include "dependencies/glm/include/glm/glm.hpp"
+ * @define TILIA_SHADER_HPP
  * 
- * Headers:
- * @include "headers/Shader_Data.h"
+ * Vendor:
+ * "dependencies/glm/include/glm/glm.hpp"
  * 
  * Standard:
- * @include <string>
- * @include <unordered_map>
+ * <unordered_map>
+ * <string>
+ * 
+ * Tilia:
+ * "Shader_Data.hpp"
  * 
  * @author Gustav Fagerlind
  * @date   15/05/2022
- *********************************************************************/
+ *************************************************************************************************/
 
-#ifndef TILIA_SHADER_H
-#define TILIA_SHADER_H
+#ifndef TILIA_SHADER_HPP
+#define TILIA_SHADER_HPP
 
-// Dependencies
+// Vendor
 #include "vendor/glm/include/glm/glm.hpp"
 
-// Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
-
 // Standard
-#include <string>
 #include <unordered_map>
+#include <string>
+
+// Tilia
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		/**
-		 * @brief A struct that holds information for the Shader class
-		 *
-		 * @param path   - The path to the file of the shader
-		 * @param source - The source code of the shader
+		 * @brief A struct that holds information for the Shader class.
 		 */
 		struct Shader_Type {
+			// The path to the file of the shader.
 			std::string path{};
+			// The source code of the shader.
 			std::string source{};
-		};
+		}; // Shader_Type
 
 		/**
-		 * @brief A class which works as an abstraction for an openGL shader made up of a vertex-shader and fragment-shader.
+		 * @brief A class which works as an abstraction for an openGL shader.
 		 */
 		class Shader {
 		public:
@@ -63,7 +63,8 @@ namespace tilia {
 			 */
 			bool Init(const Shader_Type& vert_shader, const Shader_Type& frag_shader);
 			/**
-			 * @brief Creates a new shader by loading the two different types of shaders using the given paths.
+			 * @brief Creates a new shader by loading the two different types of shaders using the given
+			 *		  paths.
 			 * 
 			 * @param vert_path - The path to the vertex-shader to be added.
 			 * @param frag_path - The path to the fragment-shader to be added.

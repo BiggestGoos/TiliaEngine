@@ -33,7 +33,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		/**
 		 * @brief Holds information which can be used to draw a "batch". A "batch" 
@@ -171,7 +171,7 @@ namespace tilia {
 			// Both stencil- and depthtest pass.
 			std::pair<enums::Test_Action, enums::Test_Action> m_stencil_actions[3]{};
 
-			void Generate_Texture_Offsets(std::weak_ptr<tilia::render::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets);
+			void Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets);
 
 			void Map_Data() const;
 

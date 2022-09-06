@@ -33,9 +33,9 @@
 #include "Core/Modules/Console/Logging.hpp"
 
 // Initialize static member which holds the bound shader id
-uint32_t tilia::render::Shader::s_bound_ID{};
+uint32_t tilia::gfx::Shader::s_bound_ID{};
 // Initialize static member which holds the previously bound shader id
-uint32_t tilia::render::Shader::s_previous_ID{};
+uint32_t tilia::gfx::Shader::s_previous_ID{};
 
 /**
  * If there is no source code for the respective shaders then the Parse_Shader 
@@ -43,7 +43,7 @@ uint32_t tilia::render::Shader::s_previous_ID{};
  * If any function returns false, throws exception and prints error. If everything 
  * went right, prints success message.
  */
-bool tilia::render::Shader::Generate_Shader()
+bool tilia::gfx::Shader::Generate_Shader()
 {
 
     try
@@ -77,7 +77,7 @@ bool tilia::render::Shader::Generate_Shader()
  * Copies the memeber Shader_Types to the same as the given 
  * Shader_Types and then calls the Generate_Shader function.
  */
-bool tilia::render::Shader::Init(const Shader_Type& vert_shader, const Shader_Type& frag_shader)
+bool tilia::gfx::Shader::Init(const Shader_Type& vert_shader, const Shader_Type& frag_shader)
 {
 
     m_vertex_shader = vert_shader;
@@ -91,7 +91,7 @@ bool tilia::render::Shader::Init(const Shader_Type& vert_shader, const Shader_Ty
  * Sets the memeber Shader_Types to have the given paths and 
  * no sorce code and then calls the Generate_Shader function.
  */
-bool tilia::render::Shader::Init(const std::string& vert_path, const std::string& frag_path)
+bool tilia::gfx::Shader::Init(const std::string& vert_path, const std::string& frag_path)
 {
 
     m_vertex_shader = { vert_path, "" };
@@ -106,7 +106,7 @@ bool tilia::render::Shader::Init(const std::string& vert_path, const std::string
  * Shader_Types of the given Shader and then calls the 
  * Generate_Shader function.
  */
-bool tilia::render::Shader::Init(const Shader& shader)
+bool tilia::gfx::Shader::Init(const Shader& shader)
 {
 
     m_vertex_shader = shader.Get_Shader(0);
@@ -119,7 +119,7 @@ bool tilia::render::Shader::Init(const Shader& shader)
 /**
  * Deletes the openGL shader of the m_ID
  */
-tilia::render::Shader::~Shader()
+tilia::gfx::Shader::~Shader()
 {
     GL_CALL(glDeleteProgram(m_ID));
     log::Log(log::Type::SUCCESS, "SHADER", "Shader { ID: %u } was succesfully destroyed", m_ID);
@@ -130,7 +130,7 @@ tilia::render::Shader::~Shader()
  * Then sets the shader source to the data. If exception was thrown, prints errors, and returns false.
  * Otherwise it returns true at the end of the function.
  */
-bool tilia::render::Shader::Parse_Shader(Shader_Type& shader) const {
+bool tilia::gfx::Shader::Parse_Shader(Shader_Type& shader) const {
 
     std::ifstream stream{};
 
@@ -171,7 +171,7 @@ bool tilia::render::Shader::Parse_Shader(Shader_Type& shader) const {
  * went bad it prints errors. If error is found deletes shader with id and also returns false.
  * If it went good, returns true.
  */
-bool tilia::render::Shader::Compile_Shader(const uint32_t& type, Shader_Type& shader, int32_t& id) {
+bool tilia::gfx::Shader::Compile_Shader(const uint32_t& type, Shader_Type& shader, int32_t& id) {
 
     // Creates shader
     GL_CALL(id = glCreateShader(type));
@@ -208,7 +208,7 @@ bool tilia::render::Shader::Compile_Shader(const uint32_t& type, Shader_Type& sh
  * attached to the shader program. If something went wron when compiling shaders, returns false,
  * otherwise it returns true if everything went alright.
  */
-bool tilia::render::Shader::Create_Shader() {
+bool tilia::gfx::Shader::Create_Shader() {
 
     // Creates program and sets m_ID
     GL_CALL(m_ID = glCreateProgram());
@@ -239,7 +239,7 @@ bool tilia::render::Shader::Create_Shader() {
  * using the glGetUniformLocation function. If the returned location is equal to -1, 
  * prints error. If not then it adds the location to m_uniform_locs and then returns location.
  */
-int32_t tilia::render::Shader::Get_Uniform_Location(const std::string& name)
+int32_t tilia::gfx::Shader::Get_Uniform_Location(const std::string& name)
 {
     // Check m_uniform_locs
     if (m_uniform_locs.find(name) != m_uniform_locs.end())
@@ -261,7 +261,7 @@ int32_t tilia::render::Shader::Get_Uniform_Location(const std::string& name)
  * If m_ID is equal to 0 then it prints error. Otherwise it bind the shader using 
  * the glUseProgram function with m_ID. Also sets s_bound_ID to m_ID.
  */
-void tilia::render::Shader::Bind() const
+void tilia::gfx::Shader::Bind() const
 {
     if (!m_ID)
         return log::Log(log::Type::ERROR, "SHADER", "Failed to bind shader { ID: %u }", m_ID);
@@ -275,7 +275,7 @@ void tilia::render::Shader::Bind() const
  * s_previous_ID. Otherwise it sets s_previous_ID to 0. After that it binds the shader
  * to 0, effectively unbinding it. Also sets s_bound_ID to 0.
  */
-void tilia::render::Shader::Unbind(const bool& save_id)
+void tilia::gfx::Shader::Unbind(const bool& save_id)
 {
     // Checks save_id
     if (save_id)
@@ -295,7 +295,7 @@ void tilia::render::Shader::Unbind(const bool& save_id)
 /**
  * Binds the shader of the stored s_previous_ID id.
  */
-void tilia::render::Shader::Rebind() const
+void tilia::gfx::Shader::Rebind() const
 {
     GL_CALL(glUseProgram(s_previous_ID));
 }
@@ -308,142 +308,142 @@ void tilia::render::Shader::Rebind() const
                        x;\
                        Rebind();
 
-void tilia::render::Shader::Uniform(const std::string& location, const float& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const float& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1f(Get_Uniform_Location(location), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const float& v0, const float& v1)
+void tilia::gfx::Shader::Uniform(const std::string& location, const float& v0, const float& v1)
 {
     SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(location), v0, v1)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const float& v0, const float& v1, const float& v2)
+void tilia::gfx::Shader::Uniform(const std::string& location, const float& v0, const float& v1, const float& v2)
 {
     SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(location), v0, v1, v2)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const float& v0, const float& v1, const float& v2, const float& v3)
+void tilia::gfx::Shader::Uniform(const std::string& location, const float& v0, const float& v1, const float& v2, const float& v3)
 {
     SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(location), v0, v1, v2, v3)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const int32_t& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const int32_t& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1i(Get_Uniform_Location(location), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1)
+void tilia::gfx::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1)
 {
     SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(location), v0, v1)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1, const int32_t& v2)
+void tilia::gfx::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1, const int32_t& v2)
 {
     SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(location), v0, v1, v2)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1, const int32_t& v2, const int32_t& v3)
+void tilia::gfx::Shader::Uniform(const std::string& location, const int32_t& v0, const int32_t& v1, const int32_t& v2, const int32_t& v3)
 {
     SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(location), v0, v1, v2, v3)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const uint32_t& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const uint32_t& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1ui(Get_Uniform_Location(location), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1)
+void tilia::gfx::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1)
 {
     SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(location), v0, v1)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1, const uint32_t& v2)
+void tilia::gfx::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1, const uint32_t& v2)
 {
     SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(location), v0, v1, v2)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1, const uint32_t& v2, const uint32_t& v3)
+void tilia::gfx::Shader::Uniform(const std::string& location, const uint32_t& v0, const uint32_t& v1, const uint32_t& v2, const uint32_t& v3)
 {
     SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(location), v0, v1, v2, v3)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::vec2& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::vec2& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(location), v0.x, v0.y)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::vec3& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::vec3& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(location), v0.x, v0.y, v0.z)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::vec4& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::vec4& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(location), v0.x, v0.y, v0.z, v0.w)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::ivec2& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::ivec2& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(location), v0.x, v0.y)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::ivec3& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::ivec3& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(location), v0.x, v0.y, v0.z)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::ivec4& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::ivec4& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(location), v0.x, v0.y, v0.z, v0.w)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::uvec2& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::uvec2& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(location), v0.x, v0.y)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::uvec3& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::uvec3& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(location), v0.x, v0.y, v0.z)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::uvec4& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::uvec4& v0)
 {
     SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(location), v0.x, v0.y, v0.z, v0.w)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const size_t& count, const float* v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const size_t& count, const float* v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1fv(Get_Uniform_Location(location), static_cast<GLint>(count), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const size_t& count, const int32_t* v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const size_t& count, const int32_t* v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1iv(Get_Uniform_Location(location), static_cast<GLint>(count), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const size_t& count, const uint32_t* v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const size_t& count, const uint32_t* v0)
 {
     SET_UNIFORM(GL_CALL(glUniform1uiv(Get_Uniform_Location(location), static_cast<GLint>(count), v0)));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::mat2& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::mat2& v0)
 {
     SET_UNIFORM(GL_CALL(glUniformMatrix2fv(Get_Uniform_Location(location), 1, GL_FALSE, &v0[0][0])));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::mat3& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::mat3& v0)
 {
     SET_UNIFORM(GL_CALL(glUniformMatrix3fv(Get_Uniform_Location(location), 1, GL_FALSE, &v0[0][0])));
 }
 
-void tilia::render::Shader::Uniform(const std::string& location, const glm::mat4& v0)
+void tilia::gfx::Shader::Uniform(const std::string& location, const glm::mat4& v0)
 {
     SET_UNIFORM(GL_CALL(glUniformMatrix4fv(Get_Uniform_Location(location), 1, GL_FALSE, &v0[0][0])));
 }
 
-void tilia::render::Shader::Uniform(const Shader_Data& shader_data)
+void tilia::gfx::Shader::Uniform(const Shader_Data& shader_data)
 {
 
     for (auto it{ shader_data.uniform_variables.begin() }; it != shader_data.uniform_variables.end(); ++it)

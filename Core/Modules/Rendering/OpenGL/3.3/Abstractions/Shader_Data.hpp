@@ -28,7 +28,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		// The different types of uniforms
 		enum class Uniform_Type {

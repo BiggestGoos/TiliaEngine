@@ -35,7 +35,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		/**
 		 * @brief Holds information about the mesh. Used to pass data to the Renderer

@@ -30,7 +30,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		// Base class for texture classes
 		class Texture {

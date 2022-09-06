@@ -20,7 +20,7 @@
 
 #include <iostream>
 
-void tilia::render::Renderer::Render()
+void tilia::gfx::Renderer::Render()
 {
 
 	std::map<float, std::vector<std::weak_ptr<Mesh_Data>>> transparent_meshes{};

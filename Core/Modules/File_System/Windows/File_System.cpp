@@ -32,7 +32,8 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 			stbi_image_free(data);
 		// Creates exception with some information.
 		utils::Tilia_Exception e{ LOCATION };
-		e.Add_Message("Image file did not load properly"
+		e.Add_Message(
+			"Image file did not load properly"
 			"\n>>> Path: %v"
 			"\n>>> Witdh: %v"
 			"\n>>> Height: %v"

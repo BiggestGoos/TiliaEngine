@@ -45,7 +45,7 @@ bool firstMouse = true;
 
 using namespace tilia;
 using namespace tilia::utils;
-using namespace tilia::render;
+using namespace tilia::gfx;
 
 enums::Polymode polymode{ enums::Polymode::Fill };
 

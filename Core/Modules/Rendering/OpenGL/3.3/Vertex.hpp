@@ -22,7 +22,7 @@
 
 namespace tilia {
 
-	namespace render {
+	namespace gfx {
 
 		/**
 		 * @brief The layout of a vertex. Used to set vertex attributes.

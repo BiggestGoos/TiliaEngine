@@ -156,6 +156,7 @@
     <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.hpp" />
     <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.hpp" />
@@ -465,6 +466,7 @@
     <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp" />
     <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp" />
