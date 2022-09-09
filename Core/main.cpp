@@ -156,17 +156,17 @@ int main()
         box_texture->Set_Cube_Map_Data(def, true);
         box_texture->Reload();
         
-        std::shared_ptr<Cube_Map> box_specular_texture{ std::make_shared<Cube_Map>() };
-        box_specular_texture->Set_Paths({
-            "res/textures/container2_specular.png",
-            "res/textures/container2_specular.png",
-            "res/textures/container2_specular.png",
-            "res/textures/container2_specular.png",
-            "res/textures/container2_specular.png",
-            "res/textures/container2_specular.png"
-        }, true);
-        box_specular_texture->Reload();
-
+        // std::shared_ptr<Cube_Map> box_specular_texture{ std::make_shared<Cube_Map>() };
+        // box_specular_texture->Set_Paths({
+        //     "res/textures/container2_specular.png",
+        //     "res/textures/container2_specular.png",
+        //     "res/textures/container2_specular.png",
+        //     "res/textures/container2_specular.png",
+        //     "res/textures/container2_specular.png",
+        //     "res/textures/container2_specular.png"
+        // }, true);
+        // box_specular_texture->Reload();
+        
         //std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
         //tex_2d->Set_Texture("res/teures/container2.png");
 

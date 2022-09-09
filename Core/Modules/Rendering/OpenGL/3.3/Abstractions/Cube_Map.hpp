@@ -1,4 +1,4 @@
-/*****************************************************************//*******************************
+/**************************************************************************************************
  * @file   Cube_Map.hpp
  * 
  * @brief  Declares and defines a class called Cube_Map deriving from Texture in "Texture.hpp", 
@@ -365,7 +365,7 @@ namespace tilia {
 
         }; // Cube_Map
 
-    } // render
+    } // gfx
 
 } // tilia
 
