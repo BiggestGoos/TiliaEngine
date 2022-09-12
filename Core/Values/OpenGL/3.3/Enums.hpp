@@ -169,6 +169,13 @@ namespace tilia {
 			One_Minus_Constant_Alpha = 0x8004  // Blending factor is equal to one minus the constant alpha.
 		};
 
+		// Different types of openGL shaders. Underlying value is the value defined by openGL.
+		enum class Shader_Type {
+			Fragment  = 0x8B30, // The fragment shader. Also known as pixel shader.
+			Vertex	  = 0x8B31, // The vertex shader.
+			Geomentry = 0x8DD9  // The geometry shader.
+		};
+
 		/**
 		 * @brief Can take any enum class as parameter and will return, if there is any the underlying value.
 		 *

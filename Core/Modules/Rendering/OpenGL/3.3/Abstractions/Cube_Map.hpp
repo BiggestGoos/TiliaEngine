@@ -43,10 +43,6 @@ namespace tilia {
             /**
              * @brief The default constructor which generates an openGL cube map and sets the
              *        texture id.
-             * 
-             * @exception Guarantee: Strong
-             * @exception Reasons: 
-             * @exception OpenGL fails to generate a new cube map.
              */
             Cube_Map();
 

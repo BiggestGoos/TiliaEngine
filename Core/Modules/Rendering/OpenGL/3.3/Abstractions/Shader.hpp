@@ -1,4 +1,4 @@
-/*****************************************************************//*******************************
+/**************************************************************************************************
  * @file   Shader.hpp
  * 
  * @brief  Declares and defines a class called Shader which works as an abstraction for an openGL
@@ -47,12 +47,14 @@ namespace tilia {
 			std::string source{};
 		}; // Shader_Type
 
+#if 0
+		
 		/**
 		 * @brief A class which works as an abstraction for an openGL shader.
 		 */
 		class Shader {
 		public:
-
+			
 			/**
 			 * @brief Creates a new shader using the two Shader_Types given.
 			 * 
@@ -264,7 +266,22 @@ namespace tilia {
 
 		};
 
-	}
+#endif // 0
+		
+		class Shader {
+		public:
+
+			Shader(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry = {});
+
+		private:
+
+			Shader();
+
+			std::uint32_t m_ID{};
+
+		};
+
+}
 
 }
 

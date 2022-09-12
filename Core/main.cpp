@@ -136,8 +136,8 @@ int main()
 
         camera.Reset();
 
-        std::shared_ptr<Shader> light_shader{ std::make_shared<Shader>() };
-        std::shared_ptr<Shader> cube_shader{ std::make_shared<Shader>() };
+        std::shared_ptr<Shader<false>> light_shader{ std::make_shared<Shader<false>>() };
+        std::shared_ptr<Shader<false>> cube_shader{ std::make_shared<Shader<false>>() };
 
         light_shader->Init("res/shaders/light_shader.vert", "res/shaders/light_shader.frag");
 

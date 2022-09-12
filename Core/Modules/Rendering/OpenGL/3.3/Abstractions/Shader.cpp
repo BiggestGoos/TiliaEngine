@@ -30,7 +30,11 @@
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Modules/Console/Logging.hpp"
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
+
+#if 0
 
 // Initialize static member which holds the bound shader id
 uint32_t tilia::gfx::Shader::s_bound_ID{};
@@ -180,7 +184,7 @@ bool tilia::gfx::Shader::Compile_Shader(const uint32_t& type, Shader_Type& shade
     GL_CALL(glShaderSource(id, 1, &src, nullptr));
     // Compiles shader
     GL_CALL(glCompileShader(id));
-
+    
     // Error checking
     int32_t result;
     GL_CALL(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
@@ -218,7 +222,7 @@ bool tilia::gfx::Shader::Create_Shader() {
         return false;
     if (!Compile_Shader(GL_FRAGMENT_SHADER, m_fragment_shader, f_id))
         return false;
-
+    
     // Attaches to, links, and validates shader program
     GL_CALL(glAttachShader(m_ID, v_id));
     GL_CALL(glAttachShader(m_ID, f_id));
@@ -578,6 +582,86 @@ void tilia::gfx::Shader::Uniform(const Shader_Data& shader_data)
             break;
 
         }
+    }
+
+}
+
+#endif // 0
+
+static void Check_Shader(const uint32_t& type, const std::uint32_t& id) {
+
+    std::int32_t result;
+    GL_CALL(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+    if (result == GL_FALSE) {
+        std::int32_t length;
+        GL_CALL(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
+
+        std::vector<char> message(length * sizeof(char));
+
+        GL_CALL(glGetShaderInfoLog(id, length, &length, &message.front()));
+        message[length - 1] = '\0';
+
+        tilia::utils::Tilia_Exception e{ LOCATION };
+
+        e.Add_Message("Failed to create shader { type: %v }"
+            "\n>>> Message: %v"
+            )(type)
+            (static_cast<const char*>(&message.front()));
+
+        throw e;
+
+        GL_CALL(glDeleteShader(id));
+    }
+
+}
+
+static std::uint32_t Compile_Shader(const uint32_t& type, const tilia::gfx::Shader_Type& shader) {
+    
+    std::uint32_t id{};
+    GL_CALL(id = glCreateShader(type));
+    const char* src = shader.source.c_str();
+    
+    GL_CALL(glShaderSource(id, 1, &src, nullptr));
+    
+    GL_CALL(glCompileShader(id));
+
+    Check_Shader(type, id);
+
+    return id;
+
+}
+
+
+
+tilia::gfx::Shader::Shader(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry = {})
+    : Shader()
+{
+
+    std::uint32_t 
+        v_id{ Compile_Shader(*enums::Shader_Type::Vertex, vertex) }, 
+        f_id{ Compile_Shader(*enums::Shader_Type::Fragment, fragment) },
+        g_id{};
+
+    if (geometry.path != "")
+        g_id = Compile_Shader(*enums::Shader_Type::Geomentry, geometry);
+
+
+
+}
+
+tilia::gfx::Shader::Shader(){
+
+    try
+    {
+        GL_CALL_MESSAGE("Main program", m_ID = glCreateProgram());
+    }
+    catch (utils::Tilia_Exception& e)
+    {
+
+        e.Add_Message("Shader failed to be generated");
+
+        // Possibly forward e to someplace else and then throw
+
     }
 
 }

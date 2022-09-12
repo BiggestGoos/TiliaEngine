@@ -74,7 +74,19 @@ std::string tilia::gfx::Texture::Get_Type_String() const
  */
 void tilia::gfx::Texture::Generate_Texture()
 {
-	GL_ASSERT(glGenTextures(1, &m_ID));
+	try
+	{
+		GL_CALL(glGenTextures(1, &m_ID));
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("%v { ID: %v } failed to be generated")
+			(Get_Type_String())(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
 	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly created", m_ID);
 }
 

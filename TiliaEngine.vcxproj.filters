@@ -1420,5 +1420,6 @@
     <None Include="res\shaders\light_shader.vert" />
     <None Include="build\res\shaders\cube_shader.vert" />
     <None Include="build\res\shaders\light_shader.vert" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>
