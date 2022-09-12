@@ -143,6 +143,23 @@ int main()
 
         cube_shader->Init("res/shaders/cube_shader.vert", "res/shaders/cube_shader.frag");
 
+        uint32_t light_ubo{}, cube_ubo{};
+
+        glGenBuffers(1, &light_ubo);
+        glGenBuffers(1, &cube_ubo);
+
+        glUniformBlockBinding(light_shader->Get_ID(), light_ubo, 0);
+        glUniformBlockBinding(cube_shader->Get_ID(), cube_ubo, 0);
+
+        uint32_t ube_matrices{};
+        glGenBuffers(1, &ube_matrices);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
+        glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ube_matrices, 0, 2 * sizeof(glm::mat4));
+
         Cube_Map_Data def{};
 
         def.sides[0].file_path = "res/textures/container2.png";
@@ -306,13 +323,19 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            light_shader->Uniform("projection", projection);
-            cube_shader->Uniform("projection", projection);
+            //light_shader->Uniform("projection", projection);
+            //cube_shader->Uniform("projection", projection);
 
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            light_shader->Uniform("view", view);
-            cube_shader->Uniform("view", view);
+            //light_shader->Uniform("view", view);
+            //cube_shader->Uniform("view", view);
+
+            glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
             renderer.m_camera_pos = camera.Position;
 

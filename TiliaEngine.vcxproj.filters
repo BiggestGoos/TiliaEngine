@@ -1002,10 +1002,6 @@
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
     <None Include="x64\Debug\res\shaders\light_shader.frag" />
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
-    <None Include="res\shaders\cube_shader.frag" />
-    <None Include="res\shaders\cube_shader.vert" />
-    <None Include="res\shaders\light_shader.frag" />
-    <None Include="res\shaders\light_shader.vert" />
     <None Include="vendor\glm\include\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -1418,5 +1414,11 @@
     <None Include="x64\Release\res\shaders\cube_shader.vert" />
     <None Include="x64\Release\res\shaders\light_shader.frag" />
     <None Include="x64\Release\res\shaders\light_shader.vert" />
+    <None Include="res\shaders\cube_shader.frag" />
+    <None Include="res\shaders\light_shader.frag" />
+    <None Include="res\shaders\cube_shader.vert" />
+    <None Include="res\shaders\light_shader.vert" />
+    <None Include="build\res\shaders\cube_shader.vert" />
+    <None Include="build\res\shaders\light_shader.vert" />
   </ItemGroup>
 </Project>
