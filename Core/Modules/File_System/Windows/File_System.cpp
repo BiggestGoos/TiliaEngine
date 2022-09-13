@@ -2,6 +2,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "vendor/stb_image/include/stb_image/stb_image.h"
 
+// Standard
+#include <fstream>
+
 // Tilia
 #include "Core/Modules/File_System/Windows/File_System.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
@@ -44,4 +47,41 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 	}
 
 	return data;
+}
+
+std::string tilia::utils::File_System::Load_Shader(const char* file_path)
+{
+	
+	std::ifstream stream{};
+
+	std::string source{};
+
+	// Sets exceptions
+	stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+	try
+	{
+
+		stream.open(file_path);
+
+		// Gets the source code from the file stream
+		source = (std::stringstream() << stream.rdbuf()).str();
+
+		stream.close();
+
+	}
+	catch (std::exception& e)
+	{
+
+		utils::Tilia_Exception te{ LOCATION };
+
+		te.Add_Message("Shader did not load properly"
+			"\n>>> Path: %v"
+			"\n>>> Message: %v"
+			)(file_path)(e.what());
+
+	}
+
+	return std::move(source);
+
 }

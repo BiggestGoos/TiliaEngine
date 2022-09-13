@@ -20,6 +20,7 @@
 
 // Standard
 #include <cstdint>
+#include <string>
 
 // Tilia
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
@@ -53,6 +54,18 @@ namespace tilia {
              */
             std::uint8_t* Load_Image(const char* file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
                                 const std::int32_t& desired_color_channels, const bool& flip_image_y);
+            /**
+             * @brief Loads in the shader source code from the given file path.
+             * 
+             * @param file_path - The path of the shader to load.
+             * 
+             * @return            The source code.
+             * 
+             * @exception         Guarantee: Strong
+             * @exception         Reasons:
+             * @exception         Fails to load in data.
+             */
+            std::string Load_Shader(const char* file_path);
 
         }; // File_System
 

@@ -30,6 +30,7 @@
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/File_System/Windows/File_System.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Modules/Console/Logging.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
@@ -588,6 +589,9 @@ void tilia::gfx::Shader::Uniform(const Shader_Data& shader_data)
 
 #endif // 0
 
+// The file system defined in another file
+extern tilia::utils::File_System file_system;
+
 static void Check_Shader(const uint32_t& type, const std::uint32_t& id) {
 
     std::int32_t result;
@@ -631,11 +635,11 @@ static std::uint32_t Compile_Shader(const uint32_t& type, const tilia::gfx::Shad
 
 }
 
-
-
 tilia::gfx::Shader::Shader(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry = {})
     : Shader()
 {
+
+    //vertex.source = file_system.Load_Shader(vertex.path);
 
     std::uint32_t 
         v_id{ Compile_Shader(*enums::Shader_Type::Vertex, vertex) }, 
