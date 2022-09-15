@@ -656,12 +656,39 @@ tilia::gfx::Shader::Shader(const Shader_Type& vertex, const Shader_Type& fragmen
         g_id = Compile_Shader(*enums::Shader_Type::Geomentry, geometry);
     }
 
+    // Attaches to, links, and validates shader program
+    GL_CALL(glAttachShader(m_ID, v_id));
+    GL_CALL(glAttachShader(m_ID, f_id));
+    GL_CALL(glLinkProgram(m_ID));
+    GL_CALL(glValidateProgram(m_ID));
 
+    // Deletes shaders
+    GL_CALL(glDeleteShader(v_id));
+    GL_CALL(glDeleteShader(f_id));
 
 }
 
 tilia::gfx::Shader::Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path)
     : Shader{ Shader_Type{vertex_path, ""}, Shader_Type{fragment_path, ""}, Shader_Type{geometry_path, ""} }
+{
+}
+
+void tilia::gfx::Shader::Reload(const Shader_Type& shader)
+{
+
+
+
+}
+
+void tilia::gfx::Shader::Reload(const std::string& shader_path)
+{
+}
+
+void tilia::gfx::Shader::Reload(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry)
+{
+}
+
+void tilia::gfx::Shader::Reload(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path)
 {
 }
 

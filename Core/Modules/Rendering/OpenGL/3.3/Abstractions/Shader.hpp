@@ -279,6 +279,17 @@ namespace tilia {
 				const std::string& fragment_path,
 				const std::string& geometry_path = "");
 
+			void Reload(const Shader_Type& shader);
+			void Reload(const std::string& shader_path);
+
+			void Reload(const Shader_Type& vertex,
+				const Shader_Type& fragment,
+				const Shader_Type& geometry = {});
+
+			void Reload(const std::string& vertex_path,
+				const std::string& fragment_path,
+				const std::string& geometry_path = "");
+
 		private:
 
 			Shader() noexcept;
