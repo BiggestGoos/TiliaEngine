@@ -121,7 +121,7 @@ namespace tilia {
 			explicit Tilia_Exception(const std::string& message, const std::size_t& line, const std::string& file) noexcept;
 
 			/**
-			 * @brief Adds a message to the Tilia_Exception. If the message contains message 
+			 * @brief Adds a message to the Tilia_Exception. If the message contains message
 			 *		  commands and the returned lambda is called with a value then that value
 			 *	      will be inserted in the string at the first message command. That lambda
 			 *		  function will return a lambda itself and will recursivley replace message

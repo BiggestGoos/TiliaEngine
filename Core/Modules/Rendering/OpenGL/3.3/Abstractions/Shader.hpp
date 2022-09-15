@@ -271,18 +271,29 @@ namespace tilia {
 		class Shader {
 		public:
 
-			Shader(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry = {});
+			Shader(const Shader_Type& vertex, 
+				const Shader_Type& fragment, 
+				const Shader_Type& geometry = {});
+
+			Shader(const std::string& vertex_path,
+				const std::string& fragment_path,
+				const std::string& geometry_path = "");
 
 		private:
 
-			Shader();
+			Shader() noexcept;
 
 			std::uint32_t m_ID{};
 
-		};
+			Shader_Type
+				m_vertex{},
+				m_fragment{},
+				m_geometry{};
 
-}
+		}; // Shader
 
-}
+	} // gfx
 
-#endif
+} // tilia
+
+#endif // TILIA_SHADER_HPP

@@ -12,7 +12,7 @@
 // Global File_System
 tilia::utils::File_System file_system{};
 
-std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
+std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
 											   const std::int32_t& desired_color_channels, const bool& flip_image_y)
 {
 	// Stores the vertical flipping flag if it needs to be reset.
@@ -22,7 +22,7 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 
 	// Loads the data along with the dimensions and amount of color channels.
 	std::uint8_t* data{
-		stbi_load(file_path, &width, &height, &color_channels, desired_color_channels)
+		stbi_load(file_path.c_str(), &width, &height, &color_channels, desired_color_channels)
 	};
 
 	// Checks if any of the loaded data is invalid.
@@ -49,7 +49,7 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const char* file_path, std::
 	return data;
 }
 
-std::string tilia::utils::File_System::Load_Shader(const char* file_path)
+std::string tilia::utils::File_System::Load_Shader(const std::string& file_path)
 {
 	
 	std::ifstream stream{};

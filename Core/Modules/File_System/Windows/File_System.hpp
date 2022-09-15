@@ -52,7 +52,7 @@ namespace tilia {
              * @exception                      Loaded width, height, or number of color channels is
              *                                 equel to zero.
              */
-            std::uint8_t* Load_Image(const char* file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
+            std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
                                 const std::int32_t& desired_color_channels, const bool& flip_image_y);
             /**
              * @brief Loads in the shader source code from the given file path.
@@ -65,7 +65,7 @@ namespace tilia {
              * @exception         Reasons:
              * @exception         Fails to load in data.
              */
-            std::string Load_Shader(const char* file_path);
+            std::string Load_Shader(const std::string& file_path);
 
         }; // File_System
 

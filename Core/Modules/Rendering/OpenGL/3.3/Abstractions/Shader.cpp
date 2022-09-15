@@ -620,7 +620,7 @@ static void Check_Shader(const uint32_t& type, const std::uint32_t& id) {
 }
 
 static std::uint32_t Compile_Shader(const uint32_t& type, const tilia::gfx::Shader_Type& shader) {
-    
+
     std::uint32_t id{};
     GL_CALL(id = glCreateShader(type));
     const char* src = shader.source.c_str();
@@ -636,24 +636,36 @@ static std::uint32_t Compile_Shader(const uint32_t& type, const tilia::gfx::Shad
 }
 
 tilia::gfx::Shader::Shader(const Shader_Type& vertex, const Shader_Type& fragment, const Shader_Type& geometry = {})
-    : Shader()
+    : Shader{}
 {
 
-    //vertex.source = file_system.Load_Shader(vertex.path);
+    m_vertex.path = vertex.path;
+    m_fragment.path = fragment.path;
+    m_geometry.path = geometry.path;
+
+    m_vertex.source = file_system.Load_Shader(m_vertex.path);
+    m_fragment.source = file_system.Load_Shader(m_fragment.path);
 
     std::uint32_t 
         v_id{ Compile_Shader(*enums::Shader_Type::Vertex, vertex) }, 
         f_id{ Compile_Shader(*enums::Shader_Type::Fragment, fragment) },
         g_id{};
 
-    if (geometry.path != "")
+    if (geometry.path != "") {
+        m_geometry.source = file_system.Load_Shader(m_geometry.path);
         g_id = Compile_Shader(*enums::Shader_Type::Geomentry, geometry);
+    }
 
 
 
 }
 
-tilia::gfx::Shader::Shader(){
+tilia::gfx::Shader::Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometry_path)
+    : Shader{ Shader_Type{vertex_path, ""}, Shader_Type{fragment_path, ""}, Shader_Type{geometry_path, ""} }
+{
+}
+
+tilia::gfx::Shader::Shader() noexcept {
 
     try
     {
