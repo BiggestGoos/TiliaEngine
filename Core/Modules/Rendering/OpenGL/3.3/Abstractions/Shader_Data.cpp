@@ -16,6 +16,8 @@
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 
+#if 0
+
 void tilia::gfx::Shader_Data::Uniform(const std::string& location, const float& v0)
 {
 	float* new_data{ new float{ v0 } };
@@ -431,4 +433,40 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 
 	return true;
 
+}
+
+#endif // 0
+
+tilia::gfx::Shader_Part::Shader_Part(const Shader_Part& other)
+	: path{ other.path },
+	source{ other.source }
+{
+}
+
+tilia::gfx::Shader_Part::Shader_Part(Shader_Part&& other)
+	: path{ std::move(other.path) },
+	source{ std::move(other.source) }
+{
+}
+
+tilia::gfx::Shader_Part& tilia::gfx::Shader_Part::operator=(const Shader_Part& other)
+{
+	if (&other == this)
+		return *this;
+
+	this->path = other.path;
+	this->source = other.source;
+
+	return *this;
+}
+
+tilia::gfx::Shader_Part& tilia::gfx::Shader_Part::operator=(Shader_Part&& other)
+{
+	if (&other == this)
+		return *this;
+
+	this->path = std::move(other.path);
+	this->source = std::move(other.source);
+
+	return *this;
 }

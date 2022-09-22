@@ -31,12 +31,14 @@
 namespace tilia {
 
 	namespace gfx {
-
+        
         /**
          * @brief A struct which holds information for the Cube_Map class.
          */
-        struct Cube_Map_Data
+        class Cube_Map_Data
         {
+        public:
+
             /**
              * @brief A struct which holds data for each side of the Cube_Map class.
              */
@@ -122,7 +124,7 @@ namespace tilia {
             void Copy_Data(const std::size_t& index, uint8_t* texture_data, uint32_t byte_count);
 
         }; // Cube_Map_Data
-
+        
 	} // gfx
 
 } // tilia

@@ -136,8 +136,8 @@ int main()
 
         camera.Reset();
 
-        std::shared_ptr<Shader<false>> light_shader{ std::make_shared<Shader<false>>() };
-        std::shared_ptr<Shader<false>> cube_shader{ std::make_shared<Shader<false>>() };
+        auto light_shader{ std::make_shared<Shader<false>>() };
+        auto cube_shader{ std::make_shared<Shader<false>>() };
 
         light_shader->Init("res/shaders/light_shader.vert", "res/shaders/light_shader.frag");
 
@@ -236,7 +236,7 @@ int main()
 
             create_cube(*new_mesh, model, true);
 
-            renderer.Add_Mesh(new_mesh->Get_Mesh_Data());
+            renderer.Add_Mesh(*new_mesh);
 
             meshes.push_back(new_mesh);
 

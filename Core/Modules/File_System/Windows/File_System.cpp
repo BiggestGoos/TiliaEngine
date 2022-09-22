@@ -49,12 +49,12 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path
 	return data;
 }
 
-std::string tilia::utils::File_System::Load_Shader(const std::string& file_path)
+std::string tilia::utils::File_System::Load_File(const std::string& file_path)
 {
 	
 	std::ifstream stream{};
 
-	std::string source{};
+	std::string data{};
 
 	// Sets exceptions
 	stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -64,8 +64,8 @@ std::string tilia::utils::File_System::Load_Shader(const std::string& file_path)
 
 		stream.open(file_path);
 
-		// Gets the source code from the file stream
-		source = (std::stringstream() << stream.rdbuf()).str();
+		// Gets the data from the file stream
+		data = (std::stringstream() << stream.rdbuf()).str();
 
 		stream.close();
 
@@ -75,13 +75,13 @@ std::string tilia::utils::File_System::Load_Shader(const std::string& file_path)
 
 		utils::Tilia_Exception te{ LOCATION };
 
-		te.Add_Message("Shader did not load properly"
+		te.Add_Message("File did not load properly"
 			"\n>>> Path: %v"
 			"\n>>> Message: %v"
 			)(file_path)(e.what());
 
 	}
 
-	return std::move(source);
+	return std::move(data);
 
 }

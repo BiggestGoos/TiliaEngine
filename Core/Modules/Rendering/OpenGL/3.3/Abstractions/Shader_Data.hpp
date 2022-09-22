@@ -30,6 +30,8 @@ namespace tilia {
 
 	namespace gfx {
 
+#if 0
+
 		// The different types of uniforms
 		enum class Uniform_Type {
 			Float,
@@ -176,8 +178,44 @@ namespace tilia {
 
 		};
 
-	}
+#endif // 0
 
-}
+		class Shader_Part {
+		public:
 
-#endif
+			std::string path{};
+
+			std::string source{};
+
+			Shader_Part(const Shader_Part& other);
+			Shader_Part(Shader_Part&& other);
+
+			Shader_Part& operator=(const Shader_Part& other);
+			Shader_Part& operator=(Shader_Part&& other);
+
+		};
+
+		class Shader_Data {
+		public:
+
+			Shader_Data(const Shader_Part& vertex,
+						const Shader_Part& fragment,
+						const Shader_Part& geometry);
+
+			Shader_Data(Shader_Part&& vertex,
+						Shader_Part&& fragment,
+						Shader_Part&& geometry);
+
+		private:
+
+			Shader_Part vertex{},
+						fragment{},
+						geometry{};
+
+		};
+
+	} // gfx
+
+} // tilia
+
+#endif // TILIA_SHADER_DATA_H

@@ -29,6 +29,7 @@
 // Standard
 #include <unordered_map>
 #include <string>
+#include <type_traits>
 
 // Tilia
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
@@ -36,6 +37,8 @@
 namespace tilia {
 
 	namespace gfx {
+
+#if 0
 
 		/**
 		 * @brief A struct that holds information for the Shader class.
@@ -46,8 +49,6 @@ namespace tilia {
 			// The source code of the shader.
 			std::string source{};
 		}; // Shader_Type
-
-#if 0
 		
 		/**
 		 * @brief A class which works as an abstraction for an openGL shader.
@@ -268,38 +269,27 @@ namespace tilia {
 
 #endif // 0
 		
+		template<bool use_geometry>
 		class Shader {
 		public:
 
-			Shader(const Shader_Type& vertex, 
-				const Shader_Type& fragment, 
-				const Shader_Type& geometry = {});
+			template <bool B = use_geometry,
+				std::enable_if_t<(B == false)>* = nullptr>
+			Shader() {
+				
+			}
 
-			Shader(const std::string& vertex_path,
-				const std::string& fragment_path,
-				const std::string& geometry_path = "");
-
-			void Reload(const Shader_Type& shader);
-			void Reload(const std::string& shader_path);
-
-			void Reload(const Shader_Type& vertex,
-				const Shader_Type& fragment,
-				const Shader_Type& geometry = {});
-
-			void Reload(const std::string& vertex_path,
-				const std::string& fragment_path,
-				const std::string& geometry_path = "");
+			template <bool B = use_geometry,
+				std::enable_if_t<(B == true)>* = nullptr>
+			Shader() {
+				
+			}
 
 		private:
 
-			Shader() noexcept;
 
-			std::uint32_t m_ID{};
 
-			Shader_Type
-				m_vertex{},
-				m_fragment{},
-				m_geometry{};
+
 
 		}; // Shader
 

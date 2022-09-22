@@ -55,17 +55,17 @@ namespace tilia {
             std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
                                 const std::int32_t& desired_color_channels, const bool& flip_image_y);
             /**
-             * @brief Loads in the shader source code from the given file path.
+             * @brief Loads in the file from the given file path.
              * 
-             * @param file_path - The path of the shader to load.
+             * @param file_path - The path of the file to load.
              * 
-             * @return            The source code.
+             * @return            The contents of the file.
              * 
              * @exception         Guarantee: Strong
              * @exception         Reasons:
              * @exception         Fails to load in data.
              */
-            std::string Load_Shader(const std::string& file_path);
+            std::string Load_File(const std::string& file_path);
 
         }; // File_System
 
