@@ -82,6 +82,8 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
+#if 0
+
 int main()
 {
 
@@ -138,6 +140,10 @@ int main()
 
         auto light_shader{ std::make_shared<Shader<false>>() };
         auto cube_shader{ std::make_shared<Shader<false>>() };
+
+        Shader<true> s{ { "hello" }, { "hello" }, { "hello" } };
+
+        s.Reset({ "hello" }, { "hello" }, { "hello" });
 
         light_shader->Init("res/shaders/light_shader.vert", "res/shaders/light_shader.frag");
 
@@ -385,11 +391,21 @@ int main()
     return 0;
 }
 
+#endif
+
+int main() {
+
+    Shader<false> s{ {"hello"}, {"hello"} };
+
+    s.Reset({ "world" }, { "world" });
+
+}
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput()
 {
-
+    
     if (input.Get_Key_Pressed(KEY_ENTER))
     {
         if (polymode == enums::Polymode::Fill)

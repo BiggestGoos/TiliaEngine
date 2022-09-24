@@ -25,6 +25,9 @@
 // Standard
 #include <unordered_map>
 #include <string>
+#include <array>
+#include <vector>
+#include <initializer_list>
 
 namespace tilia {
 
@@ -180,37 +183,58 @@ namespace tilia {
 
 #endif // 0
 
-		class Shader_Part {
-		public:
-
-			std::string path{};
-
-			std::string source{};
-
-			Shader_Part(const Shader_Part& other);
-			Shader_Part(Shader_Part&& other);
-
-			Shader_Part& operator=(const Shader_Part& other);
-			Shader_Part& operator=(Shader_Part&& other);
-
-		};
-
 		class Shader_Data {
 		public:
 
-			Shader_Data(const Shader_Part& vertex,
-						const Shader_Part& fragment,
-						const Shader_Part& geometry);
+			std::string path{};
+			std::string source{};
 
-			Shader_Data(Shader_Part&& vertex,
-						Shader_Part&& fragment,
-						Shader_Part&& geometry);
+			Shader_Data() = default;
 
-		private:
+			Shader_Data(const std::string& path)
+				: path{ path }
+			{
+			}
 
-			Shader_Part vertex{},
-						fragment{},
-						geometry{};
+			Shader_Data(const std::string& path, const std::string& source)
+				: path{ path },
+				source{ source }
+			{
+			}
+
+			Shader_Data(const Shader_Data& other) noexcept
+				: path{ other.path },
+				source{ other.source }
+			{
+			}
+
+			Shader_Data(Shader_Data&& other) noexcept
+			: path{ std::move(other.path) },
+				source{ std::move(other.source) }
+			{
+			}
+
+			Shader_Data& operator=(const Shader_Data& other) noexcept
+			{
+				if (&other == this)
+					return *this;
+
+				this->path = other.path;
+				this->source = other.source;
+				
+				return *this;
+			}
+
+			Shader_Data& operator=(Shader_Data&& other) noexcept
+			{
+				if (&other == this)
+					return *this;
+
+				this->path = std::move(other.path);
+				this->source = std::move(other.source);
+
+				return *this;
+			}
 
 		};
 

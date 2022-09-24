@@ -588,7 +588,3 @@ void tilia::gfx::Shader::Uniform(const Shader_Data& shader_data)
 }
 
 #endif // 0
-
-//// The file system defined in another file
-//extern tilia::utils::File_System file_system;
-

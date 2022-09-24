@@ -10,6 +10,9 @@
  * @date   05/07/2022
  *********************************************************************/
 
+ // Vendor
+#include "vendor/glad/include/glad/glad.h"
+
 // Standard
 #include <cstring>
 
@@ -436,37 +439,3 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 }
 
 #endif // 0
-
-tilia::gfx::Shader_Part::Shader_Part(const Shader_Part& other)
-	: path{ other.path },
-	source{ other.source }
-{
-}
-
-tilia::gfx::Shader_Part::Shader_Part(Shader_Part&& other)
-	: path{ std::move(other.path) },
-	source{ std::move(other.source) }
-{
-}
-
-tilia::gfx::Shader_Part& tilia::gfx::Shader_Part::operator=(const Shader_Part& other)
-{
-	if (&other == this)
-		return *this;
-
-	this->path = other.path;
-	this->source = other.source;
-
-	return *this;
-}
-
-tilia::gfx::Shader_Part& tilia::gfx::Shader_Part::operator=(Shader_Part&& other)
-{
-	if (&other == this)
-		return *this;
-
-	this->path = std::move(other.path);
-	this->source = std::move(other.source);
-
-	return *this;
-}

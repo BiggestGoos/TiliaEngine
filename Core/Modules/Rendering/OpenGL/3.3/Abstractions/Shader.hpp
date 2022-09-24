@@ -275,25 +275,39 @@ namespace tilia {
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
-			Shader() {
-				
+			Shader(const Shader_Data& vertex, const Shader_Data& fragment) 
+				: Shader_Data{ vertex, fragment }
+			{
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == true)>* = nullptr>
-			Shader() {
-				
+			Shader(const Shader_Data& vertex, const Shader_Data& fragment, const Shader_Data& geometry)
+				: Shader_Data{ vertex, fragment, geometry }
+			{
 			}
 
+			template <bool B = use_geometry,
+				std::enable_if_t<(B == false)>* = nullptr>
+			void Reset(const Shader_Data& vertex, const Shader_Data& fragment)
+			{
+				m_data = { vertex, fragment };
+			}
+
+			template <bool B = use_geometry,
+				std::enable_if_t<(B == true)>* = nullptr>
+				void Reset(const Shader_Data& vertex, const Shader_Data& fragment, const Shader_Data& geometry)
+			{
+				m_data = { vertex, fragment, geometry };
+			}
+		
 		private:
 
-
-
-
+			std::vector<Shader_Data> m_data{};
 
 		}; // Shader
 
-	} // gfx
+} // gfx
 
 } // tilia
 
