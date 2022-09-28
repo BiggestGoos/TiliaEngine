@@ -75,7 +75,7 @@ namespace tilia {
              *
              * @param other - The Cube_Map_Data for which to copy from.
              */
-            const Cube_Map_Data& operator=(const Cube_Map_Data& other) noexcept;
+            Cube_Map_Data& operator=(const Cube_Map_Data& other) noexcept;
 
             /**
              * @brief Move-assignment. Copies everything except for the data of all the
@@ -83,7 +83,7 @@ namespace tilia {
              *
              * @param other - The Cube_Map_Data for which to move from.
              */
-            const Cube_Map_Data& operator=(Cube_Map_Data&& other) noexcept;
+            Cube_Map_Data& operator=(Cube_Map_Data&& other) noexcept;
 
             Cube_Map_Data() = default;
 

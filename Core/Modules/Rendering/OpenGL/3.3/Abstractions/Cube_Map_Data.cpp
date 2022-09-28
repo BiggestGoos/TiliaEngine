@@ -1,6 +1,7 @@
 // Standard
 #include <stdexcept>
 #include <cmath>
+#include <iostream>
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map_Data.hpp"
@@ -12,7 +13,7 @@
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
-const tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(const Cube_Map_Data& other) noexcept
+tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(const Cube_Map_Data& other) noexcept
 {
     // Self check
     if (&other == this)
@@ -43,7 +44,7 @@ const tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(const Cube
     return *this;
 }
 
-const tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(Cube_Map_Data&& other) noexcept
+tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(Cube_Map_Data&& other) noexcept
 {
     // Self check
     if (&other == this)
@@ -75,19 +76,11 @@ const tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(Cube_Map_D
 
 tilia::gfx::Cube_Map_Data::Cube_Map_Data(const Cube_Map_Data& other) noexcept
 {
-    // Self check
-    if (&other == this)
-        return;
-
     *this = other;
 }
 
 tilia::gfx::Cube_Map_Data::Cube_Map_Data(Cube_Map_Data&& other) noexcept
 {
-    // Self check
-    if (&other == this)
-        return;
-
     *this = std::move(other);
 }
 

@@ -19,6 +19,7 @@
 
 // Standard
 #include <array>
+#include <vector>
 
 namespace tilia {
 
@@ -29,7 +30,7 @@ namespace tilia {
 		 */
 		struct Vertex_Info {
 			std::vector<int32_t> sizes{};   // The sizes of the attributes in the vertex.
-			std::vector<int32_t> strides;   // The strides of of the attributes in the vertex.
+			std::vector<int32_t> strides{};   // The strides of of the attributes in the vertex.
 			std::vector<int32_t> offsets{}; // The offsets of the attributes in the vertex.
 			bool operator==(const Vertex_Info& other) const {
 				if (this->sizes != other.sizes)

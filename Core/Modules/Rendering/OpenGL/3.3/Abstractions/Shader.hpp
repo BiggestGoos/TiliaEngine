@@ -269,45 +269,49 @@ namespace tilia {
 
 #endif // 0
 		
+#if 1
+
 		template<bool use_geometry>
 		class Shader {
 		public:
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
-			Shader(const Shader_Data& vertex, const Shader_Data& fragment) 
-				: Shader_Data{ vertex, fragment }
+			Shader(const Shader_Part& vertex, const Shader_Part& fragment)
+				: m_data{ vertex, fragment }
 			{
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == true)>* = nullptr>
-			Shader(const Shader_Data& vertex, const Shader_Data& fragment, const Shader_Data& geometry)
-				: Shader_Data{ vertex, fragment, geometry }
+			Shader(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry)
+				: m_data{ vertex, fragment, geometry }
 			{
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
-			void Reset(const Shader_Data& vertex, const Shader_Data& fragment)
+			void Reset(const Shader_Part& vertex, const Shader_Part& fragment)
 			{
 				m_data = { vertex, fragment };
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == true)>* = nullptr>
-				void Reset(const Shader_Data& vertex, const Shader_Data& fragment, const Shader_Data& geometry)
+				void Reset(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry)
 			{
 				m_data = { vertex, fragment, geometry };
 			}
 		
 		private:
 
-			std::vector<Shader_Data> m_data{};
+			Shader_Data m_data{};
 
 		}; // Shader
 
-} // gfx
+#endif
+
+	} // gfx
 
 } // tilia
 

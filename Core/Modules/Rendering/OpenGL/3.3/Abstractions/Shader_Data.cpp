@@ -439,3 +439,13 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 }
 
 #endif // 0
+
+#if 1
+
+tilia::gfx::Shader_Data::Shader_Data() noexcept
+{
+
+
+}
+
+#endif

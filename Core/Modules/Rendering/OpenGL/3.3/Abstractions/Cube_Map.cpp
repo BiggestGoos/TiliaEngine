@@ -4,6 +4,7 @@
 // Standard
 #include <stdexcept>
 #include <cmath>
+#include <iostream>
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.hpp"
@@ -22,18 +23,18 @@ tilia::gfx::Cube_Map::Cube_Map()
 
 }
 
-tilia::gfx::Cube_Map::Cube_Map(const Cube_Map_Data& cube_map_data) noexcept
+tilia::gfx::Cube_Map::Cube_Map(const Cube_Map& cube_map) noexcept
     : Cube_Map()
 {
 
-    m_cube_map_data = cube_map_data;
+    m_cube_map_data = cube_map.m_cube_map_data;
 
 }
 
-tilia::gfx::Cube_Map::Cube_Map(Cube_Map_Data&& cube_map_data) noexcept
+tilia::gfx::Cube_Map::Cube_Map(Cube_Map&& cube_map) noexcept
 {
 
-    m_cube_map_data = std::move(cube_map_data);
+    m_cube_map_data = std::move(cube_map.m_cube_map_data);
 
 }
 

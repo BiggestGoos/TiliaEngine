@@ -24,6 +24,7 @@
  // Standard
 #include <array>
 #include <memory>
+#include <algorithm>
 
 // Tilia
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
@@ -52,7 +53,7 @@ namespace tilia {
              * 
              * @param cube_map_data - The cube map data which will be copied.
              */
-            Cube_Map(const Cube_Map_Data& cube_map_data) noexcept;
+            Cube_Map(const Cube_Map& cube_map) noexcept;
 
             /**
              * @brief Move-constructor which calls the default constructor and then moves the
@@ -60,7 +61,7 @@ namespace tilia {
              *
              * @param cube_map_data - The cube map data which will be moved from.
              */
-            Cube_Map(Cube_Map_Data&& cube_map_data) noexcept;
+            Cube_Map(Cube_Map&& cube_map) noexcept;
 
             inline operator Cube_Map_Data&()             { return m_cube_map_data; }
             inline operator const Cube_Map_Data&() const { return m_cube_map_data; }
@@ -122,7 +123,7 @@ namespace tilia {
              * 
              * @return The cube map data of the cube map.
              */
-            inline auto Get_Cube_Map_Data() const {
+            inline const Cube_Map_Data& Get_Cube_Map_Data() const {
                 return m_cube_map_data;
             }
 
@@ -161,12 +162,11 @@ namespace tilia {
              * @return The paths.
              */
             inline auto Get_Paths() const {
-                std::array<std::string, *enums::Misc::Cube_Sides> ret_file_paths{};
-                for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
-                {
-                    ret_file_paths[i] = m_cube_map_data.sides[i].file_path;
-                }
-                return ret_file_paths;
+                std::array<std::string, *enums::Misc::Cube_Sides> ret{};
+                std::size_t index{};
+                std::for_each(m_cube_map_data.sides.begin(), m_cube_map_data.sides.end(), 
+                    [&ret, &index](const Cube_Map_Data::Cube_Side& side) { ret[index++] = side.file_path; });
+                return ret;
             }
 
             /**
@@ -357,7 +357,7 @@ namespace tilia {
         private:
 
             // The info pertaining to this Texture
-            Cube_Map_Data m_cube_map_data;
+            Cube_Map_Data m_cube_map_data{};
 
         }; // Cube_Map
 

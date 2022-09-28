@@ -183,49 +183,34 @@ namespace tilia {
 
 #endif // 0
 
-		class Shader_Data {
-		public:
+#if 1
 
-			std::string path{};
-			std::string source{};
+		struct Shader_Part {
 
-			Shader_Data() = default;
+			std::string path{}, source{};
 
-			Shader_Data(const std::string& path)
-				: path{ path }
-			{
-			}
+			Shader_Part(const Shader_Part& other) noexcept :
+				path{ other.path }, 
+				source{ other.source } { }
 
-			Shader_Data(const std::string& path, const std::string& source)
-				: path{ path },
-				source{ source }
-			{
-			}
+			Shader_Part(Shader_Part&& other) noexcept : 
+				path{ std::move(other.path) }, 
+				source{ std::move(other.source) } { }
 
-			Shader_Data(const Shader_Data& other) noexcept
-				: path{ other.path },
-				source{ other.source }
-			{
-			}
+			Shader_Part(const std::string& path) : path{ path } { }
+			Shader_Part(std::string&& path) : path{ std::move(path) } { }
 
-			Shader_Data(Shader_Data&& other) noexcept
-			: path{ std::move(other.path) },
-				source{ std::move(other.source) }
-			{
-			}
-
-			Shader_Data& operator=(const Shader_Data& other) noexcept
+			Shader_Part& operator=(const Shader_Part& other) noexcept
 			{
 				if (&other == this)
 					return *this;
 
 				this->path = other.path;
 				this->source = other.source;
-				
+
 				return *this;
 			}
-
-			Shader_Data& operator=(Shader_Data&& other) noexcept
+			Shader_Part& operator=(Shader_Part&& other) noexcept
 			{
 				if (&other == this)
 					return *this;
@@ -238,7 +223,74 @@ namespace tilia {
 
 		};
 
+		class Shader_Data {
+		public:
+
+			Shader_Data() noexcept;
+
+			Shader_Data(const Shader_Data& other) noexcept
+				: Shader_Data()
+			{
+
+				this->parts = other.parts;
+
+			}
+
+			Shader_Data(Shader_Data&& other) noexcept
+			{
+
+				this->parts = std::move(other.parts);
+				this->m_ID = other.m_ID;
+
+			}
+
+			Shader_Data(std::initializer_list<Shader_Part> parts) noexcept {
+				this->parts = parts;
+			}
+
+			Shader_Data& operator=(const Shader_Data& other) noexcept
+			{
+				if (&other == this)
+					return *this;
+
+				this->parts = other.parts;
+				m_ID = other.m_ID;
+				
+				return *this;
+			}
+
+			Shader_Data& operator=(Shader_Data&& other) noexcept
+			{
+				if (&other == this)
+					return *this;
+
+				this->parts = std::move(other.parts);
+				m_ID = other.m_ID;
+
+				return *this;
+			}
+
+			Shader_Data& operator=(std::initializer_list<Shader_Part> parts) noexcept
+			{
+				this->parts = parts;
+				return *this;
+			}
+
+			inline auto Get_ID() {
+				return m_ID;
+			}
+
+		private:
+
+			std::uint32_t m_ID{};
+			
+			std::vector<Shader_Part> parts{};
+
+		};
+
 	} // gfx
+
+#endif
 
 } // tilia
 

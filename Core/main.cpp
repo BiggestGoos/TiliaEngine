@@ -393,13 +393,80 @@ int main()
 
 #endif
 
+#if 1
+
 int main() {
 
-    Shader<false> s{ {"hello"}, {"hello"} };
+    try
+    {
 
-    s.Reset({ "world" }, { "world" });
+        // glfw: initialize and configure
+        // ------------------------------
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // glfw window creation
+        // --------------------
+        GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (window == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        glfwMakeContextCurrent(window);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+        // tell GLFW to capture our mouse
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        glfwSwapInterval(0);
+
+        //glad: load all OpenGL function pointers
+        //---------------------------------------
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return -1;
+        }
+
+        Shader<false> s{ {"hello"}, {"hello"} };
+
+        s.Reset({ "world" }, { "world" });
+
+        Cube_Map cm{};
+
+
+
+        while (!glfwWindowShouldClose(window))
+        {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+
+    }
+    catch (const std::exception& e)
+    {
+
+        std::cout << e.what() << '\n';
+
+    }
+    
+    glfwTerminate();
+
+    while (true)
+    {
+
+    }
 
 }
+
+#endif
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
