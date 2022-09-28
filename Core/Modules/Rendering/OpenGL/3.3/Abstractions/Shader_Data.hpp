@@ -29,6 +29,10 @@
 #include <vector>
 #include <initializer_list>
 
+// Tilia
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
+
 namespace tilia {
 
 	namespace gfx {
@@ -232,20 +236,20 @@ namespace tilia {
 				: Shader_Data()
 			{
 
-				this->parts = other.parts;
+				m_parts = other.m_parts;
 
 			}
 
 			Shader_Data(Shader_Data&& other) noexcept
 			{
 
-				this->parts = std::move(other.parts);
+				m_parts = std::move(other.m_parts);
 				this->m_ID = other.m_ID;
 
 			}
 
 			Shader_Data(std::initializer_list<Shader_Part> parts) noexcept {
-				this->parts = parts;
+				m_parts = parts;
 			}
 
 			Shader_Data& operator=(const Shader_Data& other) noexcept
@@ -253,7 +257,7 @@ namespace tilia {
 				if (&other == this)
 					return *this;
 
-				this->parts = other.parts;
+				m_parts = other.m_parts;
 				m_ID = other.m_ID;
 				
 				return *this;
@@ -264,15 +268,10 @@ namespace tilia {
 				if (&other == this)
 					return *this;
 
-				this->parts = std::move(other.parts);
+				m_parts = std::move(other.m_parts);
 				m_ID = other.m_ID;
+				other.m_ID = 0;
 
-				return *this;
-			}
-
-			Shader_Data& operator=(std::initializer_list<Shader_Part> parts) noexcept
-			{
-				this->parts = parts;
 				return *this;
 			}
 
@@ -280,11 +279,43 @@ namespace tilia {
 				return m_ID;
 			}
 
-		private:
+			inline void Set_Part(const Shader_Part& part, const enums::Shader_Type& type, const bool& reload = false) {
+				m_parts[utils::Get_Shader_Type_Index(type)] = part;
+				if (reload)
+					Reload(type);
+			}
+
+			inline void Set_Part(Shader_Part&& part, const enums::Shader_Type& type, const bool& reload = false) {
+				m_parts[utils::Get_Shader_Type_Index(type)] = std::move(part);
+				if (reload)
+					Reload(type);
+			}
+
+			inline auto Get_Part(const enums::Shader_Type& type) {
+				return m_parts[utils::Get_Shader_Type_Index(type)];
+			}
+
+			inline void Set_Parts(const std::vector<Shader_Part>& parts, const bool& reload = false) {
+				m_parts = parts;
+				if (reload)
+					Reload();
+			}
+
+			inline auto Get_Parts() {
+				return m_parts;
+			}
+
+			inline void Reload(const enums::Shader_Type& type) {
+				Reload(utils::Get_Shader_Type_Index(type));
+			}
+
+		protected:
+
+			void Reload(const std::size_t& index = 3);
 
 			std::uint32_t m_ID{};
 			
-			std::vector<Shader_Part> parts{};
+			std::vector<Shader_Part> m_parts{};
 
 		};
 

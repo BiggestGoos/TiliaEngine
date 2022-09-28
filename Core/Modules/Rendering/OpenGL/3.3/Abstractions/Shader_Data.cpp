@@ -18,6 +18,8 @@
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 #if 0
 
@@ -445,6 +447,77 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 tilia::gfx::Shader_Data::Shader_Data() noexcept
 {
 
+	try
+	{
+
+		GL_CALL(m_ID = glCreateProgram());
+
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("Shader { ID: %v } failed to be generated")
+			(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
+
+}
+
+static std::uint32_t Make_Shader(const tilia::gfx::Shader_Part& part, const tilia::enums::Shader_Type& type) {
+
+	std::uint32_t id{};
+
+	// Creates shader
+	GL_CALL(id = glCreateShader(*type));
+	const char* src = part.source.c_str();
+	// Adds source
+	GL_CALL(glShaderSource(id, 1, &src, nullptr));
+	// Compiles shader
+	GL_CALL(glCompileShader(id));
+
+	// Error checking
+	int32_t result;
+	GL_CALL(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+	if (result == GL_FALSE) {
+		int32_t length;
+		GL_CALL(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
+		std::unique_ptr<char[]> message = std::make_unique<char[]>(static_cast<size_t>(length * sizeof(char)));
+		GL_CALL(glGetShaderInfoLog(id, length, &length, message.get()));
+		message.get()[length - 1] = '\0';
+		// Prints errors
+		//log::Log(log::Type::ERROR, "SHADER", "Failed to compile %s shader", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
+		//log::Log_Indent("Message", "%s", message.get());
+		GL_CALL(glDeleteShader(id));
+	}
+
+	return id;
+
+}
+
+void tilia::gfx::Shader_Data::Reload(const std::size_t& index)
+{
+
+	std::uint32_t shader_id{};
+
+	switch (index)
+	{
+	case 0: // Vertex
+		shader_id = Make_Shader(m_parts[0], enums::Shader_Type::Vertex);
+
+		break;
+	case 1: // Fragment
+		GL_CALL(shader_id = glCreateShader(*enums::Shader_Type::Fragment));
+
+		break;
+	case 2: // Geometry
+		GL_CALL(shader_id = glCreateShader(*enums::Shader_Type::Geomentry));
+
+		break;
+	default:
+		break;
+	}
 
 }
 

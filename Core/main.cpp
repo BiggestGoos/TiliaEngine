@@ -436,9 +436,7 @@ int main() {
 
         s.Reset({ "world" }, { "world" });
 
-        Cube_Map cm{};
-
-
+        
 
         while (!glfwWindowShouldClose(window))
         {

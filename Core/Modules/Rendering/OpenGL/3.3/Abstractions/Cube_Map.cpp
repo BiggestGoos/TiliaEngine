@@ -36,6 +36,9 @@ tilia::gfx::Cube_Map::Cube_Map(Cube_Map&& cube_map) noexcept
 
     m_cube_map_data = std::move(cube_map.m_cube_map_data);
 
+    m_ID = cube_map.m_ID;
+    cube_map.m_ID = 0;
+
 }
 
 void tilia::gfx::Cube_Map::Reload()

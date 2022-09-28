@@ -32,21 +32,23 @@ namespace tilia {
 		 * 
 		 * @return The max amount of textures supported as a 32-bit integer
 		 */
-		uint32_t Get_Max_Textures();
+		std::uint32_t Get_Max_Textures();
 
 		/**
 		 * @brief Gets the smalles amount of indices needed for a primitve
 		 * 
 		 * @return The amount of indices needed for primitve
 		 */
-		uint32_t Get_Primitive_Index_Count(const uint32_t& primitve);
+		std::uint32_t Get_Primitive_Index_Count(const std::uint32_t& primitve);
 
-		uint32_t Get_Color_Format_Count(const uint32_t& color_format);
+		std::uint32_t Get_Color_Format_Count(const std::uint32_t& color_format);
 
-		const char* Get_Cube_Map_Side(const uint32_t& cube_map_side);
+		const char* Get_Cube_Map_Side(const std::uint32_t& cube_map_side);
 
-		enums::Data_Color_Format Get_Data_Color_Format(const uint32_t& color_format_count);
-		enums::Color_Format Get_Color_Format(const uint32_t& color_format_count);
+		enums::Data_Color_Format Get_Data_Color_Format(const std::uint32_t& color_format_count);
+		enums::Color_Format Get_Color_Format(const std::uint32_t& color_format_count);
+
+		std::size_t Get_Shader_Type_Index(const enums::Shader_Type& type);
 
 	}
 
