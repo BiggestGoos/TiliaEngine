@@ -43,12 +43,15 @@ namespace tilia {
 
 		std::uint32_t Get_Color_Format_Count(const std::uint32_t& color_format);
 
-		const char* Get_Cube_Map_Side(const std::uint32_t& cube_map_side);
+		const char* Get_Cube_Map_Side_String(const std::uint32_t& cube_map_side);
 
 		enums::Data_Color_Format Get_Data_Color_Format(const std::uint32_t& color_format_count);
 		enums::Color_Format Get_Color_Format(const std::uint32_t& color_format_count);
 
 		std::size_t Get_Shader_Type_Index(const enums::Shader_Type& type);
+		enums::Shader_Type Get_Index_Shader_Type(const std::size_t index);
+
+		const char* Get_Shader_Type_String(const enums::Shader_Type& type);
 
 	}
 

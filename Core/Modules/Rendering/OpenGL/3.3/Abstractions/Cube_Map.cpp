@@ -71,7 +71,7 @@ void tilia::gfx::Cube_Map::Reload()
                 )(m_ID)(m_cube_map_data.size)
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format))
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format))
-                (utils::Get_Cube_Map_Side(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
                 (static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()));
 
             Rebind();
@@ -121,7 +121,7 @@ void tilia::gfx::Cube_Map::Reload()
                 )(m_ID)
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format))
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format))
-                (utils::Get_Cube_Map_Side(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
                 (m_cube_map_data.size)
                 (static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()))
                 (m_cube_map_data.sides[i].file_path);
@@ -152,7 +152,7 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
                 "Cube map { ID: %v } could not generate mipmaps because of faulty data"
                 "\n>>> Side: %v"
                 )(m_ID)
-                (utils::Get_Cube_Map_Side(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)));
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)));
 
             throw e;
 

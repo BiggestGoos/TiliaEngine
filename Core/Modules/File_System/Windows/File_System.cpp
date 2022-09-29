@@ -80,6 +80,8 @@ std::string tilia::utils::File_System::Load_File(const std::string& file_path)
 			"\n>>> Message: %v"
 			)(file_path)(e.what());
 
+		throw te;
+
 	}
 
 	return std::move(data);

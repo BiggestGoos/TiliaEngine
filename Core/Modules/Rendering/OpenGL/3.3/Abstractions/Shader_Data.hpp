@@ -193,6 +193,9 @@ namespace tilia {
 
 			std::string path{}, source{};
 
+			Shader_Part(const std::string& path) : path{ path } { }
+			Shader_Part(std::string&& path) : path{ std::move(path) } { }
+
 			Shader_Part(const Shader_Part& other) noexcept :
 				path{ other.path }, 
 				source{ other.source } { }
@@ -200,9 +203,6 @@ namespace tilia {
 			Shader_Part(Shader_Part&& other) noexcept : 
 				path{ std::move(other.path) }, 
 				source{ std::move(other.source) } { }
-
-			Shader_Part(const std::string& path) : path{ path } { }
-			Shader_Part(std::string&& path) : path{ std::move(path) } { }
 
 			Shader_Part& operator=(const Shader_Part& other) noexcept
 			{
@@ -248,8 +248,9 @@ namespace tilia {
 
 			}
 
-			Shader_Data(std::initializer_list<Shader_Part> parts) noexcept {
+			Shader_Data(std::initializer_list<Shader_Part> parts, const bool& use_geometry) noexcept : Shader_Data() {
 				m_parts = parts;
+				m_use_geometry = use_geometry;
 			}
 
 			Shader_Data& operator=(const Shader_Data& other) noexcept
@@ -295,27 +296,29 @@ namespace tilia {
 				return m_parts[utils::Get_Shader_Type_Index(type)];
 			}
 
-			inline void Set_Parts(const std::vector<Shader_Part>& parts, const bool& reload = false) {
-				m_parts = parts;
-				if (reload)
-					Reload();
-			}
-
-			inline auto Get_Parts() {
-				return m_parts;
-			}
-
 			inline void Reload(const enums::Shader_Type& type) {
 				Reload(utils::Get_Shader_Type_Index(type));
 			}
 
 		protected:
 
+			std::uint32_t Make_Shader(const tilia::enums::Shader_Type& type);
+
 			void Reload(const std::size_t& index = 3);
 
 			std::uint32_t m_ID{};
 			
 			std::vector<Shader_Part> m_parts{};
+			
+			std::unordered_map<std::string, int32_t> m_location_cache{};
+
+		private:
+
+			bool m_use_geometry{};
+
+			static uint32_t s_bound_ID; 
+
+			static uint32_t s_previous_ID; 
 
 		};
 
