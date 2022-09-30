@@ -102,7 +102,7 @@ void tilia::gfx::Cube_Map_Data::Reload(const std::size_t& index)
         e.Add_Message(
             "Failed to reload data"
             "\n>>> Side: %v"
-        )(utils::Get_Cube_Map_Side(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(index)));
+        )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(index)));
 
         throw e;
 
@@ -131,7 +131,7 @@ void tilia::gfx::Cube_Map_Data::Reload()
             e.Add_Message(
                 "Failed to reload data"
                 "\n>>> Side: %v"
-            )(utils::Get_Cube_Map_Side(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(i)));
+            )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(i)));
 
             throw e;
 

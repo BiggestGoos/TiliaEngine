@@ -16,11 +16,13 @@
 // Standard
 #include <cstring>
 #include <memory>
+#include <iostream>
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Modules/File_System/Windows/File_System.hpp"
 
 #if 0
 
@@ -445,6 +447,9 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 
 #if 1
 
+// The file system defined in another file
+extern tilia::utils::File_System file_system;
+
 tilia::gfx::Shader_Data::Shader_Data() noexcept
 {
 
@@ -466,31 +471,55 @@ tilia::gfx::Shader_Data::Shader_Data() noexcept
 
 }
 
-static std::uint32_t Make_Shader(const tilia::gfx::Shader_Part& part, const tilia::enums::Shader_Type& type) {
-
+std::uint32_t tilia::gfx::Shader_Data::Make_Shader(const tilia::enums::Shader_Type& type)
+{
+	
 	std::uint32_t id{};
 
 	// Creates shader
 	GL_CALL(id = glCreateShader(*type));
-	const char* src = part.source.c_str();
-	// Adds source
-	GL_CALL(glShaderSource(id, 1, &src, nullptr));
-	// Compiles shader
+	
+	std::string src{};
+
+	switch (type)
+	{
+	case enums::Shader_Type::Vertex:
+		src = m_parts[0].source;
+		break;
+	case enums::Shader_Type::Fragment:
+		src = m_parts[1].source;
+		break;
+	case enums::Shader_Type::Geomentry:
+		src = m_parts[2].source;
+		break;
+	}
+
+	const char* c_src{ src.c_str() };
+
+	GL_CALL(glShaderSource(id, 1, &c_src, nullptr));
+
 	GL_CALL(glCompileShader(id));
 
-	// Error checking
-	int32_t result;
+	std::int32_t result;
+
 	GL_CALL(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+
 	if (result == GL_FALSE) {
-		int32_t length;
+		std::int32_t length;
+
 		GL_CALL(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
-		std::unique_ptr<char[]> message = std::make_unique<char[]>(static_cast<size_t>(length * sizeof(char)));
-		GL_CALL(glGetShaderInfoLog(id, length, &length, message.get()));
-		message.get()[length - 1] = '\0';
+
+		std::vector<char> message(static_cast<size_t>(length));
+		
+		GL_CALL(glGetShaderInfoLog(id, length, &length, &message.front()));
+		message[static_cast<size_t>(length) - 1] = '\0';
+
 		// Prints errors
 		//log::Log(log::Type::ERROR, "SHADER", "Failed to compile %s shader", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
 		//log::Log_Indent("Message", "%s", message.get());
+
 		GL_CALL(glDeleteShader(id));
+
 	}
 
 	return id;
@@ -505,19 +534,85 @@ void tilia::gfx::Shader_Data::Reload(const std::size_t& index)
 	switch (index)
 	{
 	case 0: // Vertex
-		shader_id = Make_Shader(m_parts[0], enums::Shader_Type::Vertex);
+
+		m_parts[0].source = file_system.Load_File(m_parts[0].path);
+
+		shader_id = Make_Shader(enums::Shader_Type::Vertex);
 
 		break;
 	case 1: // Fragment
-		GL_CALL(shader_id = glCreateShader(*enums::Shader_Type::Fragment));
+
+		m_parts[1].source = file_system.Load_File(m_parts[1].path);
+
+		shader_id = Make_Shader(enums::Shader_Type::Fragment);
 
 		break;
 	case 2: // Geometry
-		GL_CALL(shader_id = glCreateShader(*enums::Shader_Type::Geomentry));
+
+		m_parts[2].source = file_system.Load_File(m_parts[2].path);
+
+		shader_id = Make_Shader(enums::Shader_Type::Geomentry);
 
 		break;
 	default:
-		break;
+
+		Reload(0);
+				
+		Reload(1);
+
+		if (m_use_geometry)
+			Reload(2);	
+
+		return;
+	}
+
+	try
+	{
+
+		GL_CALL(glAttachShader(m_ID, shader_id));
+		
+		GL_CALL(glLinkProgram(m_ID));
+		GL_CALL(glValidateProgram(m_ID));
+	
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		GL_CALL(glDeleteShader(shader_id));
+
+		e.Add_Message("Shader { %v } failed to attach part"
+			"\n>>> Part ID: %v"
+		)(m_ID)(shader_id);
+
+		throw e;
+
+	}
+
+	GL_CALL(glDeleteShader(shader_id));
+
+	std::int32_t result;
+
+	GL_CALL(glGetProgramiv(m_ID, GL_LINK_STATUS, &result));
+
+	if (result == GL_FALSE) {
+		std::int32_t length;
+
+		GL_CALL(glGetProgramiv(m_ID, GL_INFO_LOG_LENGTH, &length));
+
+		std::vector<char> message(static_cast<size_t>(length));
+
+		GL_CALL(glGetProgramInfoLog(m_ID, length, &length, &message.front()));
+		message[static_cast<size_t>(length) - 1] = '\0';
+
+		utils::Tilia_Exception e{ LOCATION };
+
+		e.Add_Message("Shader { ID: %v } failed to reload shader part { ID: %v }"
+			"\n>>> Part type: %v"
+			"\n>>> Message: %v"
+		)(m_ID)(shader_id)
+		(utils::Get_Shader_Type_String(utils::Get_Index_Shader_Type(index)))
+		(&message.front());
+
 	}
 
 }

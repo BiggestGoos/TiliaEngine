@@ -71,7 +71,7 @@ std::uint32_t tilia::utils::Get_Color_Format_Count(const std::uint32_t& color_fo
 	}
 }
 
-const char* tilia::utils::Get_Cube_Map_Side(const std::uint32_t& cube_map_side)
+const char* tilia::utils::Get_Cube_Map_Side_String(const std::uint32_t& cube_map_side)
 {
 	switch (cube_map_side)
 	{
@@ -132,6 +132,37 @@ std::size_t tilia::utils::Get_Shader_Type_Index(const enums::Shader_Type& type)
 		return 1;
 	case enums::Shader_Type::Geomentry:
 		return 2;
+	default:
+		return 3;
 	}
-	return 3;
+}
+
+tilia::enums::Shader_Type tilia::utils::Get_Index_Shader_Type(const std::size_t index)
+{
+	switch (index)
+	{
+	case 0:
+		return enums::Shader_Type::Vertex;
+	case 1:
+		return enums::Shader_Type::Fragment;
+	case 2:
+		return enums::Shader_Type::Geomentry;
+	default:
+		return enums::Shader_Type();
+	}
+}
+
+const char* tilia::utils::Get_Shader_Type_String(const enums::Shader_Type& type)
+{
+	switch (type)
+	{
+	case enums::Shader_Type::Vertex:
+		return "Vertex";
+	case enums::Shader_Type::Fragment:
+		return "Fragment";
+	case enums::Shader_Type::Geomentry:
+		return "Geometry";
+	default:
+		return "Error type";
+	}
 }

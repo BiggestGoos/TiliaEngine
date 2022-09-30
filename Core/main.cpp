@@ -432,11 +432,7 @@ int main() {
             return -1;
         }
 
-        Shader<false> s{ {"hello"}, {"hello"} };
-
-        s.Reset({ "world" }, { "world" });
-
-        
+        Shader<false> s{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
 
         while (!glfwWindowShouldClose(window))
         {
@@ -448,11 +444,14 @@ int main() {
         }
 
     }
-    catch (const std::exception& e)
-    {
-
+    catch (const utils::Tilia_Exception& e) {
+        std::cout << "\n<<<Tilia_Exception>>>\n";
+        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
+            "File: " << e.Get_Origin_File() << '\n';
         std::cout << e.what() << '\n';
-
+    }
+    catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
     }
     
     glfwTerminate();

@@ -277,30 +277,39 @@ namespace tilia {
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
-			Shader(const Shader_Part& vertex, const Shader_Part& fragment)
-				: Shader_Data{ vertex, fragment }
+			Shader(const Shader_Part& vertex, const Shader_Part& fragment, const bool& reload = false)
+				: Shader_Data{ { vertex, fragment }, use_geometry
+		}
 			{
+				if (reload)
+					Reload();
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == true)>* = nullptr>
-			Shader(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry)
-				: Shader_Data{ vertex, fragment, geometry }
+			Shader(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry, const bool& reload = false)
+				: Shader_Data{ { vertex, fragment, geometry }, use_geometry }
 			{
+				if (reload)
+					Reload();
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
-			void Reset(const Shader_Part& vertex, const Shader_Part& fragment)
+			void Reset(const Shader_Part& vertex, const Shader_Part& fragment, const bool& reload = false)
 			{
-				Set_Parts({ vertex, fragment });
+				m_parts = { vertex, fragment };
+				if (reload)
+					Reload();
 			}
 
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == true)>* = nullptr>
-				void Reset(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry)
+				void Reset(const Shader_Part& vertex, const Shader_Part& fragment, const Shader_Part& geometry, const bool& reload = false)
 			{
-				Set_Parts({ vertex, fragment, geometry });
+				m_parts = { vertex, fragment, geometry };
+				if (reload)
+					Reload();
 			}
 
 		}; // Shader
