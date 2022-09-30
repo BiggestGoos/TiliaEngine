@@ -1,4 +1,4 @@
-/*****************************************************************//**
+/*********************************************************************
  * @file   Shader_Data.h
  * @brief  Holds a class which holds data to be set as uniforms in an 
  *		   @Shader object.
@@ -299,6 +299,30 @@ namespace tilia {
 			inline void Reload(const enums::Shader_Type& type) {
 				Reload(utils::Get_Shader_Type_Index(type));
 			}
+
+			/**
+			 * @brief Binds the shader.
+			 */
+			void Bind() const;
+
+			/**
+			 * @brief Binds the given shader.
+			 * 
+			 * @param id - The id of the shader which will be bound.
+			 */
+			static void Bind(const std::uint32_t& id);
+
+			/**
+			 * @brief Unbinds the bound shader. Static version
+			 * of Unbind.
+			 */
+			static void Unbind(const bool& save_id = false);
+
+			/**
+			 * @brief Binds the stored previously bound shader. Static version
+			 * of Rebind.
+			 */
+			static void Rebind();
 
 		protected:
 
