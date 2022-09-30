@@ -15,6 +15,7 @@
 
 // Standard
 #include <cstring>
+#include <memory>
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"

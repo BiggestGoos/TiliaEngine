@@ -33,7 +33,7 @@ LIBS_DIR := -L.\vendor\glfw\lib
 
 CXX := g++
 EXE_FLAGS := $(OBJS) -o $(BUILD_DIR)$(EXECUTABLE).exe $(LIBS_DIR) $(LIBS)
-C_FLAGS := -O3 -g -static -static-libgcc -static-libstdc++
+C_FLAGS := -O3 -g -static -static-libgcc -static-libstdc++ -std=c++14
 CPP_FLAGS := -I.
 
 RM := del
