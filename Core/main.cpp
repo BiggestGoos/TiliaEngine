@@ -434,6 +434,16 @@ int main() {
 
         Shader<false> s{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
 
+        Shader<false> s_2{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
+
+        s.Bind();
+
+        s.Unbind(true);
+
+        s.Bind(s_2.Get_ID());
+
+        s_2.Rebind();
+
         while (!glfwWindowShouldClose(window))
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -456,10 +466,9 @@ int main() {
     
     glfwTerminate();
 
-    while (true)
-    {
+    int w{};
 
-    }
+    std::cin >> w;
 
 }
 

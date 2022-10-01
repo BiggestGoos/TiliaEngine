@@ -334,15 +334,15 @@ namespace tilia {
 			
 			std::vector<Shader_Part> m_parts{};
 			
-			std::unordered_map<std::string, int32_t> m_location_cache{};
+			std::unordered_map<std::string, std::int32_t> m_location_cache{};
 
 		private:
 
 			bool m_use_geometry{};
 
-			static uint32_t s_bound_ID; 
+			static std::uint32_t s_bound_ID; 
 
-			static uint32_t s_previous_ID; 
+			static std::uint32_t s_previous_ID; 
 
 		};
 

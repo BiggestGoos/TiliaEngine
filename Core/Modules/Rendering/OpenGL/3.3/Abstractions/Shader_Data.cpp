@@ -447,6 +447,9 @@ bool tilia::gfx::Shader_Data::Uniform_Variable::operator==(const Uniform_Variabl
 
 #if 1
 
+std::uint32_t tilia::gfx::Shader_Data::s_bound_ID{};
+std::uint32_t tilia::gfx::Shader_Data::s_previous_ID{};
+
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
@@ -471,12 +474,58 @@ tilia::gfx::Shader_Data::Shader_Data() noexcept
 
 }
 
+void tilia::gfx::Shader_Data::Bind() const {
+    if (!m_ID)
+	{
+		utils::Tilia_Exception e{ LOCATION };
+
+		e.Add_Message("Failed to bind shader { ID: %v }"
+		)(m_ID);
+
+		throw e;
+
+	}
+    GL_CALL(glUseProgram(m_ID));
+    s_bound_ID = m_ID;
+}
+
+void tilia::gfx::Shader_Data::Bind(const std::uint32_t& id) {
+    if (!id)
+	{
+		utils::Tilia_Exception e{ LOCATION };
+
+		e.Add_Message("Failed to bind shader { ID: %v }"
+		)(id);
+
+		throw e;
+
+	}
+    GL_CALL(glUseProgram(id));
+    s_bound_ID = id;
+}
+
+void tilia::gfx::Shader_Data::Unbind(const bool& save_id) {
+    GL_CALL(glUseProgram(0));
+
+    if (save_id)
+    {
+        s_previous_ID = s_bound_ID;
+    }
+
+	s_bound_ID = 0;
+}
+
+void tilia::gfx::Shader_Data::Rebind() {
+	GL_CALL(glUseProgram(s_previous_ID));
+	s_bound_ID = s_previous_ID;
+	s_bound_ID = 0;
+}
+
 std::uint32_t tilia::gfx::Shader_Data::Make_Shader(const tilia::enums::Shader_Type& type)
 {
 	
 	std::uint32_t id{};
 
-	// Creates shader
 	GL_CALL(id = glCreateShader(*type));
 	
 	std::string src{};
@@ -514,11 +563,18 @@ std::uint32_t tilia::gfx::Shader_Data::Make_Shader(const tilia::enums::Shader_Ty
 		GL_CALL(glGetShaderInfoLog(id, length, &length, &message.front()));
 		message[static_cast<size_t>(length) - 1] = '\0';
 
-		// Prints errors
-		//log::Log(log::Type::ERROR, "SHADER", "Failed to compile %s shader", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
-		//log::Log_Indent("Message", "%s", message.get());
-
 		GL_CALL(glDeleteShader(id));
+
+		utils::Tilia_Exception e{ LOCATION };
+
+		e.Add_Message("Shader part { ID: %v } failed to be created"
+			"\n>>> Part type: %v"
+			"\n>>> Message: %v"
+		)(id)
+		(utils::Get_Shader_Type_String(type))
+		(&message.front());
+
+		throw e;
 
 	}
 
@@ -612,6 +668,8 @@ void tilia::gfx::Shader_Data::Reload(const std::size_t& index)
 		)(m_ID)(shader_id)
 		(utils::Get_Shader_Type_String(utils::Get_Index_Shader_Type(index)))
 		(&message.front());
+
+		throw e;
 
 	}
 
