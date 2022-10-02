@@ -521,6 +521,109 @@ void tilia::gfx::Shader_Data::Rebind() {
 	s_bound_ID = 0;
 }
 
+#define SET_UNIFORM(x) if (m_ID != s_bound_ID)\
+					   { Unbind(true);\
+                       Bind(); }\
+                       x;\
+					   if (m_ID == s_bound_ID && m_ID != s_previous_ID)\
+                       { Rebind(); }
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, std::initializer_list<float> vs)
+{
+	Uniform(loc, vs.begin(), vs.size());
+}
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, std::initializer_list<std::int32_t> vs)
+{
+	Uniform(loc, vs.begin(), vs.size());
+}
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, std::initializer_list<std::uint32_t> vs)
+{
+	Uniform(loc, vs.begin(), vs.size());
+}
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, const float* vs, const std::size_t& size)
+{
+	switch (size)
+	{
+	case 1:
+		SET_UNIFORM(GL_CALL(glUniform1f(Get_Uniform_Location(loc), vs[0])));
+		return;
+	case 2:
+		SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(loc), vs[0], vs[1])));
+		return;
+	case 3:
+		SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+		return;
+	case 4:
+		SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+		return;
+	default:
+		SET_UNIFORM(GL_CALL(glUniform1fv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))		
+		return;
+	}
+}
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, const std::int32_t* vs, const std::size_t& size)
+{
+	switch (size)
+	{
+	case 1:
+		SET_UNIFORM(GL_CALL(glUniform1i(Get_Uniform_Location(loc), vs[0])));
+		return;
+	case 2:
+		SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(loc), vs[0], vs[1])));
+		return;
+	case 3:
+		SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+		return;
+	case 4:
+		SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+		return;
+	default:
+		SET_UNIFORM(GL_CALL(glUniform1iv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))
+			return;
+	}
+}
+
+void tilia::gfx::Shader_Data::Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size)
+{
+	switch (size)
+	{
+	case 1:
+		SET_UNIFORM(GL_CALL(glUniform1ui(Get_Uniform_Location(loc), vs[0])));
+		return;
+	case 2:
+		SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(loc), vs[0], vs[1])));
+		return;
+	case 3:
+		SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+		return;
+	case 4:
+		SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+		return;
+	default:
+		SET_UNIFORM(GL_CALL(glUniform1uiv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))			return;
+	}
+}
+
+std::int32_t tilia::gfx::Shader_Data::Get_Uniform_Location(const std::string& name)
+{
+	if (m_location_cache.find(name) != m_location_cache.end())
+		return m_location_cache[name];
+
+	GL_CALL(std::int32_t location = glGetUniformLocation(m_ID, name.c_str()));
+
+	// Check is -1
+	//if (location == -1)
+	//	log::Log(log::Type::ERROR, "SHADER", "Uniform { Name: %s } does not exist / is not being used", name.c_str());
+
+	m_location_cache[name] = location;
+
+	return location;
+}
+
 std::uint32_t tilia::gfx::Shader_Data::Make_Shader(const tilia::enums::Shader_Type& type)
 {
 	

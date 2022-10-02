@@ -52,35 +52,35 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path
 std::string tilia::utils::File_System::Load_File(const std::string& file_path)
 {
 	
-	std::ifstream stream{};
+	std::ifstream file{};
 
 	std::string data{};
 
 	// Sets exceptions
-	stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
 	try
 	{
 
-		stream.open(file_path);
+		file.open(file_path);
 
 		// Gets the data from the file stream
-		data = (std::stringstream() << stream.rdbuf()).str();
+		data = (std::stringstream() << file.rdbuf()).str();
 
-		stream.close();
+		file.close();
 
 	}
 	catch (std::exception& e)
 	{
 
-		utils::Tilia_Exception te{ LOCATION };
+		utils::Tilia_Exception t_e{ LOCATION };
 
-		te.Add_Message("File did not load properly"
+		t_e.Add_Message("File did not load properly"
 			"\n>>> Path: %v"
 			"\n>>> Message: %v"
 			)(file_path)(e.what());
 
-		throw te;
+		throw t_e;
 
 	}
 

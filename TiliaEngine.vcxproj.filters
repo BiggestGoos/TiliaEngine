@@ -1410,16 +1410,16 @@
     <None Include="vendor\glm\include\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="build\res\shaders\cube_shader.vert" />
+    <None Include="build\res\shaders\light_shader.vert" />
+    <None Include="cpp.hint" />
     <None Include="x64\Release\res\shaders\cube_shader.frag" />
     <None Include="x64\Release\res\shaders\cube_shader.vert" />
     <None Include="x64\Release\res\shaders\light_shader.frag" />
     <None Include="x64\Release\res\shaders\light_shader.vert" />
     <None Include="res\shaders\cube_shader.frag" />
-    <None Include="res\shaders\light_shader.frag" />
     <None Include="res\shaders\cube_shader.vert" />
+    <None Include="res\shaders\light_shader.frag" />
     <None Include="res\shaders\light_shader.vert" />
-    <None Include="build\res\shaders\cube_shader.vert" />
-    <None Include="build\res\shaders\light_shader.vert" />
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

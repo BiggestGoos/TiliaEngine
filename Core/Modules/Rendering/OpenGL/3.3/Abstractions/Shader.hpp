@@ -275,11 +275,14 @@ namespace tilia {
 		class Shader : public Shader_Data {
 		public:
 
+			Shader() 
+				: Shader_Data{ { }, use_geometry }
+			{ }
+
 			template <bool B = use_geometry,
 				std::enable_if_t<(B == false)>* = nullptr>
 			Shader(const Shader_Part& vertex, const Shader_Part& fragment, const bool& reload = false)
-				: Shader_Data{ { vertex, fragment }, use_geometry
-		}
+				: Shader_Data{ { vertex, fragment }, use_geometry }
 			{
 				if (reload)
 					Reload();

@@ -28,6 +28,7 @@
 #include <array>
 #include <vector>
 #include <initializer_list>
+#include <iostream>
 
 // Tilia
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
@@ -324,9 +325,48 @@ namespace tilia {
 			 */
 			static void Rebind();
 
-		protected:
+			void Uniform(const std::string& loc, std::initializer_list<float> vs);
+			void Uniform(const std::string& loc, std::initializer_list<std::int32_t> vs);
+			void Uniform(const std::string& loc, std::initializer_list<std::uint32_t> vs);
 
-			std::uint32_t Make_Shader(const tilia::enums::Shader_Type& type);
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::vec<size, float, glm::defaultp> v) {
+				Uniform(loc, &v[0], size);
+			}
+
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::vec<size, std::int32_t, glm::defaultp> v) {
+				Uniform(loc, &v[0], size);
+			}
+
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::vec<size, std::uint32_t, glm::defaultp> v)
+			{
+				Uniform(loc, &v[0], size);
+			}
+
+			void Uniform(const std::string& loc, const float* vs, const std::size_t& size);
+
+			void Uniform(const std::string& loc, const std::int32_t* vs, const std::size_t& size);
+
+			void Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size);
+
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::mat<size, size, float, glm::defaultp> v) {
+				Uniform(loc, &v[0], size * size);
+			}
+
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::mat<size, size, std::int32_t, glm::defaultp> v) {
+				Uniform(loc, &v[0], size * size);
+			}
+
+			template<glm::length_t size>
+			void Uniform(const std::string& loc, glm::mat<size, size, std::uint32_t, glm::defaultp> v) {
+				Uniform(loc, &v[0], size * size);
+			}
+
+		protected:
 
 			void Reload(const std::size_t& index = 3);
 
@@ -338,6 +378,10 @@ namespace tilia {
 
 		private:
 
+			std::int32_t Get_Uniform_Location(const std::string& name);
+
+			std::uint32_t Make_Shader(const tilia::enums::Shader_Type& type);
+
 			bool m_use_geometry{};
 
 			static std::uint32_t s_bound_ID; 
@@ -346,7 +390,7 @@ namespace tilia {
 
 		};
 
-	} // gfx
+} // gfx
 
 #endif
 

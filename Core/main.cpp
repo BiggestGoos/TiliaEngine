@@ -82,7 +82,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 0
+#if 1
 
 int main()
 {
@@ -139,15 +139,11 @@ int main()
         camera.Reset();
 
         auto light_shader{ std::make_shared<Shader<false>>() };
+
         auto cube_shader{ std::make_shared<Shader<false>>() };
 
-        Shader<true> s{ { "hello" }, { "hello" }, { "hello" } };
-
-        s.Reset({ "hello" }, { "hello" }, { "hello" });
-
-        light_shader->Init("res/shaders/light_shader.vert", "res/shaders/light_shader.frag");
-
-        cube_shader->Init("res/shaders/cube_shader.vert", "res/shaders/cube_shader.frag");
+        light_shader->Reset({ "res/shaders/light_shader.vert" }, { "res/shaders/light_shader.frag" }, true);
+        cube_shader->Reset({ "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true);
 
         uint32_t light_ubo{}, cube_ubo{};
 
@@ -193,9 +189,6 @@ int main()
         //std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
         //tex_2d->Set_Texture("res/teures/container2.png");
 
-        light_shader->Uniform("material.diffuse", 0);
-        light_shader->Uniform("material.specular", 1);
-        
         constexpr size_t cube_count{ 10 };
         constexpr size_t light_count{ 1 };
         
@@ -229,7 +222,7 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Shader()(light_shader);
+            new_mesh->Set_Shader_Data()(light_shader);
 
             new_mesh->Add_Texture(box_texture);
             //new_mesh->Add_Texture(box_specular_texture);
@@ -242,7 +235,7 @@ int main()
 
             create_cube(*new_mesh, model, true);
 
-            renderer.Add_Mesh(*new_mesh);
+            renderer.Add_Mesh(new_mesh->Get_Mesh_Data());
 
             meshes.push_back(new_mesh);
 
@@ -253,7 +246,7 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Shader()(cube_shader);
+            new_mesh->Set_Shader_Data()(cube_shader);
 
             new_mesh->Set_Cull_Face()(enums::Face::Back);
 
@@ -345,7 +338,7 @@ int main()
 
             renderer.m_camera_pos = camera.Position;
 
-            light_shader->Uniform("lightColor", 1.0f, 1.0f, 1.0f);
+            light_shader->Uniform("lightColor", { 1.0f, 1.0f, 1.0f });
             light_shader->Uniform("lightPos", pointLightPositions[0]);
 
             try
@@ -385,15 +378,15 @@ int main()
 
     glfwTerminate();
 
-    // int w{};
-    // std::cin >> w;
+    int w{};
+    std::cin >> w;
 
     return 0;
 }
 
 #endif
 
-#if 1
+#if 0
 
 int main() {
 

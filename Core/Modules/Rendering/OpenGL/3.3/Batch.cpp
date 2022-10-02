@@ -292,13 +292,13 @@ void tilia::gfx::Batch::Render()
 	// Binds vertex array
 	GL_CALL(glBindVertexArray(m_vao));
 
-#if 0
+#if 1
 
-	if (m_shader_data.lock().get()) 
-		m_shader.lock()->Uniform(*m_shader_data.lock());
+	//if (m_shader_data.lock().get()) 
+	//	m_shader.lock()->Uniform(*m_shader_data.lock());
 
 	// Binds shader
-	m_shader.lock()->Bind();
+	m_shader_data.lock()->Bind();
 
 #else
 
@@ -520,6 +520,8 @@ bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 	if (m_texture_count + temp->textures->size() > utils::Get_Max_Textures())
 		return false;
 
+#if 1
+
 #if 0
 
 	// Checks if shader is same
@@ -535,6 +537,11 @@ bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 	{
 		return false;
 	}
+
+#endif
+
+	if (m_shader_data.lock()->Get_ID() != temp->shader_data->lock()->Get_ID())
+		return false;
 
 #else
 
