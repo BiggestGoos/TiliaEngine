@@ -138,12 +138,9 @@ int main()
 
         camera.Reset();
 
-        auto light_shader{ std::make_shared<Shader<false>>() };
+        auto light_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/light_shader.vert" }, { "res/shaders/light_shader.frag" }, true }) };
 
-        auto cube_shader{ std::make_shared<Shader<false>>() };
-
-        light_shader->Reset({ "res/shaders/light_shader.vert" }, { "res/shaders/light_shader.frag" }, true);
-        cube_shader->Reset({ "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true);
+        auto cube_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true }) };
 
         uint32_t light_ubo{}, cube_ubo{};
 

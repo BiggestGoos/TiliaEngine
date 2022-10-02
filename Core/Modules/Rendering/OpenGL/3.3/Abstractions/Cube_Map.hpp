@@ -1,9 +1,7 @@
 /**************************************************************************************************
  * @file   Cube_Map.hpp
  * 
- * @brief  Declares and defines a class called Cube_Map deriving from Texture in "Texture.hpp", 
- *         which works as an abstraction for an openGL cube map texture as well as a struct called
- *         Cube_Map_Data that holds some information about the class.
+ * @brief  Declares and defines a class called Cube_Map deriving from Texture in "Texture.hpp", which works as an abstraction for an openGL cube map texture as well as a struct called Cube_Map_Data that holds some information about the class.
  * 
  * @define TILIA_CUBE_MAP_HPP
  * 
@@ -35,29 +33,25 @@ namespace tilia {
     namespace gfx {
 
         /**
-         * @brief A class deriving from the "Texture.h" Texture class which works as an abstraction
-         *        for an openGL cube map. Also contains a Cube_Map_Data object.
+         * @brief A class deriving from the "Texture.h" Texture class which works as an abstraction for an openGL cube map. Also contains a Cube_Map_Data object.
          */
         class Cube_Map : public Texture {
             public:
 
             /**
-             * @brief The default constructor which generates an openGL cube map and sets the
-             *        texture id.
+             * @brief The default constructor which generates an openGL cube map and sets the texture id.
              */
             Cube_Map();
 
             /**
-             * @brief Copy-constructor which calls the default constructor and then copies the
-             *        data of the given cube map data.
+             * @brief Copy-constructor which calls the default constructor and then copies the data of the given cube map data.
              * 
              * @param cube_map_data - The cube map data which will be copied.
              */
             Cube_Map(const Cube_Map& cube_map) noexcept;
 
             /**
-             * @brief Move-constructor which calls the default constructor and then moves the
-             *        data of the given cube map data.
+             * @brief Move-constructor which calls the default constructor and then moves the data of the given cube map data.
              *
              * @param cube_map_data - The cube map data which will be moved from.
              */
@@ -76,8 +70,7 @@ namespace tilia {
             void Reload();
 
             /**
-             * @brief Reloads the texture data of the cube map data to the loaded textures from the
-             *        contained paths.
+             * @brief Reloads the texture data of the cube map data to the loaded textures from the contained paths.
              */
             inline void Reload_Cube_Map_Data() {
                 m_cube_map_data.Reload();
@@ -94,8 +87,7 @@ namespace tilia {
             void Generate_Mipmaps() override;
 
             /**
-             * @brief Copies all of the data from the given cube map data. If told so will also
-             *        load the texture data from the paths.
+             * @brief Copies all of the data from the given cube map data. If told so will also load the texture data from the paths.
              * 
              * @param cube_map_data - The data for which to copy.
              * @param reload - Wheter or not to reload the texture data.
@@ -106,8 +98,7 @@ namespace tilia {
                     m_cube_map_data.Reload();
             }
             /**
-             * @brief Moves all of the data from the given cube map data. If told so will also
-             *        load the texture data from the paths.
+             * @brief Moves all of the data from the given cube map data. If told so will also load the texture data from the paths.
              *
              * @param cube_map_data - The data for which to move from.
              * @param reload - Wheter or not to reload the texture data.
@@ -210,8 +201,7 @@ namespace tilia {
              * 
              * @param index - The index of the side of which data to set.
              * @param data - The data for which to copy from.
-             * @param byte_count - The amount of bytes the data is made up of. If zero then will
-             *                     use the square of the already stored size.
+             * @param byte_count - The amount of bytes the data is made up of. If zero then will use the square of the already stored size.
              */
             inline void Set_Data(const std::size_t& index, uint8_t*& data, const uint32_t& byte_count = 0) {
                 m_cube_map_data.Copy_Data(index, data, byte_count);
@@ -227,8 +217,7 @@ namespace tilia {
             }
 
             /**
-             * @brief Gets the data from the given index. If specified then the ownership of the
-             *        data will be released.
+             * @brief Gets the data from the given index. If specified then the ownership of the data will be released.
              * 
              * @param index - The index of the side of which data to get.
              * @param take_ownership - Wheter or not to release the ownership of the data.

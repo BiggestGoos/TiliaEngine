@@ -34,10 +34,7 @@ namespace tilia {
 	namespace utils {
 
 		/**
-		 * @brief Custom exception class deriving from the <stdexcept> exception class. Holds a
-		 *		  vector of messages which can be added to while the exception is being passed
-		 *		  along. Also holds the origin line and file which will point to the place where
-		 *		  the exception was first thrown.
+		 * @brief Custom exception class deriving from the <stdexcept> exception class. Holds a vector of messages which can be added to while the exception is being passed along. Also holds the origin line and file which will point to the place where the exception was first thrown.
 		 */
 		class Tilia_Exception 
 			: public std::exception 
@@ -52,16 +49,11 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Recursively adds values to a stored message. It gets the value by a returned
-			 *		  lambda function which adds the value and then calls this function again.
+			 * @brief Recursively adds values to a stored message. It gets the value by a returned lambda function which adds the value and then calls this function again.
 			 * 
-			 * @param message - The message which will be checked for a place to add the value
-			 *					given in the lambda function.
+			 * @param message - The message which will be checked for a place to add the value given in the lambda function.
 			 * 
-			 * @return A lambda function which takes in a value, adds the value to the string at 
-			 *		   the captured index in the message with the captured message index. After 
-			 *		   this it just calls the function again and it does the same thing again until
-			 *		   you stop calling the returned lambda function.
+			 * @return A lambda function which takes in a value, adds the value to the string at the captured index in the message with the captured message index. After this it just calls the function again and it does the same thing again until you stop calling the returned lambda function.
 			 */
 			auto Print_To_String(const std::string& message) noexcept
 			{
@@ -121,16 +113,11 @@ namespace tilia {
 			explicit Tilia_Exception(const std::string& message, const std::size_t& line, const std::string& file) noexcept;
 
 			/**
-			 * @brief Adds a message to the Tilia_Exception. If the message contains message
-			 *		  commands and the returned lambda is called with a value then that value
-			 *	      will be inserted in the string at the first message command. That lambda
-			 *		  function will return a lambda itself and will recursivley replace message
-			 *		  commands with the given values.
+			 * @brief Adds a message to the Tilia_Exception. If the message contains message commands and the returned lambda is called with a value then that value will be inserted in the string at the first message command. That lambda function will return a lambda itself and will recursivley replace message commands with the given values.
 			 * 
 			 * @param message - The message to add. Message command: %v
 			 * 
-			 * @return A lambda function which can be called to insert values into the string at a
-			 *		   specified place.
+			 * @return A lambda function which can be called to insert values into the string at a specified place.
 			 */
 			auto Add_Message(const std::string& message) noexcept {
 

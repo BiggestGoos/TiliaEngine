@@ -144,8 +144,7 @@ void tilia::gfx::Cube_Map_Data::Reload()
 void tilia::gfx::Cube_Map_Data::Copy_Data(const std::size_t& index, uint8_t* texture_data, uint32_t byte_count)
 {
     if (!byte_count) {
-        // Calculates the byte count by taking the square of the size and multiplying by the number
-        // of color channels.
+        // Calculates the byte count by taking the square of the size and multiplying by the number of color channels.
         byte_count = static_cast<uint32_t>((powf(static_cast<float>(this->size), 2.0f) *
             utils::Get_Color_Format_Count(static_cast<uint32_t>(*this->sides[index].color_format))));
     }

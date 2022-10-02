@@ -476,7 +476,6 @@
     <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp" />
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp" />

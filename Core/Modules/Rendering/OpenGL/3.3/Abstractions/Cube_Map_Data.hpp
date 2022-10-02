@@ -51,7 +51,7 @@ namespace tilia {
                 enums::Color_Format	                        color_format{ enums::Color_Format::RGBA8 };
                 // The color format of the data.
                 enums::Data_Color_Format	                data_color_format{ enums::Data_Color_Format::None };
-
+                
             };
             // The data for all of the sides of a cube map.
             std::array<Cube_Side, *enums::Misc::Cube_Sides> sides;
@@ -69,17 +69,14 @@ namespace tilia {
             enums::Wrap_Mode				                wrap_r{ enums::Wrap_Mode::Repeat };
 
             /**
-             * @brief Copy-assignment. Shallow copies everything except for the data of all the
-             *        sides. It will instead be reset to a new pointer and then have the data
-             *        copied over.
+             * @brief Copy-assignment. Shallow copies everything except for the data of all the sides. It will instead be reset to a new pointer and then have the data copied over.
              *
              * @param other - The Cube_Map_Data for which to copy from.
              */
             Cube_Map_Data& operator=(const Cube_Map_Data& other) noexcept;
 
             /**
-             * @brief Move-assignment. Copies everything except for the data of all the
-             *        sides. It will instead be reset to the pointer of the other data.
+             * @brief Move-assignment. Copies everything except for the data of all the sides. It will instead be reset to the pointer of the other data.
              *
              * @param other - The Cube_Map_Data for which to move from.
              */
@@ -102,8 +99,7 @@ namespace tilia {
             Cube_Map_Data(Cube_Map_Data&& other) noexcept;
 
             /**
-             * @brief Reloads the texture data of the side with the given index with the path of
-             *        the index.
+             * @brief Reloads the texture data of the side with the given index with the path of the index.
              *
              * @param index - The index of the side to reload the data of.
              */

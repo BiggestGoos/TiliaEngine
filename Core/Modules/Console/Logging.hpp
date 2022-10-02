@@ -34,8 +34,7 @@ namespace tilia {
 		void Log(const Type& log_type, const char* log_tag, const char* text...);
 
 		/**
-		 * @brief A log function which can be used as an add-on for the regular Log function. It
-		 *		  prints a tag and a text with an indentation.
+		 * @brief A log function which can be used as an add-on for the regular Log function. It prints a tag and a text with an indentation.
 		 * 
 		 * @param log_tag - The tag to print to the console
 		 * @param text    - The text to print to the console
