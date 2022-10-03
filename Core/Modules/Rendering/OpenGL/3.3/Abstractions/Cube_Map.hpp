@@ -3,15 +3,6 @@
  * 
  * @brief  Declares and defines a class called Cube_Map deriving from Texture in "Texture.hpp", which works as an abstraction for an openGL cube map texture as well as a struct called Cube_Map_Data that holds some information about the class.
  * 
- * @define TILIA_CUBE_MAP_HPP
- * 
- * Standard:
- * <array>
- * <memory>
- * 
- * Tilia:
- * "Texture.hpp"
- * 
  * @author Gustav Fagerlind
  * @date   04/06/2022
  *************************************************************************************************/

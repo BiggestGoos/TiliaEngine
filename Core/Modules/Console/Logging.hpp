@@ -3,8 +3,6 @@
  * 
  * @brief  Declarations of functions used for logging information to the console.
  * 
- * @define TILIA_LOGGING_HPP
- * 
  * @author Gustav Fagerlind
  * @date   16/05/2022
  *************************************************************************************************/

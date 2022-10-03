@@ -3,16 +3,6 @@
  * 
  * @brief  Contains a class which holds the data of the Cube_Map class.
  * 
- * @define TILIA_CUBE_MAP_DATA_HPP
- * 
- * Standard:
- * <array>
- * <memory>
- * <string>
- * 
- * Tilia:
- * "Enums.hpp"
- * 
  * @author Gustav Fagerlind
  * @date   06/09/2022
  *************************************************************************************************/

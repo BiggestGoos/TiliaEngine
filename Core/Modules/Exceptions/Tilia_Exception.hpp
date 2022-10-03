@@ -3,14 +3,6 @@
  * 
  * @brief  Holds a custom exception class deriving from the <stdexcept> exception class.
  * 
- * @define TILIA_TILIA_EXCEPTION_HPP
- * 
- * Standard:
- * <stdexcept>
- * <string>
- * <vector>
- * <sstream>
- * 
  * @author Gustav Fagerlind
  * @date   10/07/2022
  *************************************************************************************************/
