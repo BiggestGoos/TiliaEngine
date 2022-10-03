@@ -1,16 +1,4 @@
-/*****************************************************************//**
- * @file   Shader_Data.cpp
- * @brief  Holds the definitions of the functions declared in @include 
- *		   "headers/Shader_Data.h" for the @Shader_Data class.
- * 
- * Headers:
- * @include "headers/Shader_Data.h"
- * 
- * @author Gustav Fagerlind
- * @date   05/07/2022
- *********************************************************************/
-
- // Vendor
+// Vendor
 #include "vendor/glad/include/glad/glad.h"
 
 // Standard
@@ -453,25 +441,8 @@ std::uint32_t tilia::gfx::Shader_Data::s_previous_ID{};
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
-tilia::gfx::Shader_Data::Shader_Data() noexcept
-{
-
-	try
-	{
-
-		GL_CALL(m_ID = glCreateProgram());
-
-	}
-	catch (utils::Tilia_Exception& e)
-	{
-
-		e.Add_Message("Shader { ID: %v } failed to be generated")
-			(m_ID);
-
-		// Possibly forward e to someplace else and then throw
-
-	}
-
+tilia::gfx::Shader_Data::~Shader_Data() {
+	Delete_Shader();
 }
 
 void tilia::gfx::Shader_Data::Bind() const {
@@ -682,6 +653,32 @@ std::uint32_t tilia::gfx::Shader_Data::Make_Shader(const tilia::enums::Shader_Ty
 	}
 
 	return id;
+
+}
+
+void tilia::gfx::Shader_Data::Generate_Shader() noexcept
+{
+	try
+	{
+
+		GL_CALL(m_ID = glCreateProgram());
+
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("Shader { ID: %v } failed to be generated")
+			(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
+}
+
+void tilia::gfx::Shader_Data::Delete_Shader() noexcept
+{
+
+
 
 }
 

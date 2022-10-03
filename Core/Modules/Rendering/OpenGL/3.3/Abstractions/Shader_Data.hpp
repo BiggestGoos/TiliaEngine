@@ -33,6 +33,9 @@ namespace tilia {
 		 */
 		struct Shader_Part {
 
+			// The ID of the Shader_Part
+			std::uint32_t ID{};
+
 			// Path and source code of shader
 			std::string path{}, source{};
 
@@ -44,8 +47,9 @@ namespace tilia {
 				source{ other.source } { }
 
 			Shader_Part(Shader_Part&& other) noexcept : 
+				ID{ other.ID },
 				path{ std::move(other.path) }, 
-				source{ std::move(other.source) } { }
+				source{ std::move(other.source) } { other.ID = 0; }
 
 			Shader_Part& operator=(const Shader_Part& other) noexcept
 			{
@@ -62,6 +66,8 @@ namespace tilia {
 				if (&other == this)
 					return *this;
 
+				this->ID = other.ID;
+				other.ID = 0;
 				this->path = std::move(other.path);
 				this->source = std::move(other.source);
 
@@ -76,19 +82,18 @@ namespace tilia {
 		class Shader_Data {
 		public:
 
-			template<bool use_geometry>
-			friend class Shader;
-
-			Shader_Data() noexcept;
-
 			/**
 			 * @brief Copy-contructor which calls default construcotr and copies from given Shader_Data.
 			 * 
 			 * @param other - The given Shader_Data
 			 */
 			Shader_Data(const Shader_Data& other) noexcept
-				: Shader_Data()
-			{ m_parts = other.m_parts; }
+			{ 
+				Generate_Shader();
+				m_parts = other.m_parts; 
+				m_location_cache = other.m_location_cache;
+				m_use_geometry = other.m_use_geometry;
+			}
 			/**
 			 * @brief Move-constructor which moves all resources from given Shader_Data and then leaves given Shader_Data useless.
 			 * 
@@ -99,20 +104,23 @@ namespace tilia {
 				m_parts = std::move(other.m_parts);
 				m_ID = other.m_ID;
 				other.m_ID = 0;
+				m_location_cache = std::move(other.m_location_cache);
+				m_use_geometry = other.m_use_geometry;
 			}
 
-			Shader_Data(std::initializer_list<Shader_Part> parts, const bool& use_geometry) noexcept : Shader_Data() {
-				m_parts = parts;
-				m_use_geometry = use_geometry;
-			}
+			~Shader_Data() noexcept;
 
 			Shader_Data& operator=(const Shader_Data& other) noexcept
 			{
 				if (&other == this)
 					return *this;
 
+				
+
+				Generate_Shader();
 				m_parts = other.m_parts;
-				m_ID = other.m_ID;
+				m_location_cache = other.m_location_cache;
+				m_use_geometry = other.m_use_geometry;
 				
 				return *this;
 			}
@@ -125,6 +133,8 @@ namespace tilia {
 				m_parts = std::move(other.m_parts);
 				m_ID = other.m_ID;
 				other.m_ID = 0;
+				m_location_cache = std::move(other.m_location_cache);
+				m_use_geometry = other.m_use_geometry;
 
 				return *this;
 			}
@@ -133,17 +143,17 @@ namespace tilia {
 				return m_ID;
 			}
 
-			inline void Set_Part(const Shader_Part& part, const enums::Shader_Type& type, const bool& reload = false) {
-				m_parts[utils::Get_Shader_Type_Index(type)] = part;
-				if (reload)
-					Reload(type);
-			}
+			//inline void Set_Part(const Shader_Part& part, const enums::Shader_Type& type, const bool& reload = false) {
+			//	m_parts[utils::Get_Shader_Type_Index(type)] = part;
+			//	if (reload)
+			//		Reload(type);
+			//}
 
-			inline void Set_Part(Shader_Part&& part, const enums::Shader_Type& type, const bool& reload = false) {
-				m_parts[utils::Get_Shader_Type_Index(type)] = std::move(part);
-				if (reload)
-					Reload(type);
-			}
+			//inline void Set_Part(Shader_Part&& part, const enums::Shader_Type& type, const bool& reload = false) {
+			//	m_parts[utils::Get_Shader_Type_Index(type)] = std::move(part);
+			//	if (reload)
+			//		Reload(type);
+			//}
 
 			inline auto Get_Part(const enums::Shader_Type& type) {
 				return m_parts[utils::Get_Shader_Type_Index(type)];
@@ -220,11 +230,20 @@ namespace tilia {
 
 		protected:
 
+			Shader_Data(const std::initializer_list<Shader_Part>& vertex_parts, const std::initializer_list<Shader_Part>& fragment_parts, const std::initializer_list<Shader_Part>& geometry_parts, const bool& use_geometry) noexcept {
+				Generate_Shader();
+				m_parts = { vertex_parts, fragment_parts, geometry_parts };
+				m_use_geometry = use_geometry;
+			}
+
+			void Generate_Shader() noexcept;
+			void Delete_Shader() noexcept;
+
 			void Reload(const std::size_t& index = 3);
 
 			std::uint32_t m_ID{};
 			
-			std::vector<Shader_Part> m_parts{};
+			std::array<std::vector<Shader_Part>, 3> m_parts{};
 			
 			std::unordered_map<std::string, std::int32_t> m_location_cache{};
 
@@ -242,7 +261,7 @@ namespace tilia {
 
 		}; // Shader_Data
 
-	} // gfx
+} // gfx
 
 } // tilia
 

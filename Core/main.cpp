@@ -82,7 +82,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 1
+#if 0
 
 int main()
 {
@@ -383,7 +383,7 @@ int main()
 
 #endif
 
-#if 0
+#if 1
 
 int main() {
 
@@ -425,14 +425,6 @@ int main() {
         Shader<false> s{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
 
         Shader<false> s_2{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
-
-        s.Bind();
-
-        s.Unbind(true);
-
-        s.Bind(s_2.Get_ID());
-
-        s_2.Rebind();
 
         while (!glfwWindowShouldClose(window))
         {

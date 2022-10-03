@@ -936,6 +936,9 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Modules\Console\Logging.cpp">
@@ -990,6 +993,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
