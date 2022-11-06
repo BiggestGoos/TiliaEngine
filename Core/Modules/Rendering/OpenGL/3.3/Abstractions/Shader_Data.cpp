@@ -1,3 +1,4 @@
+#if 0
 // Vendor
 #include "vendor/glad/include/glad/glad.h"
 
@@ -775,4 +776,5 @@ void tilia::gfx::Shader_Data::Reload(const std::size_t& index)
 
 }
 
+#endif
 #endif

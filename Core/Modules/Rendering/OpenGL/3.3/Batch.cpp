@@ -43,7 +43,7 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	m_textures{  },
 	// Todo: remove posibly
 	//m_shader		  { *mesh_data.lock()->shader },
-	m_shader_data	  { *mesh_data.lock()->shader_data },
+	//m_shader_data	  { *mesh_data.lock()->shader_data },
 	m_transparent	  { *mesh_data.lock()->transparent },
 	m_primitive	 	  { *mesh_data.lock()->primitive },
 	m_polymode		  { *mesh_data.lock()->polymode },
@@ -100,7 +100,7 @@ void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 	// Sets batch to be compatible
 	// Todo: Remove posibly
 	//m_shader		   = *mesh_data.lock()->shader;
-	m_shader_data	   = *mesh_data.lock()->shader_data;
+	//m_shader_data	   = *mesh_data.lock()->shader_data;
 	m_transparent	   = *mesh_data.lock()->transparent;
 	m_primitive		   = *mesh_data.lock()->primitive;
 	m_polymode		   = *mesh_data.lock()->polymode;
@@ -298,7 +298,7 @@ void tilia::gfx::Batch::Render()
 	//	m_shader.lock()->Uniform(*m_shader_data.lock());
 
 	// Binds shader
-	m_shader_data.lock()->Bind();
+	//m_shader_data.lock()->Bind();
 
 #else
 
@@ -540,8 +540,8 @@ bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 
 #endif
 
-	if (m_shader_data.lock()->Get_ID() != temp->shader_data->lock()->Get_ID())
-		return false;
+	// if (m_shader_data.lock()->Get_ID() != temp->shader_data->lock()->Get_ID())
+	// 	return false;
 
 #else
 

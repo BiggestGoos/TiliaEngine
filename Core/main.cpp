@@ -15,6 +15,7 @@
 
 #include "Core/Values/OpenGL/3.3/Utils.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Part.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
@@ -422,9 +423,25 @@ int main() {
             return -1;
         }
 
-        Shader<false> s{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
+        // Shader<false> s{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
 
-        Shader<false> s_2{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
+        // Shader<false> s_2{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
+
+        Shader_Part part{ "res/shaders/light_shader.vert", enums::Shader_Type::Vertex };
+
+        part.Init();
+        part.Source();
+        part.Compile();
+
+        std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
+        
+        part.Set_Path("res/shaders/light_shader.frag");
+        part.Set_Type(enums::Shader_Type::Fragment);
+
+        part.Source();
+        part.Compile();
+
+        std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
 
         while (!glfwWindowShouldClose(window))
         {

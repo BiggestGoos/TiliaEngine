@@ -141,7 +141,7 @@ namespace tilia {
 			// Todo: Remove posibly
 			//std::weak_ptr<Shader> m_shader{}; // The shader of the batch
 
-			std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data
+			//std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data
 
 			size_t m_vertex_size{}; // The size of the vertices bound to the openGL objects
 

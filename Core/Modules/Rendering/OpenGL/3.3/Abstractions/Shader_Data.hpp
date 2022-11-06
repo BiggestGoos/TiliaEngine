@@ -6,7 +6,7 @@
  * @author Gustav Fagerlind
  * @date   05/07/2022
  *************************************************************************************************/
-
+#if 0
 #ifndef TILIA_SHADER_DATA_HPP
 #define TILIA_SHADER_DATA_HPP
 
@@ -266,3 +266,4 @@ namespace tilia {
 } // tilia
 
 #endif // TILIA_SHADER_DATA_HPP
+#endif

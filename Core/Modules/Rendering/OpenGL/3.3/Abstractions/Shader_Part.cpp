@@ -10,11 +10,46 @@
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Values/OpenGL/3.3/Utils.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Modules/File_System/Windows/File_System.hpp"
 
-void tilia::gfx::Shader_Part::Reload()
+// The file system defined in another file
+extern tilia::utils::File_System file_system;
+
+void tilia::gfx::Shader_Part::Init()
 {
 
-	GL_CALL(m_ID = glCreateShader(*m_type));
+	try {
+		
+		GL_CALL(m_ID = glCreateShader(*m_type));
+
+	}
+	catch(utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to init Shader_Part { ID: %v }")(m_ID);
+
+		throw e;
+	}
+
+}
+
+void tilia::gfx::Shader_Part::Source()
+{
+
+	try {
+		m_source = file_system.Load_File(m_path);
+	}
+	catch(utils::Tilia_Exception& e)
+	{
+		e.Add_Message("Failed to load shader source for Shader_Part { ID: %v }")(m_ID);
+
+		throw e;
+	}
+
+}
+
+void tilia::gfx::Shader_Part::Compile()
+{
+
+	try {
 
 	const char* src{ m_source.c_str() };
 
@@ -49,6 +84,13 @@ void tilia::gfx::Shader_Part::Reload()
 
 		throw e;
 
+	}
+
+	}
+	catch(utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to compile Shader_Part { ID: %v }")(m_ID);
+
+		throw e;
 	}
 
 }

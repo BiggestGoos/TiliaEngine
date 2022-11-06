@@ -29,7 +29,7 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
+//#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 #include "Core/Modules/Console/Logging.hpp"
 
@@ -67,7 +67,7 @@ namespace tilia {
 			std::vector<uint32_t>*							   indices{};
 // Todo: hello
 			//std::weak_ptr<Shader>*							   shader{};
-			std::weak_ptr<Shader_Data>*						   shader_data{};
+			//std::weak_ptr<Shader_Data>*						   shader_data{};
 			bool*											   transparent{};
 			enums::Primitive*								   primitive{};
 			enums::Polymode*								   polymode{};
@@ -156,7 +156,7 @@ namespace tilia {
 			 * @param shader_data - The new shader data which m_shader_data is set to.
 			 */
 			inline auto Set_Shader_Data() {
-				return [this](std::weak_ptr<Shader_Data> shader_data) { m_shader_data = shader_data; };
+				//return [this](std::weak_ptr<Shader_Data> shader_data) { m_shader_data = shader_data; };
 			}
 			/**
 			 * @brief Gets the shader data.
@@ -164,7 +164,7 @@ namespace tilia {
 			 * @return m_shader_data - The shader data of the mesh.
 			 */
 			inline auto Get_Shader_Data() {
-				return m_shader_data;
+				//return m_shader_data;
 			}
 
 			/**
@@ -457,7 +457,7 @@ namespace tilia {
 					m_mesh_data->indices = &indices;
 					// Todo: Fix
 					//m_mesh_data->shader = &m_shader;
-					m_mesh_data->shader_data = &m_shader_data;
+					//m_mesh_data->shader_data = &m_shader_data;
 					m_mesh_data->transparent = &m_transparent;
 					m_mesh_data->primitive = &m_primitive;
 					m_mesh_data->polymode = &m_polymode;
@@ -492,7 +492,7 @@ namespace tilia {
 			// Todo: remove posibly
 			//std::weak_ptr<Shader> m_shader{}; // The shader this mesh should be drawn with
 
-			std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data of the mesh.
+			//std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data of the mesh.
 
 			enums::Primitive m_primitive{ enums::Primitive::Points }; // The primitve this mesh should be drawn with
 

@@ -9,6 +9,7 @@ CXX_SRCS := \
 	Core\Modules\File_System\Windows\File_System.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp \
