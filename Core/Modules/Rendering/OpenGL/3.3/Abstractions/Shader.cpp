@@ -169,67 +169,147 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, std::initializer_list<s
 
 void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const std::size_t& size)
 {
-	switch (size)
-	{
-	case 1:
-		SET_UNIFORM(GL_CALL(glUniform1f(Get_Uniform_Location(loc), vs[0])));
-		return;
-	case 2:
-		SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(loc), vs[0], vs[1])));
-		return;
-	case 3:
-		SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
-		return;
-	case 4:
-		SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
-		return;
-	default:
-		SET_UNIFORM(GL_CALL(glUniform1fv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))		
-		return;
+	try {
+		switch (size)
+		{
+		case 1:
+			SET_UNIFORM(GL_CALL(glUniform1f(Get_Uniform_Location(loc), vs[0])));
+			return;
+		case 2:
+			SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(loc), vs[0], vs[1])));
+			return;
+		case 3:
+			SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			return;
+		case 4:
+			SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+			return;
+		default:
+			SET_UNIFORM(GL_CALL(glUniform1fv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))
+				return;
+		}
+	}
+	catch (utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
+
+		throw e;
 	}
 }
 
 void tilia::gfx::Shader::Uniform(const std::string& loc, const std::int32_t* vs, const std::size_t& size)
 {
-	switch (size)
-	{
-	case 1:
-		SET_UNIFORM(GL_CALL(glUniform1i(Get_Uniform_Location(loc), vs[0])));
-		return;
-	case 2:
-		SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(loc), vs[0], vs[1])));
-		return;
-	case 3:
-		SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
-		return;
-	case 4:
-		SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
-		return;
-	default:
-		SET_UNIFORM(GL_CALL(glUniform1iv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))
+	try {
+		switch (size)
+		{
+		case 1:
+			SET_UNIFORM(GL_CALL(glUniform1i(Get_Uniform_Location(loc), vs[0])));
 			return;
+		case 2:
+			SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(loc), vs[0], vs[1])));
+			return;
+		case 3:
+			SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			return;
+		case 4:
+			SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+			return;
+		default:
+			SET_UNIFORM(GL_CALL(glUniform1iv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))
+				return;
+		}
+	}
+	catch (utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
+
+		throw e;
 	}
 }
 
 void tilia::gfx::Shader::Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size)
 {
-	switch (size)
-	{
-	case 1:
-		SET_UNIFORM(GL_CALL(glUniform1ui(Get_Uniform_Location(loc), vs[0])));
-		return;
-	case 2:
-		SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(loc), vs[0], vs[1])));
-		return;
-	case 3:
-		SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
-		return;
-	case 4:
-		SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
-		return;
-	default:
-		SET_UNIFORM(GL_CALL(glUniform1uiv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))			return;
+	try {
+		switch (size)
+		{
+		case 1:
+			SET_UNIFORM(GL_CALL(glUniform1ui(Get_Uniform_Location(loc), vs[0])));
+			return;
+		case 2:
+			SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(loc), vs[0], vs[1])));
+			return;
+		case 3:
+			SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			return;
+		case 4:
+			SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], vs[3])));
+			return;
+		default:
+			SET_UNIFORM(GL_CALL(glUniform1uiv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), vs)))
+				return;
+		}
 	}
+	catch (utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
+
+		throw e;
+	}
+}
+
+void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const std::size_t& size_x, const std::size_t& size_y)
+{
+
+	try {
+		switch (size_x)
+		{
+		case 2:
+			switch (size_y)
+			{
+			case 2:
+				SET_UNIFORM(GL_CALL(glUniformMatrix2fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 3:
+				SET_UNIFORM(GL_CALL(glUniformMatrix2x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 4:
+				SET_UNIFORM(GL_CALL(glUniformMatrix2x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			}
+			return;
+		case 3:
+			switch (size_y)
+			{
+			case 2:
+				SET_UNIFORM(GL_CALL(glUniformMatrix3x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 3:
+				SET_UNIFORM(GL_CALL(glUniformMatrix3fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 4:
+				SET_UNIFORM(GL_CALL(glUniformMatrix3x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			}
+			return;
+		case 4:
+			switch (size_y)
+			{
+			case 2:
+				SET_UNIFORM(GL_CALL(glUniformMatrix4x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 3:
+				SET_UNIFORM(GL_CALL(glUniformMatrix4x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			case 4:
+				SET_UNIFORM(GL_CALL(glUniformMatrix4fv(Get_Uniform_Location(loc), 1, GL_FALSE, vs)))
+				return;
+			}
+			return;
+		}
+	}
+	catch (utils::Tilia_Exception& e) {
+		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
+
+		throw e;
+	}
+
 }
 
 std::int32_t tilia::gfx::Shader::Get_Uniform_Location(const std::string& name)

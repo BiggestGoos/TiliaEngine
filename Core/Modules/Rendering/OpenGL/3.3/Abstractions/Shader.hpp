@@ -236,7 +236,7 @@ namespace tilia {
 			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
-				Uniform(loc, &v[0], size);
+				Uniform(loc, static_cast<T*>(&v[0]), size);
 			}
 
 			void Uniform(const std::string& loc, const float* vs, const std::size_t& size);
@@ -245,10 +245,16 @@ namespace tilia {
 
 			void Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size);
 
-			template<typename T, glm::length_t size, glm::qualifier Q,
-			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
-			void Uniform(const std::string& loc, glm::mat<size, size, T, Q> v) {
-				Uniform(loc, &v[0][0], size * size);
+			void Uniform(const std::string& loc, const float* vs, const std::size_t& size_x, const std::size_t& size_y);
+
+			void Uniform(const std::string& loc, const std::int32_t* vs, const std::size_t& size_x, const std::size_t& size_y);
+
+			void Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size_x, const std::size_t& size_y);
+
+			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
+			void Uniform(const std::string& loc, glm::mat<size_x, size_y, float, Q> v)
+			{
+				Uniform(loc, static_cast<float*>(&v[0][0]), size_x, size_y);
 			}
 
 		private:
