@@ -7,8 +7,8 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec3 Tex_Coords;
 
-mat4 projection;
-mat4 view;
+uniform mat4 projection;
+uniform mat4 view;
 
 void main()
 {

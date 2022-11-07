@@ -14,6 +14,20 @@ std::uint32_t tilia::gfx::Shader::s_previous_ID{};
 tilia::gfx::Shader::~Shader()
 {
     
+	try
+	{
+		GL_CALL(glDeleteProgram(m_ID));
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("Shader { ID: %v } failed to be destroyed")
+			(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
+
 }
 
 void tilia::gfx::Shader::Init(std::initializer_list<std::weak_ptr<Shader_Part>> vertex_parts, std::initializer_list<std::weak_ptr<Shader_Part>> fragment_parts, std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts)

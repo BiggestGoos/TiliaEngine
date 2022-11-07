@@ -139,6 +139,8 @@ namespace tilia {
 
 			Shader() = default;
 
+			~Shader();
+
 			/**
 			 * @brief Copy-contructor which calls default construcotr and copies from given Shader_Data.
 			 *
@@ -185,8 +187,6 @@ namespace tilia {
 
 				return *this;
 			}
-
-			~Shader();
 
 			void Init(std::initializer_list<std::weak_ptr<Shader_Part>> vertex_parts, std::initializer_list<std::weak_ptr<Shader_Part>> fragment_parts, std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts);
 

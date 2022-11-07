@@ -1,8 +1,8 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 
-mat4 projection;
-mat4 view;
+uniform mat4 projection;
+uniform mat4 view;
 
 void main()
 {

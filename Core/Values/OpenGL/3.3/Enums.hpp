@@ -173,7 +173,7 @@ namespace tilia {
 		enum class Shader_Type {
 			Fragment  = 0x8B30, // The fragment shader. Also known as pixel shader.
 			Vertex	  = 0x8B31, // The vertex shader.
-			Geomentry = 0x8DD9  // The geometry shader.
+			Geometry = 0x8DD9  // The geometry shader.
 		};
 
 		/**

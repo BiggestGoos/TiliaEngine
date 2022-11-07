@@ -15,12 +15,34 @@
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
-void tilia::gfx::Shader_Part::Init()
+tilia::gfx::Shader_Part::~Shader_Part()
+{
+
+	try
+	{
+		GL_CALL(glDeleteShader(m_ID));
+	}
+	catch (utils::Tilia_Exception& e)
+	{
+
+		e.Add_Message("Shader part { ID: %v } failed to be destroyed")
+			(m_ID);
+
+		// Possibly forward e to someplace else and then throw
+
+	}
+
+}
+
+void tilia::gfx::Shader_Part::Init(const bool& reload)
 {
 
 	try {
 		
 		GL_CALL(m_ID = glCreateShader(*m_type));
+
+		if (reload)
+			Compile(true);
 
 	}
 	catch(utils::Tilia_Exception& e) {
@@ -46,10 +68,13 @@ void tilia::gfx::Shader_Part::Source()
 
 }
 
-void tilia::gfx::Shader_Part::Compile()
+void tilia::gfx::Shader_Part::Compile(const bool& source)
 {
 
 	try {
+
+		if (source)
+			Source();
 
 		const char* src{ m_source.c_str() };
 
