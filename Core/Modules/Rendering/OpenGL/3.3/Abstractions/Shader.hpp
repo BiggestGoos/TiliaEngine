@@ -137,6 +137,8 @@ namespace tilia {
 		class Shader {
 		public:
 
+			Shader() = default;
+
 			/**
 			 * @brief Copy-contructor which calls default construcotr and copies from given Shader_Data.
 			 *
@@ -186,15 +188,17 @@ namespace tilia {
 
 			~Shader();
 
-			void Init(std::initializer_list<Shader_Part> vertex_parts, std::initializer_list<Shader_Part> fragment_parts, std::initializer_list<Shader_Part> geometry_parts);
+			void Init(std::initializer_list<std::weak_ptr<Shader_Part>> vertex_parts, std::initializer_list<std::weak_ptr<Shader_Part>> fragment_parts, std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts);
 
-			void Add_Part(std::weak_ptr<Shader_Part> shader_part);
+			void Add_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload = true);
 
-			void Remove_Part(std::weak_ptr<Shader_Part> shader_part);
+			void Remove_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload = true);
 
 			inline auto Get_Part(const enums::Shader_Type& type, const std::size_t index) {
 				return m_parts[utils::Get_Shader_Type_Index(type)][index];
 			}
+
+			void Reload();
 
 			inline auto Get_ID() {
 				return m_ID;
@@ -224,24 +228,13 @@ namespace tilia {
 			 */
 			static void Rebind();
 
-			#pragma region uniforms
-
 			void Uniform(const std::string& loc, std::initializer_list<float> vs);
 			void Uniform(const std::string& loc, std::initializer_list<std::int32_t> vs);
 			void Uniform(const std::string& loc, std::initializer_list<std::uint32_t> vs);
 
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::vec<size, float, glm::defaultp> v) {
-				Uniform(loc, &v[0], size);
-			}
-
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::vec<size, std::int32_t, glm::defaultp> v) {
-				Uniform(loc, &v[0], size);
-			}
-
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::vec<size, std::uint32_t, glm::defaultp> v)
+			template<typename T, glm::length_t size, glm::qualifier Q,
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
 				Uniform(loc, &v[0], size);
 			}
@@ -252,22 +245,11 @@ namespace tilia {
 
 			void Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size);
 
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::mat<size, size, float, glm::defaultp> v) {
-				Uniform(loc, &v[0], size * size);
+			template<typename T, glm::length_t size, glm::qualifier Q,
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			void Uniform(const std::string& loc, glm::mat<size, size, T, Q> v) {
+				Uniform(loc, &v[0][0], size * size);
 			}
-
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::mat<size, size, std::int32_t, glm::defaultp> v) {
-				Uniform(loc, &v[0], size * size);
-			}
-
-			template<glm::length_t size>
-			void Uniform(const std::string& loc, glm::mat<size, size, std::uint32_t, glm::defaultp> v) {
-				Uniform(loc, &v[0], size * size);
-			}
-
-			#pragma endregion
 
 		private:
 

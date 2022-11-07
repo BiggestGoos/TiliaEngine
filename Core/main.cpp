@@ -83,7 +83,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 0
+#if 1
 
 int main()
 {
@@ -139,26 +139,58 @@ int main()
 
         camera.Reset();
 
-        auto light_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/light_shader.vert" }, { "res/shaders/light_shader.frag" }, true }) };
+        // auto light_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/light_shader.vert" }, { "res/shaders/light_shader.frag" }, true }) };
 
-        auto cube_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true }) };
+        // auto cube_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true }) };
 
-        uint32_t light_ubo{}, cube_ubo{};
+        auto 
+        light_v_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.vert", enums::Shader_Type::Vertex) },
+        light_f_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.frag", enums::Shader_Type::Fragment) };
 
-        glGenBuffers(1, &light_ubo);
-        glGenBuffers(1, &cube_ubo);
+        light_v_shader->Init();
+        light_v_shader->Source();
+        light_v_shader->Compile();
 
-        glUniformBlockBinding(light_shader->Get_ID(), light_ubo, 0);
-        glUniformBlockBinding(cube_shader->Get_ID(), cube_ubo, 0);
+        light_f_shader->Init();
+        light_f_shader->Source();
+        light_f_shader->Compile();
 
-        uint32_t ube_matrices{};
-        glGenBuffers(1, &ube_matrices);
+        auto light_shader{ std::make_shared<Shader>() };
 
-        glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
-        glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        light_shader->Init({ light_v_shader }, { light_f_shader }, {});
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ube_matrices, 0, 2 * sizeof(glm::mat4));
+        auto 
+        cube_v_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.vert", enums::Shader_Type::Vertex) },
+        cube_f_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.frag", enums::Shader_Type::Fragment) };
+
+        cube_v_shader->Init();
+        cube_v_shader->Source();
+        cube_v_shader->Compile();
+
+        cube_f_shader->Init();
+        cube_f_shader->Source();
+        cube_f_shader->Compile();
+
+        auto cube_shader{ std::make_shared<Shader>() };
+
+        cube_shader->Init({ cube_v_shader }, { cube_f_shader }, {});
+
+        // uint32_t light_ubo{}, cube_ubo{};
+
+        // glGenBuffers(1, &light_ubo);
+        // glGenBuffers(1, &cube_ubo);
+
+        // glUniformBlockBinding(light_shader->Get_ID(), light_ubo, 0);
+        // glUniformBlockBinding(cube_shader->Get_ID(), cube_ubo, 0);
+
+        // uint32_t ube_matrices{};
+        // glGenBuffers(1, &ube_matrices);
+
+        // glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
+        // glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 0, ube_matrices, 0, 2 * sizeof(glm::mat4));
 
         Cube_Map_Data def{};
 
@@ -220,7 +252,7 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Shader_Data()(light_shader);
+            new_mesh->Set_Shader()(light_shader);
 
             new_mesh->Add_Texture(box_texture);
             //new_mesh->Add_Texture(box_specular_texture);
@@ -244,7 +276,7 @@ int main()
 
             std::shared_ptr<Mesh<9>> new_mesh{ std::make_shared<Mesh<9>>() };
 
-            new_mesh->Set_Shader_Data()(cube_shader);
+            new_mesh->Set_Shader()(cube_shader);
 
             new_mesh->Set_Cull_Face()(enums::Face::Back);
 
@@ -320,19 +352,19 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            //light_shader->Uniform("projection", projection);
-            //cube_shader->Uniform("projection", projection);
+            light_shader->Uniform("projection", projection);
+            cube_shader->Uniform("projection", projection);
 
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            //light_shader->Uniform("view", view);
-            //cube_shader->Uniform("view", view);
+            light_shader->Uniform("view", view);
+            cube_shader->Uniform("view", view);
 
-            glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
-            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+            // glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
+            // glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
 
-            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
-            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+            // glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+            // glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
             renderer.m_camera_pos = camera.Position;
 
@@ -384,7 +416,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
 
 int main() {
 
@@ -427,21 +459,52 @@ int main() {
 
         // Shader<false> s_2{ {"res/shaders/light_shader.vert"}, {"res/shaders/light_shader.frag"}, true };
 
-        Shader_Part part{ "res/shaders/light_shader.vert", enums::Shader_Type::Vertex };
+        // Shader_Part part{ "res/shaders/light_shader.vert", enums::Shader_Type::Vertex };
 
-        part.Init();
-        part.Source();
-        part.Compile();
+        // part.Init();
+        // part.Source();
+        // part.Compile();
 
-        std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
-        
-        part.Set_Path("res/shaders/light_shader.frag");
-        part.Set_Type(enums::Shader_Type::Fragment);
+        // std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
 
-        part.Source();
-        part.Compile();
+        // part.Set_Path("res/shaders/light_shader.frag");
+        // part.Set_Type(enums::Shader_Type::Fragment);
 
-        std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
+        // part.Source();
+        // part.Compile();
+
+        // std::cout << "ID: " << part.Get_ID() << '\n' << "Path: " << part.Get_Path() << '\n' << "Source: " << part.Get_Source() << '\n' << "Type: " << *part.Get_Type() << '\n';
+
+        std::shared_ptr<Shader_Part> 
+        vertex_part{ std::make_shared<Shader_Part>("res/shaders/light_shader.vert", enums::Shader_Type::Vertex) }, 
+        fragment_part{ std::make_shared<Shader_Part>("res/shaders/light_shader.frag", enums::Shader_Type::Fragment) };
+
+        vertex_part->Init();
+        vertex_part->Source();
+        vertex_part->Compile();
+
+        fragment_part->Init();
+        fragment_part->Source();
+        fragment_part->Compile();
+
+        std::cout << "Vertex\n";
+
+        std::cout << "ID: " << vertex_part->Get_ID() << '\n' << "Path: " << vertex_part->Get_Path() << '\n' << "Source: " << vertex_part->Get_Source() << '\n' << "Type: " << *vertex_part->Get_Type() << '\n';
+
+        std::cout << "\n\nFragment\n";
+
+        std::cout << "ID: " << fragment_part->Get_ID() << '\n' << "Path: " << fragment_part->Get_Path() << '\n' << "Source: " << fragment_part->Get_Source() << '\n' << "Type: " << *fragment_part->Get_Type() << '\n';
+
+        Shader shader{};
+
+        shader.Init({vertex_part}, {fragment_part}, {});
+
+        glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
+        shader.Uniform("projection", projection);
+
+        shader.Uniform("view", glm::mat4{1.0f});
+
+        shader.Uniform("lightColor", { 1.0f, 1.0f, 1.0f });
 
         while (!glfwWindowShouldClose(window))
         {

@@ -138,8 +138,7 @@ namespace tilia {
 
 			size_t m_texture_count{}; // The amount of textures to be drawn
 
-			// Todo: Remove posibly
-			//std::weak_ptr<Shader> m_shader{}; // The shader of the batch
+			std::weak_ptr<Shader> m_shader{}; // The shader of the batch
 
 			//std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data
 

@@ -42,7 +42,7 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	: // Sets batch to be compatible
 	m_textures{  },
 	// Todo: remove posibly
-	//m_shader		  { *mesh_data.lock()->shader },
+	m_shader		  { *mesh_data.lock()->shader },
 	//m_shader_data	  { *mesh_data.lock()->shader_data },
 	m_transparent	  { *mesh_data.lock()->transparent },
 	m_primitive	 	  { *mesh_data.lock()->primitive },
@@ -99,7 +99,7 @@ void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 {
 	// Sets batch to be compatible
 	// Todo: Remove posibly
-	//m_shader		   = *mesh_data.lock()->shader;
+	m_shader		   = *mesh_data.lock()->shader;
 	//m_shader_data	   = *mesh_data.lock()->shader_data;
 	m_transparent	   = *mesh_data.lock()->transparent;
 	m_primitive		   = *mesh_data.lock()->primitive;
@@ -292,19 +292,11 @@ void tilia::gfx::Batch::Render()
 	// Binds vertex array
 	GL_CALL(glBindVertexArray(m_vao));
 
-#if 1
-
-	//if (m_shader_data.lock().get()) 
-	//	m_shader.lock()->Uniform(*m_shader_data.lock());
+	// if (m_shader_data.lock().get()) 
+	// 	m_shader.lock()->Uniform(*m_shader_data.lock());
 
 	// Binds shader
-	//m_shader_data.lock()->Bind();
-
-#else
-
-	throw 1;
-
-#endif
+	m_shader.lock()->Bind();
 
 	// Sets polygonmode
 	GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, *m_polymode));
@@ -520,34 +512,19 @@ bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 	if (m_texture_count + temp->textures->size() > utils::Get_Max_Textures())
 		return false;
 
-#if 1
-
-#if 0
-
 	// Checks if shader is same
 	if (m_shader.lock()->Get_ID()      != temp->shader->lock()->Get_ID())
 		return false;
 
-	// Checks if shader data is same
-	if (m_shader_data.lock().get() && temp->shader_data->lock().get()) {
-		if (*m_shader_data.lock() != *temp->shader_data->lock())
-			return false;
-	}
-	else if (temp->shader_data->lock().get())
-	{
-		return false;
-	}
-
-#endif
-
-	// if (m_shader_data.lock()->Get_ID() != temp->shader_data->lock()->Get_ID())
+	// // Checks if shader data is same
+	// if (m_shader_data.lock().get() && temp->shader_data->lock().get()) {
+	// 	if (*m_shader_data.lock() != *temp->shader_data->lock())
+	// 		return false;
+	// }
+	// else if (temp->shader_data->lock().get())
+	// {
 	// 	return false;
-
-#else
-
-throw 1;
-
-#endif
+	// }
 
 	// Checks if transparency is same
 	if (m_transparent != *temp->transparent)

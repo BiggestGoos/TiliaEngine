@@ -51,40 +51,40 @@ void tilia::gfx::Shader_Part::Compile()
 
 	try {
 
-	const char* src{ m_source.c_str() };
+		const char* src{ m_source.c_str() };
 
-	GL_CALL(glShaderSource(m_ID, 1, &src, nullptr));
+		GL_CALL(glShaderSource(m_ID, 1, &src, nullptr));
 
-	GL_CALL(glCompileShader(m_ID));
+		GL_CALL(glCompileShader(m_ID));
 
-	std::int32_t result;
+		std::int32_t result;
 
-	GL_CALL(glGetShaderiv(m_ID, GL_COMPILE_STATUS, &result));
+		GL_CALL(glGetShaderiv(m_ID, GL_COMPILE_STATUS, &result));
 
-	if (result == GL_FALSE) {
-		std::int32_t length;
+		if (result == GL_FALSE) {
+			std::int32_t length;
 
-		GL_CALL(glGetShaderiv(m_ID, GL_INFO_LOG_LENGTH, &length));
+			GL_CALL(glGetShaderiv(m_ID, GL_INFO_LOG_LENGTH, &length));
 
-		std::vector<char> message(static_cast<size_t>(length));
+			std::vector<char> message(static_cast<size_t>(length));
 
-		GL_CALL(glGetShaderInfoLog(m_ID, length, &length, &message.front()));
-		message[static_cast<size_t>(length) - 1] = '\0';
+			GL_CALL(glGetShaderInfoLog(m_ID, length, &length, &message.front()));
+			message[static_cast<size_t>(length) - 1] = '\0';
 
-		GL_CALL(glDeleteShader(m_ID));
+			GL_CALL(glDeleteShader(m_ID));
 
-		utils::Tilia_Exception e{ LOCATION };
+			utils::Tilia_Exception e{ LOCATION };
 
-		e.Add_Message("Shader part { ID: %v } failed to be created"
-			"\n>>> Part type: %v"
-			"\n>>> Message: %v"
-			)(m_ID)
-			(utils::Get_Shader_Type_String(m_type))
-			(&message.front());
+			e.Add_Message("Shader part { ID: %v } failed to be created"
+				"\n>>> Part type: %v"
+				"\n>>> Message: %v"
+				)(m_ID)
+				(utils::Get_Shader_Type_String(m_type))
+				(&message.front());
 
-		throw e;
+			throw e;
 
-	}
+		}
 
 	}
 	catch(utils::Tilia_Exception& e) {

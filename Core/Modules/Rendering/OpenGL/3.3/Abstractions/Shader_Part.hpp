@@ -25,7 +25,7 @@ namespace tilia {
 		class Shader_Part {
 		public:
 
-			//friend class Shader;
+			Shader_Part() = default;
 
 			Shader_Part(const std::string& path, const enums::Shader_Type& type) : m_type{ type }, m_path{ path } { }
 			Shader_Part(std::string&& path, const enums::Shader_Type& type) : m_type{ type }, m_path{ std::move(path) } { }

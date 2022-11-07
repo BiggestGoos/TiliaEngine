@@ -29,7 +29,6 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
-//#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 #include "Core/Modules/Console/Logging.hpp"
 
@@ -65,8 +64,7 @@ namespace tilia {
 			size_t											   vertex_size{};
 			std::vector<float>*								   vertex_data{};
 			std::vector<uint32_t>*							   indices{};
-// Todo: hello
-			//std::weak_ptr<Shader>*							   shader{};
+			std::weak_ptr<Shader>*							   shader{};
 			//std::weak_ptr<Shader_Data>*						   shader_data{};
 			bool*											   transparent{};
 			enums::Primitive*								   primitive{};
@@ -137,8 +135,7 @@ namespace tilia {
 			 * @param shader - The shader to set m_shader to.
 			 */			
 			inline auto Set_Shader() {
-				return 0;
-				//return [this](std::weak_ptr<Shader> shader) { m_shader = shader; };
+				return [this](std::weak_ptr<Shader> shader) { m_shader = shader; };
 			}
 			/**
 			 * @brief Gets the shader of the mesh.
@@ -146,8 +143,7 @@ namespace tilia {
 			 * @return m_shader - The shader of the mesh.
 			 */
 			inline auto Get_Shader() {
-				return 0;
-				//return m_shader;
+				return m_shader;
 			}
 
 			/**
@@ -456,7 +452,7 @@ namespace tilia {
 					m_mesh_data->vertex_data = static_cast<std::vector<float>*>(static_cast<void*>(&vertices));
 					m_mesh_data->indices = &indices;
 					// Todo: Fix
-					//m_mesh_data->shader = &m_shader;
+					m_mesh_data->shader = &m_shader;
 					//m_mesh_data->shader_data = &m_shader_data;
 					m_mesh_data->transparent = &m_transparent;
 					m_mesh_data->primitive = &m_primitive;
@@ -489,8 +485,7 @@ namespace tilia {
 			uint32_t m_vertex_pos_start{}; // Start of the position in the vertices.
 			uint32_t m_vertex_pos_end{}; // End of the position in the vertices.
 
-			// Todo: remove posibly
-			//std::weak_ptr<Shader> m_shader{}; // The shader this mesh should be drawn with
+			std::weak_ptr<Shader> m_shader{}; // The shader this mesh should be drawn with
 
 			//std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data of the mesh.
 
