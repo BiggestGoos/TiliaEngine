@@ -166,21 +166,6 @@ void tilia::gfx::Shader::Rebind() {
 					   if (m_ID == s_bound_ID && m_ID != s_previous_ID)\
                        { Rebind(); }
 
-void tilia::gfx::Shader::Uniform(const std::string& loc, std::initializer_list<float> vs)
-{
-	Uniform(loc, vs.begin(), vs.size());
-}
-
-void tilia::gfx::Shader::Uniform(const std::string& loc, std::initializer_list<std::int32_t> vs)
-{
-	Uniform(loc, vs.begin(), vs.size());
-}
-
-void tilia::gfx::Shader::Uniform(const std::string& loc, std::initializer_list<std::uint32_t> vs)
-{
-	Uniform(loc, vs.begin(), vs.size());
-}
-
 void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const std::size_t& size)
 {
 	try {

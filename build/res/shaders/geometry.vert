@@ -6,8 +6,11 @@ out VS_OUT {
     vec3 color;
 } vs_out;
 
+uniform mat4 projection;
+uniform mat4 view;
+
 void main()
 {
     vs_out.color = aColor;
-    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0); 
+    gl_Position = projection * view * vec4(aPos.x, aPos.y, 0.0, 1.0); 
 }

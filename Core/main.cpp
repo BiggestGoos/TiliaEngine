@@ -83,7 +83,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 1
+#if 0
 
 int main()
 {
@@ -184,6 +184,8 @@ int main()
         while (!glfwWindowShouldClose(window))
         {
 
+            mesh->Set_Polymode()(polymode);
+
             fps = static_cast<uint32_t>(static_cast<double>(passed_frames) / glfwGetTime());
 
             float currentFrame = static_cast<float>(glfwGetTime());
@@ -198,9 +200,11 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
+            shader->Uniform("projection", projection);
 
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
+            shader->Uniform("view", view);
 
             renderer.m_camera_pos = camera.Position;
 
@@ -249,7 +253,7 @@ int main()
 
 #endif
 
-#if 0
+#if 1
 
 int main()
 {
@@ -310,32 +314,16 @@ int main()
         // auto cube_shader{ std::make_shared<Shader<false>>(Shader<false>{ { "res/shaders/cube_shader.vert" }, { "res/shaders/cube_shader.frag" }, true }) };
 
         auto 
-        light_v_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.vert", enums::Shader_Type::Vertex) },
-        light_f_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.frag", enums::Shader_Type::Fragment) };
-
-        light_v_shader->Init();
-        light_v_shader->Source();
-        light_v_shader->Compile();
-
-        light_f_shader->Init();
-        light_f_shader->Source();
-        light_f_shader->Compile();
+        light_v_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.vert", enums::Shader_Type::Vertex, true) },
+        light_f_shader{ std::make_shared<Shader_Part>("res/shaders/light_shader.frag", enums::Shader_Type::Fragment, true) };
 
         auto light_shader{ std::make_shared<Shader>() };
 
         light_shader->Init({ light_v_shader }, { light_f_shader }, {});
 
         auto 
-        cube_v_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.vert", enums::Shader_Type::Vertex) },
-        cube_f_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.frag", enums::Shader_Type::Fragment) };
-
-        cube_v_shader->Init();
-        cube_v_shader->Source();
-        cube_v_shader->Compile();
-
-        cube_f_shader->Init();
-        cube_f_shader->Source();
-        cube_f_shader->Compile();
+        cube_v_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.vert", enums::Shader_Type::Vertex, true) },
+        cube_f_shader{ std::make_shared<Shader_Part>("res/shaders/cube_shader.frag", enums::Shader_Type::Fragment, true) };
 
         auto cube_shader{ std::make_shared<Shader>() };
 

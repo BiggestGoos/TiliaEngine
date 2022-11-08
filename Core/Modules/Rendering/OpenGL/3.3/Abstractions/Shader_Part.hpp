@@ -29,19 +29,19 @@ namespace tilia {
 
 			~Shader_Part();
 
-			Shader_Part(const std::string& path, const enums::Shader_Type& type) : m_type{ type }, m_path{ path } { }
-			Shader_Part(std::string&& path, const enums::Shader_Type& type) : m_type{ type }, m_path{ std::move(path) } { }
+			Shader_Part(const std::string& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ path } { if (init) Init(true); }
+			Shader_Part(std::string&& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ std::move(path) } { if (init) Init(true); }
 
-			Shader_Part(const Shader_Part& other) noexcept :
+			Shader_Part(const Shader_Part& other, const bool& init = false) noexcept :
 				m_type{ other.m_type },
 				m_path{ other.m_path },
-				m_source{ other.m_source } { }
+				m_source{ other.m_source } { if (init) Init(true); }
 
-			Shader_Part(Shader_Part&& other) noexcept :
+			Shader_Part(Shader_Part&& other, const bool& init = false) noexcept :
 				m_ID{ other.m_ID },
 				m_type{ other.m_type },
 				m_path{ std::move(other.m_path) },
-				m_source{ std::move(other.m_source) } { other.m_ID = 0; }
+				m_source{ std::move(other.m_source) } { other.m_ID = 0; if (init) Init(true); }
 
 			Shader_Part& operator=(const Shader_Part& other) noexcept
 			{
@@ -84,11 +84,11 @@ namespace tilia {
 
 			inline std::string Get_Source() const { return m_source; }
 
-			void Init(const bool& reload);
+			void Init(const bool& reload = false);
 
 			void Source();
 
-			void Compile(const bool& source);
+			void Compile(const bool& source = false);
 
 		private:
 

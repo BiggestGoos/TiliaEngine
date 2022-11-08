@@ -130,7 +130,7 @@ std::size_t tilia::utils::Get_Shader_Type_Index(const enums::Shader_Type& type)
 		return 0;
 	case enums::Shader_Type::Fragment:
 		return 1;
-	case enums::Shader_Type::Geomentry:
+	case enums::Shader_Type::Geometry:
 		return 2;
 	default:
 		return 3;
@@ -146,7 +146,7 @@ tilia::enums::Shader_Type tilia::utils::Get_Index_Shader_Type(const std::size_t 
 	case 1:
 		return enums::Shader_Type::Fragment;
 	case 2:
-		return enums::Shader_Type::Geomentry;
+		return enums::Shader_Type::Geometry;
 	default:
 		return enums::Shader_Type();
 	}
@@ -160,7 +160,7 @@ const char* tilia::utils::Get_Shader_Type_String(const enums::Shader_Type& type)
 		return "Vertex";
 	case enums::Shader_Type::Fragment:
 		return "Fragment";
-	case enums::Shader_Type::Geomentry:
+	case enums::Shader_Type::Geometry:
 		return "Geometry";
 	default:
 		return "Error type";
