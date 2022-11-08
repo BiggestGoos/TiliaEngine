@@ -13,6 +13,7 @@ CXX_SRCS := \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Batch.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Renderer.cpp \

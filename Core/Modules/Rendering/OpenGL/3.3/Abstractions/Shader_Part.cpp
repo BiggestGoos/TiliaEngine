@@ -11,6 +11,7 @@
 #include "Core/Values/OpenGL/3.3/Utils.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 #include "Core/Modules/File_System/Windows/File_System.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
@@ -109,6 +110,12 @@ void tilia::gfx::Shader_Part::Compile(const bool& source)
 
 			throw e;
 
+		}
+	
+		for (auto& shader : m_attached_to)
+		{
+			if (shader != nullptr)
+				shader->Reload();
 		}
 
 	}

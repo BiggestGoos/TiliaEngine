@@ -22,12 +22,17 @@ namespace tilia {
 
 	namespace gfx {
 
+		// Predefinition
+		class Shader;
+
 		class Shader_Part {
 		public:
 
 			Shader_Part() = default;
 
 			~Shader_Part();
+
+			friend class Shader;
 
 			Shader_Part(const std::string& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ path } { if (init) Init(true); }
 			Shader_Part(std::string&& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ std::move(path) } { if (init) Init(true); }
@@ -100,6 +105,8 @@ namespace tilia {
 
 			// Path and source code of the Shader_Part
 			std::string m_path{}, m_source{};
+
+			std::vector<Shader*> m_attached_to{};
 
 		};
 

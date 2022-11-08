@@ -13,6 +13,7 @@
 
 // Vendor
 #include "vendor/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/gtc/type_ptr.hpp"
 
 // Standard
 #include <array>
@@ -148,7 +149,6 @@ namespace tilia {
 			 */
 			Shader(const Shader& other) noexcept
 			{
-				m_parts = other.m_parts;
 				m_location_cache = other.m_location_cache;
 			}
 			/**
@@ -160,7 +160,6 @@ namespace tilia {
 			{
 				m_ID = other.m_ID;
 				other.m_ID = 0;
-				m_parts = std::move(other.m_parts);
 				m_location_cache = std::move(other.m_location_cache);
 			}
 
@@ -169,7 +168,6 @@ namespace tilia {
 				if (&other == this)
 					return *this;
 
-				m_parts = other.m_parts;
 				m_location_cache = other.m_location_cache;
 
 				return *this;
@@ -182,7 +180,6 @@ namespace tilia {
 
 				m_ID = other.m_ID;
 				other.m_ID = 0;
-				m_parts = std::move(other.m_parts);
 				m_location_cache = std::move(other.m_location_cache);
 
 				return *this;
@@ -193,10 +190,6 @@ namespace tilia {
 			void Add_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload = true);
 
 			void Remove_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload = true);
-
-			inline auto Get_Part(const enums::Shader_Type& type, const std::size_t index) {
-				return m_parts[utils::Get_Shader_Type_Index(type)][index];
-			}
 
 			void Reload();
 
@@ -239,13 +232,13 @@ namespace tilia {
 			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
-				Uniform(loc, static_cast<T*>(&v[0]), size);
+				Uniform(loc, glm::value_ptr(v), size);
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, glm::mat<size_x, size_y, float, Q> v)
 			{
-				Uniform(loc, static_cast<float*>(&v[0][0]), size_x, size_y);
+				Uniform(loc, glm::value_ptr(v), size_x, size_y);
 			}
 
 			void Uniform(const std::string& loc, const float* vs, const std::size_t& size);
@@ -259,8 +252,6 @@ namespace tilia {
 		private:
 
 			std::uint32_t m_ID{};
-
-			std::array<std::vector<std::weak_ptr<Shader_Part>>, 3> m_parts{};
 
 			std::unordered_map<std::string, std::int32_t> m_location_cache{};
 

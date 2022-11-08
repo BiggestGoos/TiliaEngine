@@ -64,6 +64,8 @@ void tilia::gfx::Shader::Add_Part(std::weak_ptr<Shader_Part> shader_part, const 
 
 	GL_CALL(glAttachShader(m_ID, shader_part.lock()->Get_ID()));
 
+	shader_part.lock()->m_attached_to.push_back(this);
+
     if (reload)
         Reload();
 
@@ -73,6 +75,15 @@ void tilia::gfx::Shader::Remove_Part(std::weak_ptr<Shader_Part> shader_part, con
 {
 
 	GL_CALL(glDetachShader(m_ID, shader_part.lock()->Get_ID()));
+
+	std::size_t count{ shader_part.lock()->m_attached_to.size() };
+	for (std::size_t i = 0; i < count; i++)
+	{
+		if (shader_part.lock()->m_attached_to[i] == this)
+		{
+			shader_part.lock()->m_attached_to.erase(shader_part.lock()->m_attached_to.begin() + i);
+		}
+	}
 
     if (reload)
         Reload();

@@ -52,6 +52,8 @@ enums::Polymode polymode{ enums::Polymode::Fill };
 
 bool pause{ true };
 
+bool reload_shader{ false };
+
 float light_z{ 0.0f };
 
 float angle{};
@@ -83,7 +85,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 0
+#if 1
 
 int main()
 {
@@ -140,17 +142,34 @@ int main()
         camera.Reset();
 
         auto
-        shader_v{ std::make_shared<Shader_Part>("res/shaders/geometry.vert", enums::Shader_Type::Vertex) }, 
-        shader_f{ std::make_shared<Shader_Part>("res/shaders/geometry.frag", enums::Shader_Type::Fragment) },
-        shader_g{ std::make_shared<Shader_Part>("res/shaders/geometry.geom", enums::Shader_Type::Geometry) };
-
-        shader_v->Init(true);
-        shader_f->Init(true);
-        shader_g->Init(true);
+        shader_v{ std::make_shared<Shader_Part>("res/shaders/geometry.vert", enums::Shader_Type::Vertex, true) }, 
+        shader_f{ std::make_shared<Shader_Part>("res/shaders/geometry.frag", enums::Shader_Type::Fragment, true) },
+        shader_g{ std::make_shared<Shader_Part>("res/shaders/geometry.geom", enums::Shader_Type::Geometry, true) };
 
         auto shader{ std::make_shared<Shader>() };
 
         shader->Init({ shader_v }, { shader_f }, { shader_g });
+
+        std::uint32_t ubo;
+        glGenBuffers(1, &ubo);
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glBufferData(GL_UNIFORM_BUFFER, 52, NULL, GL_STATIC_DRAW); // allocate 52 bytes of memory
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+        std::uint32_t color_block_index{ glGetUniformBlockIndex(shader->Get_ID(), "color_block") };
+
+        glUniformBlockBinding(shader->Get_ID(), color_block_index, 0);
+
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 52);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glm::vec3 rgb{ 0.5f, 1.0f, 0.25f };
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16, &rgb[0]);
+        float mult_r{ 0.35f }, mult_g{ 0.725 }, mult_b{ 0.125 };
+        glBufferSubData(GL_UNIFORM_BUFFER, 16, 20, &mult_r);
+        glBufferSubData(GL_UNIFORM_BUFFER, 32, 36, &mult_g);
+        glBufferSubData(GL_UNIFORM_BUFFER, 48, 52, &mult_b);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
@@ -184,6 +203,13 @@ int main()
         while (!glfwWindowShouldClose(window))
         {
 
+            processInput();
+
+            if (reload_shader)
+            {
+                shader_g->Compile(true);
+            }
+
             mesh->Set_Polymode()(polymode);
 
             fps = static_cast<uint32_t>(static_cast<double>(passed_frames) / glfwGetTime());
@@ -194,7 +220,6 @@ int main()
 
             std::cout << fps << " : " << deltaTime << " : " << add_angle << " : "<< angle << " : " << axis.x << " , " << axis.y << " , " << axis.z << '\n';
 
-            processInput();
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -222,6 +247,8 @@ int main()
             glfwSwapBuffers(window);
             glfwPollEvents();
             input.Update();
+
+            reload_shader = false;
 
             ++passed_frames;
 
@@ -253,7 +280,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
 
 int main()
 {
@@ -705,6 +732,9 @@ void processInput()
 
     if (input.Get_Key_Pressed(KEY_BACKSPACE))
         pause = !pause;
+
+    if (input.Get_Key_Pressed(KEY_HOME))
+        reload_shader = true;
 
     if (input.Get_Key_Down(KEY_UP))
         add_angle += 10.0f * deltaTime;
