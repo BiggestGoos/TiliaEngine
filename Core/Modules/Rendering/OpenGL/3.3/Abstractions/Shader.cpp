@@ -322,12 +322,33 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const 
 
 }
 
+void tilia::gfx::Shader::Bind_Uniform_Block(const std::string& block_name, const std::uint32_t& block_index)
+{
+	GL_CALL(glUniformBlockBinding(m_ID, Get_Uniform_Block_Index(block_name), block_index));
+}
+
 std::int32_t tilia::gfx::Shader::Get_Uniform_Location(const std::string& name)
 {
 	if (m_location_cache.find(name) != m_location_cache.end())
 		return m_location_cache[name];
 
 	GL_CALL(std::int32_t location = glGetUniformLocation(m_ID, name.c_str()));
+
+	// Check is -1
+	//if (location == -1)
+	//	log::Log(log::Type::ERROR, "SHADER", "Uniform { Name: %s } does not exist / is not being used", name.c_str());
+
+	m_location_cache[name] = location;
+
+	return location;
+}
+
+std::int32_t tilia::gfx::Shader::Get_Uniform_Block_Index(const std::string& name)
+{
+	if (m_location_cache.find(name) != m_location_cache.end())
+		return m_location_cache[name];
+
+	GL_CALL(std::int32_t location = glGetUniformBlockIndex(m_ID, name.c_str()));
 
 	// Check is -1
 	//if (location == -1)

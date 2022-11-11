@@ -30,6 +30,7 @@
 #include "Core/Temp/Input.hpp"
 #include "Core/Temp/Limit_Fps.hpp"
 #include "Core/Temp/Stopwatch.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Uniform_Buffer.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -150,26 +151,51 @@ int main()
 
         shader->Init({ shader_v }, { shader_f }, { shader_g });
 
-        std::uint32_t ubo;
-        glGenBuffers(1, &ubo);
-        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-        glBufferData(GL_UNIFORM_BUFFER, 52, NULL, GL_STATIC_DRAW); // allocate 52 bytes of memory
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        // std::uint32_t ubo;
+        // glGenBuffers(1, &ubo);
+        // glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        // glBufferData(GL_UNIFORM_BUFFER, 52, NULL, GL_STATIC_DRAW); // allocate 52 bytes of memory
+        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-        std::uint32_t color_block_index{ glGetUniformBlockIndex(shader->Get_ID(), "color_block") };
+        // std::uint32_t color_block_index{ glGetUniformBlockIndex(shader->Get_ID(), "color_block") };
 
-        glUniformBlockBinding(shader->Get_ID(), color_block_index, 0);
+        // glUniformBlockBinding(shader->Get_ID(), color_block_index, 0);
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 52);
+        // glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 52);
 
-        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-        glm::vec3 rgb{ 0.5f, 1.0f, 0.25f };
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, 16, &rgb[0]);
-        float mult_r{ 0.35f }, mult_g{ 0.725 }, mult_b{ 0.125 };
-        glBufferSubData(GL_UNIFORM_BUFFER, 16, 20, &mult_r);
-        glBufferSubData(GL_UNIFORM_BUFFER, 32, 36, &mult_g);
-        glBufferSubData(GL_UNIFORM_BUFFER, 48, 52, &mult_b);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        // glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        // glm::vec3 rgb{ 0.5f, 1.0f, 0.25f };
+        // glBufferSubData(GL_UNIFORM_BUFFER, 0, 16, &rgb[0]);
+        // float mult_r{ 0.325f }, mult_g{ 0.725 }, mult_b{ 0.125 };
+        // glBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_r);
+        // glBufferSubData(GL_UNIFORM_BUFFER, 32, 4, &mult_g);
+        // glBufferSubData(GL_UNIFORM_BUFFER, 48, 4, &mult_b);
+        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        Uniform_Buffer ub{};
+
+        ub.Init({ { "rgb", { enums::GLSL_Type::Vector3, 1 } }, { "multiplier_r", { enums::GLSL_Type::Scalar, 1 } }, { "multiplier_g", { enums::GLSL_Type::Scalar, 1 } }, { "multiplier_b", { enums::GLSL_Type::Scalar, 1 } } });
+
+        ub.debug_print();
+
+        ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
+        ub.Uniform("multiplier_r", { 1.0f });
+        ub.Uniform("multiplier_g", { 1.0f });
+        ub.Uniform("multiplier_b", { 1.0f });
+
+        ub.Bind();
+
+        glm::vec3 rgb_data{};
+        float mult_r_data{}, mult_g_data{}, mult_b_data{};
+        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 0,16, glm::value_ptr(rgb_data)));
+        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_r_data));
+        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 32, 4, &mult_g_data));
+        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 48, 4, &mult_b_data));
+        std::cout << rgb_data.r << " : " << rgb_data.g<< " : " << rgb_data.b << '\n';
+        std::cout << "mult_r: " << mult_r_data << '\n'<< "mult_g: " << mult_g_data << '\n' << "mult_b: " << mult_g_data << '\n';
+
+        ub.Set_Bind_Point(0);
+
+        shader->Bind_Uniform_Block("color_block", 0);
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
@@ -207,7 +233,7 @@ int main()
 
             if (reload_shader)
             {
-                shader_g->Compile(true);
+                shader_f->Compile(true);
             }
 
             mesh->Set_Polymode()(polymode);

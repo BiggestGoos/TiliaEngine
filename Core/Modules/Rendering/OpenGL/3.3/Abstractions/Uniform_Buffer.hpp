@@ -8,11 +8,18 @@
  *************************************************************************************************/
 
 // Vendor
+#include "vendor/glm/include/glm/glm.hpp"
+#include "vendor/glm/include/glm/gtc/type_ptr.hpp"
 
 // Standard
 #include <cstdint>
+#include <initializer_list>
+#include <utility>
+#include <string>
+#include <unordered_map>
 
 // Tilia
+#include "Core/Values/OpenGL/3.3/Enums.hpp"
 
 #ifndef TILIA_UNIFORM_BUFFER_HPP
 #define TILIA_UNIFORM_BUFFER_HPP
@@ -21,15 +28,26 @@ namespace tilia
 {
     
     namespace gfx
-    {
+    {   
         
         class Uniform_Buffer
         {
         public:
+
+            void Init(std::initializer_list<std::pair<std::string, std::pair<enums::GLSL_Type, std::size_t>>> block_variables);
+
+
+            void debug_print();
             
-            inline auto Get_ID() {
+            inline auto Get_ID() const {
 				return m_ID;
 			}
+
+            void Set_Bind_Point(const std::uint32_t& bind_point);
+
+            inline auto Get_Bind_Point() const {
+                return m_bind_point;
+            }
 
 			/**
 			 * @brief Binds the ubo.
@@ -55,13 +73,35 @@ namespace tilia
 			 */
 			static void Rebind();
 
+			template<typename T,
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			void Uniform(const std::string& loc, std::initializer_list<T> vs)
+			{
+				Uniform(loc, vs.begin());
+			}
+
+			template<typename T, glm::length_t size, glm::qualifier Q,
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
+			{
+				Uniform(loc, glm::value_ptr(v));
+			}
+
+			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
+			void Uniform(const std::string& loc, glm::mat<size_x, size_y, float, Q> v)
+			{
+				Uniform(loc, glm::value_ptr(v));
+			}
+
+			void Uniform(const std::string& loc, const void* vs);
+
         private:
 
             std::uint32_t m_ID{};
 
-            std::uint32_t m_Bind_Index{};
+            std::uint32_t m_bind_point{};
 
-            std::uint32_t m_base{}, m_size{};
+            std::unordered_map<std::string, std::pair<std::size_t, std::size_t>> m_variables{};
 
             static std::uint32_t s_bound_ID;
 			static std::uint32_t s_previous_ID;

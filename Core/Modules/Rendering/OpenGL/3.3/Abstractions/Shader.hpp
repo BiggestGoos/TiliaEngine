@@ -249,6 +249,8 @@ namespace tilia {
 
 			void Uniform(const std::string& loc, const float* vs, const std::size_t& size_x, const std::size_t& size_y);
 
+			void Bind_Uniform_Block(const std::string& block_name, const std::uint32_t& block_index);
+
 		private:
 
 			std::uint32_t m_ID{};
@@ -256,6 +258,8 @@ namespace tilia {
 			std::unordered_map<std::string, std::int32_t> m_location_cache{};
 
 			std::int32_t Get_Uniform_Location(const std::string& name);
+
+			std::int32_t Get_Uniform_Block_Index(const std::string& name);
 
 			static std::uint32_t s_bound_ID;
 			static std::uint32_t s_previous_ID;

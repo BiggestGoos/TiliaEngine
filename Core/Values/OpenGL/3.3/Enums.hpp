@@ -173,7 +173,19 @@ namespace tilia {
 		enum class Shader_Type {
 			Fragment  = 0x8B30, // The fragment shader. Also known as pixel shader.
 			Vertex	  = 0x8B31, // The vertex shader.
-			Geometry = 0x8DD9  // The geometry shader.
+			Geometry  = 0x8DD9  // The geometry shader.
+		};
+
+		// Different GLSL types with their sizes as values.
+		enum class GLSL_Type {
+			Scalar  = 4,  // float, int, bool, etc...
+			Vector2 = 8,  // vec2, ivec2, uvec2, etc...
+			Vector3 = 16, // vec3, ivec3, uvec3, etc...
+			Vector4 = 16, // vec4, ivec4, uvec4, etc...
+			Matrix2 = 32, // mat2.
+			Matrix3 = 48, // mat3
+			Matrix4 = 64, // mat4
+			Array   = 16  // float[3], int[7], vec2[2], etc...
 		};
 
 		/**
