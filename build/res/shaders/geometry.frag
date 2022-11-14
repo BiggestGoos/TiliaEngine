@@ -13,5 +13,6 @@ layout (std140) uniform color_block
 
 void main()
 {
-    FragColor = vec4(fColor * vec3(rgb.r * multiplier_r, rgb.g * multiplier_g, rgb.b * multiplier_b), 1.0);   
+    FragColor = vec4(fColor, 1.0);   
+    //FragColor = vec4(fColor * vec3(rgb.r * multiplier_r, rgb.g * multiplier_g, rgb.b * multiplier_b), 1.0);   
 }

@@ -177,25 +177,26 @@ int main()
 
         ub.debug_print();
 
-        ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
-        ub.Uniform("multiplier_r", { 1.0f });
-        ub.Uniform("multiplier_g", { 1.0f });
-        ub.Uniform("multiplier_b", { 1.0f });
+        // ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
+        // ub.Uniform("multiplier_r", { 1.0f });
+        // ub.Uniform("multiplier_g", { 1.0f });
+        // ub.Uniform("multiplier_b", { 1.0f });
 
-        ub.Bind();
+        // ub.Bind();
+        ub.Unbind();
 
-        glm::vec3 rgb_data{};
-        float mult_r_data{}, mult_g_data{}, mult_b_data{};
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 0,16, glm::value_ptr(rgb_data)));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_r_data));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 32, 4, &mult_g_data));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 48, 4, &mult_b_data));
-        std::cout << rgb_data.r << " : " << rgb_data.g<< " : " << rgb_data.b << '\n';
-        std::cout << "mult_r: " << mult_r_data << '\n'<< "mult_g: " << mult_g_data << '\n' << "mult_b: " << mult_g_data << '\n';
+        // glm::vec3 rgb_data{};
+        // float mult_r_data{}, mult_g_data{}, mult_b_data{};
+        // GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 0,16, glm::value_ptr(rgb_data)));
+        // GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_r_data));
+        // GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 32, 4, &mult_g_data));
+        // GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 48, 4, &mult_b_data));
+        // std::cout << rgb_data.r << " : " << rgb_data.g<< " : " << rgb_data.b << '\n';
+        // std::cout << "mult_r: " << mult_r_data << '\n'<< "mult_g: " << mult_g_data << '\n' << "mult_b: " << mult_g_data << '\n';
 
-        ub.Set_Bind_Point(0);
+        // ub.Set_Bind_Point(0);
 
-        shader->Bind_Uniform_Block("color_block", 0);
+        // shader->Bind_Uniform_Block("color_block", 0);
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
