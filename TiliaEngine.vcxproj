@@ -171,6 +171,7 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Mesh.hpp" />
@@ -482,6 +483,7 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Batch.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Renderer.cpp" />
@@ -496,9 +498,7 @@
     <None Include="build\res\shaders\cube_shader.vert" />
     <None Include="build\res\shaders\light_shader.vert" />
     <None Include="cpp.hint" />
-    <None Include="res\shaders\cube_shader.frag" />
     <None Include="res\shaders\cube_shader.vert" />
-    <None Include="res\shaders\light_shader.frag" />
     <None Include="res\shaders\light_shader.vert" />
     <None Include="vendor\glm\include\glm\detail\func_common.inl" />
     <None Include="vendor\glm\include\glm\detail\func_common_simd.inl" />
@@ -637,13 +637,9 @@
     <None Include="vendor\glm\include\glm\gtx\vector_query.inl" />
     <None Include="vendor\glm\include\glm\gtx\wrap.inl" />
     <None Include="src\vertex.vert" />
-    <None Include="x64\Debug\res\shaders\cube_shader.frag" />
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
-    <None Include="x64\Debug\res\shaders\light_shader.frag" />
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
-    <None Include="x64\Release\res\shaders\cube_shader.frag" />
     <None Include="x64\Release\res\shaders\cube_shader.vert" />
-    <None Include="x64\Release\res\shaders\light_shader.frag" />
     <None Include="x64\Release\res\shaders\light_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

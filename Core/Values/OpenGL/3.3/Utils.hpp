@@ -53,6 +53,8 @@ namespace tilia {
 
 		const char* Get_Shader_Type_String(const enums::Shader_Type& type);
 
+		std::size_t Get_GLSL_Scalar_Size(const enums::GLSL_Scalar_Type& scalar);
+
 	}
 
 }

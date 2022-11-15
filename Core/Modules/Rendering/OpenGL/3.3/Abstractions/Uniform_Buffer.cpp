@@ -8,34 +8,65 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Uniform_Buffer.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Values/OpenGL/3.3/Utils.hpp"
 
 std::uint32_t tilia::gfx::Uniform_Buffer::s_bound_ID{};
 std::uint32_t tilia::gfx::Uniform_Buffer::s_previous_ID{};
 
-void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, std::pair<enums::GLSL_Type, std::size_t>>> block_variables)
+template<typename T, typename U>
+static T round_up(const T& to_round, const U& multiple_of)
+{
+    if (!multiple_of)
+        return to_round;
+    return ((to_round + multiple_of - 1) / multiple_of) * multiple_of;
+}
+
+void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables)
 {
 
     GL_CALL(glGenBuffers(1, &m_ID));
 
-    std::size_t size{};
+    const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
 
-    for (auto& variable : block_variables)
+    std::vector<std::pair<std::string, GLSL_Variable>> variables{ block_variables };
+
+    std::size_t block_size{};
+
+    const std::size_t var_count{ variables.size() };
+    for (std::size_t i{}; i < var_count; ++i)
     {
-        m_variables[variable.first] = { size, *variable.second.first * variable.second.second };
-        if (variable == *(block_variables.end() - 1))
+
+        std::size_t variable_size{};
+
+        if (variables[i].second.container_type != enums::GLSL_Container_Type::Scalar && variables[i].second.container_type != enums::GLSL_Container_Type::Vector2 && block_size % vec4_size)
         {
-            size += *variable.second.first * variable.second.second;
-            break;
+            block_size = round_up(block_size, vec4_size);
         }
-        size += (*variable.second.first * variable.second.second >= 16)? *variable.second.first * variable.second.second : 16;
+
+        if (variables[i].second.array_count)
+        {
+            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+            variable_size = round_up(variable_size, vec4_size);
+        }
+        else
+        {
+            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+        }
+
+        m_variables[variables[i].first] = { block_size, variable_size };
+
+        block_size += variable_size;
+
     }
 
-    std::cout << size << '\n';
+    block_size = round_up(block_size, vec4_size);
+
+    std::cout << block_size << '\n';
 
     // Make sure the buffer is a uniform buffer
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
 
-    glBufferData(GL_UNIFORM_BUFFER, size, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, block_size, NULL, GL_DYNAMIC_DRAW);
 
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 

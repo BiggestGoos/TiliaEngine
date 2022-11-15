@@ -166,3 +166,22 @@ const char* tilia::utils::Get_Shader_Type_String(const enums::Shader_Type& type)
 		return "Error type";
 	}
 }
+
+std::size_t tilia::utils::Get_GLSL_Scalar_Size(const enums::GLSL_Scalar_Type& scalar)
+{
+
+	switch (scalar)
+	{
+	case enums::GLSL_Scalar_Type::Bool:
+		return sizeof(GLboolean);
+	case enums::GLSL_Scalar_Type::Int:
+		return sizeof(GLint);
+	case enums::GLSL_Scalar_Type::Uint:
+		return sizeof(GLuint);
+	case enums::GLSL_Scalar_Type::Float:
+		return sizeof(GLfloat);
+	default:
+		return 0;
+	}
+
+}

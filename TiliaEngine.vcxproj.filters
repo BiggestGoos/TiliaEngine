@@ -939,6 +939,9 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Modules\Console\Logging.cpp">
@@ -1001,13 +1004,12 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vertex.vert" />
-    <None Include="x64\Debug\res\shaders\cube_shader.frag" />
-    <None Include="x64\Debug\res\shaders\cube_shader.vert" />
-    <None Include="x64\Debug\res\shaders\light_shader.frag" />
-    <None Include="x64\Debug\res\shaders\light_shader.vert" />
     <None Include="vendor\glm\include\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -1419,13 +1421,11 @@
     <None Include="build\res\shaders\cube_shader.vert" />
     <None Include="build\res\shaders\light_shader.vert" />
     <None Include="cpp.hint" />
-    <None Include="x64\Release\res\shaders\cube_shader.frag" />
-    <None Include="x64\Release\res\shaders\cube_shader.vert" />
-    <None Include="x64\Release\res\shaders\light_shader.frag" />
-    <None Include="x64\Release\res\shaders\light_shader.vert" />
-    <None Include="res\shaders\cube_shader.frag" />
     <None Include="res\shaders\cube_shader.vert" />
-    <None Include="res\shaders\light_shader.frag" />
     <None Include="res\shaders\light_shader.vert" />
+    <None Include="x64\Debug\res\shaders\cube_shader.vert" />
+    <None Include="x64\Debug\res\shaders\light_shader.vert" />
+    <None Include="x64\Release\res\shaders\cube_shader.vert" />
+    <None Include="x64\Release\res\shaders\light_shader.vert" />
   </ItemGroup>
 </Project>

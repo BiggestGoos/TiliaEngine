@@ -34,7 +34,19 @@ namespace tilia
         {
         public:
 
-            void Init(std::initializer_list<std::pair<std::string, std::pair<enums::GLSL_Type, std::size_t>>> block_variables);
+			struct GLSL_Variable
+			{
+				enums::GLSL_Scalar_Type scalar_type{};
+				enums::GLSL_Container_Type container_type{};
+				std::size_t array_count{};
+				GLSL_Variable(const enums::GLSL_Scalar_Type& type) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ 0 } { }
+				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const std::size_t& count) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ count } { }
+				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type) : scalar_type{ type }, container_type{ c_type }, array_count{ 0 } { }
+				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type, const std::size_t& count) : scalar_type{ type }, container_type{ c_type }, array_count{ count } { }
+
+			};
+
+            void Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables);
 
 
             void debug_print();

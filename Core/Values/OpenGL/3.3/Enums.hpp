@@ -176,16 +176,29 @@ namespace tilia {
 			Geometry  = 0x8DD9  // The geometry shader.
 		};
 
-		// Different GLSL types with their sizes as values.
-		enum class GLSL_Type {
-			Scalar  = 4,  // float, int, bool, etc...
-			Vector2 = 8,  // vec2, ivec2, uvec2, etc...
-			Vector3 = 16, // vec3, ivec3, uvec3, etc...
-			Vector4 = 16, // vec4, ivec4, uvec4, etc...
-			Matrix2 = 32, // mat2.
-			Matrix3 = 48, // mat3
-			Matrix4 = 64, // mat4
-			Array   = 16  // float[3], int[7], vec2[2], etc...
+		// GLSL data scalar types. Underlying value is the value defined by openGL.
+		enum class GLSL_Scalar_Type {
+			Bool   = 0x8B56, // A boolean.
+			Int    = 0x1404, // An integer.
+			Uint   = 0x1405, // An unisgned integer.
+			Float  = 0x1406 // A single precision floating point number
+		};
+
+		// GLSL container types. Value is the *size* https://www.oreilly.com/library/view/opengl-programming-guide/9780132748445/app09lev1sec2.html.
+		enum class GLSL_Container_Type {
+			Scalar    = 1,           // Eg. bool, int, float...
+			Vector2   = 2,           // Eg. vec2, ivec2, bvec2...
+			Vector3   = 3,           // Eg. vec3, ivec3, bvec3...
+			Vector4   = 4,           // Eg. vec4, ivec4, bvec4...
+			Matrix2   = 2 * Vector2, // mat2
+			Matrix2x3 = 2 * Vector3, // mat2x3
+			Matrix2x4 = 2 * Vector4, // mat2x4
+			Matrix3   = 3 * Vector3, // mat3
+			Matrix3x2 = 3 * Vector2, // mat3x2
+			Matrix3x4 = 3 * Vector4, // mat3x4
+			Matrix4   = 4 * Vector4, // mat4
+			Matrix4x3 = 4 * Vector3, // mat4x3
+			Matrix4x2 = 4 * Vector2  // mat4x2
 		};
 
 		/**
