@@ -45,8 +45,9 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
 
         if (variables[i].second.array_count)
         {
-            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
-            variable_size = round_up(variable_size, vec4_size);
+            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type * variables[i].second.array_count;
+            //variable_size = round_up(variable_size, vec4_size) * variables[i].second.array_count;
+
         }
         else
         {

@@ -175,30 +175,25 @@ int main()
 
         //ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier_r", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_g", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_b", { enums::GLSL_Scalar_Type::Float } } });
 
-        ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } } });
+        ub.Init({ { "scalar", {  enums::GLSL_Scalar_Type::Float } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2x3 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 5 } } });
 
         ub.debug_print();
 
-        //ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
-        //ub.Uniform("multiplier", { 1.0f, 1.0f, 1.0f });
-        //ub.Uniform("multiplier_r", { 1.0f });
-        //ub.Uniform("multiplier_g", { 1.0f });
-        //ub.Uniform("multiplier_b", { 1.0f });
+        ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
+
+        glm::mat4 matrix{ 1.0f };
+
+        ub.Uniform("matrix_4", matrix);
+
+        ub.Uniform("scalar", { 1.0f });
+
+        ub.Uniform("arr", { 1.0f, 0.5f, 1.0f, 1.0f, 1.0f });
 
         ub.Bind();
 
-        glm::vec3 rgb_data{};
-        float mult_r_data{}, mult_g_data{}, mult_b_data{};
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 0,  12, glm::value_ptr(rgb_data)));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 12, 4, &mult_r_data));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_g_data));
-        GL_CALL(glGetBufferSubData(GL_UNIFORM_BUFFER, 20, 4, &mult_b_data));
-        std::cout << rgb_data.r << " : " << rgb_data.g<< " : " << rgb_data.b << '\n';
-        std::cout << "mult_r: " << mult_r_data << '\n'<< "mult_g: " << mult_g_data << '\n' << "mult_b: " << mult_g_data << '\n';
-
         ub.Set_Bind_Point(0);
 
-        shader->Bind_Uniform_Block("color_block", 0);
+        shader->Bind_Uniform_Block("block", 0);
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
