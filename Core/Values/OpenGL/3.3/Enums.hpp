@@ -190,15 +190,9 @@ namespace tilia {
 			Vector2   = 2,           // Eg. vec2, ivec2, bvec2...
 			Vector3   = 3,           // Eg. vec3, ivec3, bvec3...
 			Vector4   = 4,           // Eg. vec4, ivec4, bvec4...
-			Matrix2   = 2 * Vector4, // mat2
-			Matrix2x3 = 2 * Vector4, // mat2x3
-			Matrix2x4 = 2 * Vector4, // mat2x4
-			Matrix3   = 3 * Vector4, // mat3
-			Matrix3x2 = 3 * Vector4, // mat3x2
-			Matrix3x4 = 3 * Vector4, // mat3x4
-			Matrix4   = 4 * Vector4, // mat4
-			Matrix4x3 = 4 * Vector4, // mat4x3
-			Matrix4x2 = 4 * Vector4  // mat4x2
+			Matrix2   = 2 * Vector4, // mat2, mat2x3, mat2x4.
+			Matrix3   = 3 * Vector4, // mat3, mat3x2, mat3x4.
+			Matrix4   = 4 * Vector4, // mat4, mat4x3, mat4x2.
 		};
 
 		/**

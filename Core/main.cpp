@@ -175,23 +175,34 @@ int main()
 
         //ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier_r", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_g", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_b", { enums::GLSL_Scalar_Type::Float } } });
 
-        ub.Init({ { "scalar", {  enums::GLSL_Scalar_Type::Float } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2x3 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 5 } } });
+        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } } });
 
         ub.debug_print();
 
         ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
 
-        glm::mat4 matrix{ 1.0f };
+        glm::mat4 matrix_4{ 1.0f };
 
-        ub.Uniform("matrix_4", matrix);
+        ub.Uniform("matrix_4", matrix_4);
 
         ub.Uniform("scalar", { 1.0f });
 
-        ub.Uniform("arr", { 1.0f, 0.5f, 1.0f, 1.0f, 1.0f });
+        ub.Uniform("arr", { 1.0f, 1.0f, 1.0f });
+
+        glm::mat3 matrix_3{ 1.0f };
+
+        ub.Bind();
+
+        //ub.Uniform("matrix_3", matrix_3);
+        glBufferSubData(GL_UNIFORM_BUFFER, 16, 32, &matrix_3);
+
+        ub.Uniform("arr_2", { matrix_3, matrix_3, matrix_3, matrix_3, matrix_3 });
 
         ub.Bind();
 
         ub.Set_Bind_Point(0);
+
+        ub.Unbind();
 
         shader->Bind_Uniform_Block("block", 0);
 

@@ -17,6 +17,7 @@
 #include <utility>
 #include <string>
 #include <unordered_map>
+#include <array>
 
 // Tilia
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
@@ -85,18 +86,72 @@ namespace tilia
 			 */
 			static void Rebind();
 
-			template<typename T,
-			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			#define TILIA_ENABLE_IF_UNIFORM std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value || std::is_same<bool, T>::value>* = nullptr
+
+			template<typename T, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, std::vector<T> vs)
+			{
+				Uniform(loc, &vs.front());
+			}
+
+			template<typename T, std::size_t S, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, std::array<T, S> vs)
+			{
+				Uniform(loc, &vs.front());
+			}
+
+			template<typename T, TILIA_ENABLE_IF_UNIFORM>				
 			void Uniform(const std::string& loc, std::initializer_list<T> vs)
 			{
 				Uniform(loc, vs.begin());
 			}
 
-			template<typename T, glm::length_t size, glm::qualifier Q,
-			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			template<typename T, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, T vs)
+			{
+				Uniform(loc, &vs);
+			}
+
+			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, std::vector<glm::vec<size, T, Q>> v)
+			{
+				Uniform(loc, &v.front());
+			}
+
+			template<typename T, std::size_t S, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, std::array<glm::vec<size, T, Q>, S> v)
+			{
+				Uniform(loc, &v.front());
+			}
+
+			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
+			void Uniform(const std::string& loc, std::initializer_list<glm::vec<size, T, Q>> v)
+			{
+				Uniform(loc, v.begin());
+			}
+
+			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
 				Uniform(loc, glm::value_ptr(v));
+			}
+
+			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
+			void Uniform(const std::string& loc, std::vector<glm::mat<size_x, size_y, float, Q>> v)
+			{
+				Uniform(loc, &v.front());
+			}
+
+			template<std::size_t S, glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
+			void Uniform(const std::string& loc, std::array<glm::mat<size_x, size_y, float, Q>, S> v)
+			{
+				Uniform(loc, &v.front());
+			}
+
+			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
+			void Uniform(const std::string& loc, std::initializer_list<glm::mat<size_x, size_y, float, Q>> v)
+			{
+				Uniform(loc, v.begin());
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
@@ -105,15 +160,29 @@ namespace tilia
 				Uniform(loc, glm::value_ptr(v));
 			}
 
-			void Uniform(const std::string& loc, const void* vs);
+			void Uniform(const std::string& loc, const void* vs) {
+				if (m_variables.find(loc) != m_variables.end()) {
+					Uniform(m_variables[loc][0], m_variables[loc][1], vs);
+				}
+				else
+				{
+					Uniform(m_arrays[loc][0], m_arrays[loc][1], m_arrays[loc][2], vs);
+				}
+			}
 
+			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs);
+			void Uniform(const std::size_t& offset, const std::size_t& size, const std::size_t& stride, const void* vs);
+
+			//#undef TILIA_ENABLE_IF_UNIFORM
+			
         private:
 
             std::uint32_t m_ID{};
 
             std::uint32_t m_bind_point{};
 
-            std::unordered_map<std::string, std::pair<std::size_t, std::size_t>> m_variables{};
+            std::unordered_map<std::string, std::array<std::size_t, 2>> m_variables{};
+			std::unordered_map<std::string, std::array<std::size_t, 3>> m_arrays{};
 
             static std::uint32_t s_bound_ID;
 			static std::uint32_t s_previous_ID;

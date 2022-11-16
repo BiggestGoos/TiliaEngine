@@ -33,30 +33,47 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
     std::size_t block_size{};
 
     const std::size_t var_count{ variables.size() };
-    for (std::size_t i{}; i < var_count; ++i)
+    for (std::size_t i{ 0 }; i < var_count; ++i)
     {
 
         std::size_t variable_size{};
 
-        if (variables[i].second.container_type != enums::GLSL_Container_Type::Scalar && variables[i].second.container_type != enums::GLSL_Container_Type::Vector2 && block_size % vec4_size)
+        if (variables[i].second.container_type != enums::GLSL_Container_Type::Scalar && variables[i].second.container_type != enums::GLSL_Container_Type::Vector2 && block_size % vec4_size || variables[i].second.array_count)
         {
             block_size = round_up(block_size, vec4_size);
         }
 
-        if (variables[i].second.array_count)
+        const std::size_t& array_count{ variables[i].second.array_count };
+        for (std::size_t u{ 0 }; u < array_count; ++u)
         {
-            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type * variables[i].second.array_count;
-            //variable_size = round_up(variable_size, vec4_size) * variables[i].second.array_count;
 
+            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+
+            if (u == 0)
+                m_arrays[variables[i].first] = { block_size, 0, variable_size };
+
+            variable_size = round_up(variable_size, vec4_size);
+
+            std::stringstream var_name{};
+            var_name << variables[i].first << '[' << u << ']';
+
+            m_variables[var_name.str()] = { block_size, variable_size };
+
+            block_size += variable_size;
+
+            if (u == array_count - 1)
+                m_arrays[variables[i].first][1] = block_size;
+            
         }
-        else
+
+        if (!array_count)
         {
             variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+
+            m_variables[variables[i].first] = { block_size, variable_size };
+
+            block_size += variable_size;
         }
-
-        m_variables[variables[i].first] = { block_size, variable_size };
-
-        block_size += variable_size;
 
     }
 
@@ -79,7 +96,7 @@ void tilia::gfx::Uniform_Buffer::debug_print()
     for (auto& var : m_variables)
     {
 
-        std::cout << "name: " << var.first << " : offset: " << var.second.first << " : size: " << var.second.second << '\n';
+        std::cout << "name: " << var.first << " : offset: " << var.second[0] << " : size: " << var.second[1] << '\n';
 
     }
 
@@ -139,18 +156,37 @@ void tilia::gfx::Uniform_Buffer::Rebind() {
 	s_bound_ID = 0;
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const void* vs)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs)
 {
 
     if (m_ID != s_bound_ID)
-	{
+    {
         Unbind(true);
-        Bind(); 
+        Bind();
     }
 
-    GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, m_variables[loc].first, m_variables[loc].second, vs));
+    GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, vs));
 
-	if (m_ID == s_bound_ID && m_ID != s_previous_ID)
-        Rebind(); 
+    if (m_ID == s_bound_ID && m_ID != s_previous_ID)
+        Rebind();
+
+}
+
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const std::size_t& stride, const void* vs)
+{
+
+    if (m_ID != s_bound_ID)
+    {
+        Unbind(true);
+        Bind();
+    }
+
+    for (std::size_t i{ offset }; i < size; i += stride)
+    {
+        GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, i, stride, static_cast<const void*>(reinterpret_cast<const char*>(vs) + stride)));
+    }
+
+    if (m_ID == s_bound_ID && m_ID != s_previous_ID)
+        Rebind();
 
 }
