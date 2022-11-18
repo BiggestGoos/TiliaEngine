@@ -5,10 +5,12 @@ layout (location = 1) in vec3 aColor;
 layout (std140) uniform block
 {
     float scalar;
+    mat3 matrix_3;
     mat2x3 matrix_2x3;
     mat4 matrix_4;
     vec3 rgb;
-    float arr[5];
+    mat3 arr_2[5];
+    float arr[3];
 };
 
 out VS_OUT {

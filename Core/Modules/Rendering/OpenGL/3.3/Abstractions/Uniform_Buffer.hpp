@@ -18,6 +18,7 @@
 #include <string>
 #include <unordered_map>
 #include <array>
+#include <vector>
 
 // Tilia
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
