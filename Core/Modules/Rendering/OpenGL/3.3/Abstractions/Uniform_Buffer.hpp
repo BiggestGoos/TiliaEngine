@@ -50,6 +50,7 @@ namespace tilia
 
             void Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables);
 
+			void Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables);
 
             void debug_print();
             
@@ -90,93 +91,95 @@ namespace tilia
 			#define TILIA_ENABLE_IF_UNIFORM std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value || std::is_same<bool, T>::value>* = nullptr
 
 			template<typename T, TILIA_ENABLE_IF_UNIFORM>
-			void Uniform(const std::string& loc, std::vector<T> vs)
+			void Uniform(const std::string& loc, std::vector<T> v)
 			{
-				Uniform(loc, &vs.front());
+				Uniform(loc, sizeof(T), &v.front());
 			}
 
 			template<typename T, std::size_t S, TILIA_ENABLE_IF_UNIFORM>
-			void Uniform(const std::string& loc, std::array<T, S> vs)
+			void Uniform(const std::string& loc, std::array<T, S> v)
 			{
-				Uniform(loc, &vs.front());
+				Uniform(loc, sizeof(T), &v.front());
 			}
 
 			template<typename T, TILIA_ENABLE_IF_UNIFORM>				
-			void Uniform(const std::string& loc, std::initializer_list<T> vs)
+			void Uniform(const std::string& loc, std::initializer_list<T> v)
 			{
-				Uniform(loc, vs.begin());
+				Uniform(loc, sizeof(T), v.begin());
 			}
 
 			template<typename T, TILIA_ENABLE_IF_UNIFORM>
-			void Uniform(const std::string& loc, T vs)
+			void Uniform(const std::string& loc, T v)
 			{
-				Uniform(loc, &vs);
+				Uniform(loc, sizeof(T), &v);
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::vector<glm::vec<size, T, Q>> v)
 			{
-				Uniform(loc, &v.front());
+				Uniform(loc, sizeof(T), &v.front());
 			}
 
 			template<typename T, std::size_t S, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::array<glm::vec<size, T, Q>, S> v)
 			{
-				Uniform(loc, &v.front());
+				Uniform(loc, sizeof(T), &v.front());
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::initializer_list<glm::vec<size, T, Q>> v)
 			{
-				Uniform(loc, v.begin());
+				Uniform(loc, sizeof(T), v.begin());
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
-				Uniform(loc, glm::value_ptr(v));
+				Uniform(loc, sizeof(T), glm::value_ptr(v));
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::vector<glm::mat<size_x, size_y, float, Q>> v)
 			{
-				Uniform(loc, &v.front());
+				Uniform(loc, sizeof(float), &v.front());
 			}
 
 			template<std::size_t S, glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::array<glm::mat<size_x, size_y, float, Q>, S> v)
 			{
-				Uniform(loc, &v.front());
+				Uniform(loc, sizeof(float), &v.front());
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::initializer_list<glm::mat<size_x, size_y, float, Q>> v)
 			{
-				Uniform(loc, v.begin());
+				Uniform(loc, sizeof(float), v.begin());
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, glm::mat<size_x, size_y, float, Q> v)
 			{
-				Uniform(loc, glm::value_ptr(v));
+				Uniform(loc, sizeof(float), glm::value_ptr(v));
 			}
 
-			void Uniform(const std::string& loc, const void* vs) {
+			void Uniform(const std::string& loc, const std::size_t& var_size, const void* vs) {
 				if (m_variables.find(loc) != m_variables.end()) {
 					Uniform(m_variables[loc][0], m_variables[loc][1], vs);
 				}
 				else
 				{
-					Uniform(m_arrays[loc][0], m_arrays[loc][1], m_arrays[loc][2], vs);
+					Uniform(m_arrays[loc][0], m_arrays[loc][1], var_size, vs);
 				}
 			}
 
 			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs);
-			void Uniform(const std::size_t& offset, const std::size_t& size, const std::size_t& stride, const void* vs);
+			void Uniform(const std::size_t& offset, const std::size_t& array_size, const std::size_t& var_size, const void* vs);
 
 			//#undef TILIA_ENABLE_IF_UNIFORM
 			
         private:
+
+			void Push_Variable(std::size_t& block_size, const std::string& name, const GLSL_Variable& variable);
 
             std::uint32_t m_ID{};
 

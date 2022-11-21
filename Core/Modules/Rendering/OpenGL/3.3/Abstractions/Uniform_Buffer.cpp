@@ -16,7 +16,7 @@ std::uint32_t tilia::gfx::Uniform_Buffer::s_previous_ID{};
 template<typename T, typename U>
 static T round_up(const T& to_round, const U& multiple_of)
 {
-    if (!multiple_of)
+    if (!to_round || !multiple_of)
         return to_round;
     return ((to_round + multiple_of - 1) / multiple_of) * multiple_of;
 }
@@ -26,9 +26,20 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
 
     GL_CALL(glGenBuffers(1, &m_ID));
 
+    Reset(std::move(block_variables));
+
+    // Make sure the buffer is a uniform buffer
+    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+
+}
+
+void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables)
+{
+
     const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
 
-    std::vector<std::pair<std::string, GLSL_Variable>> variables{ block_variables };
+    std::vector<std::pair<std::string, GLSL_Variable>> variables{ std::move(block_variables) };
 
     std::size_t block_size{};
 
@@ -36,44 +47,88 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
     for (std::size_t i{ 0 }; i < var_count; ++i)
     {
 
-        std::size_t variable_size{};
+        //std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type };
 
-        if (variables[i].second.container_type != enums::GLSL_Container_Type::Scalar && variables[i].second.container_type != enums::GLSL_Container_Type::Vector2 && block_size % vec4_size || variables[i].second.array_count)
-        {
-            block_size = round_up(block_size, vec4_size);
-        }
+        //if (*variables[i].second.container_type > *enums::GLSL_Container_Type::Vector2 && block_size % vec4_size != 0 || variables[i].second.array_count)
+        //{
+        //    block_size = round_up(block_size, vec4_size);
+        //}
 
-        const std::size_t& array_count{ variables[i].second.array_count };
-        for (std::size_t u{ 0 }; u < array_count; ++u)
-        {
+        //if (variables[i].second.array_count || *variables[i].second.container_type >= *enums::GLSL_Container_Type::Vector2)
+        //{
 
-            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+        //    variable_size = round_up(variable_size, vec4_size);
 
-            if (u == 0)
-                m_arrays[variables[i].first] = { block_size, 0, variable_size };
+        //    std::size_t array_count{};
+        //    if (!variables[i].second.array_count)
+        //    {
+        //        array_count = *variables[i].second.container_type;
+        //    }
+        //    else
+        //    {
+        //        array_count = variables[i].second.array_count * *variables[i].second.container_type;
+        //    }
 
-            variable_size = round_up(variable_size, vec4_size);
+        //    for (std::size_t u{ 0 }; u < array_count; ++u)
+        //    {
 
-            std::stringstream var_name{};
-            var_name << variables[i].first << '[' << u << ']';
+        //        if (!variables[i].second.array_count)
+        //        {
 
-            m_variables[var_name.str()] = { block_size, variable_size };
+        //            if (*variables[i].second.container_type < *enums::GLSL_Container_Type::Matrix2)
+        //            {
 
-            block_size += variable_size;
+        //                m_variables[(std::stringstream() << variables[i].first << '.' << ((u != 3)? static_cast<char>('x' + u) : 'w')).str()] = { block_size, variable_size };
+        //                m_variables[(std::stringstream() << variables[i].first << '[' << u << ']').str()] = { block_size, variable_size };
 
-            if (u == array_count - 1)
-                m_arrays[variables[i].first][1] = block_size;
-            
-        }
+        //            }
+        //            else if (*variables[i].second.container_type >= *enums::GLSL_Container_Type::Matrix2)
+        //            {
 
-        if (!array_count && *variables[i].second.container_type <= enums::GLSL_Container_Type::Vector4)
-        {
-            variable_size = utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) * *variables[i].second.container_type;
+        //                m_variables[(std::stringstream() << variables[i].first << '[' << static_cast<std::size_t>(u / utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type)) << ']' << '[' << (u % utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type)) << ']').str()] = { block_size, variable_size / utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) };
 
-            m_variables[variables[i].first] = { block_size, variable_size };
+        //                m_variables[(std::stringstream() << variables[i].first << '[' << static_cast<std::size_t>(u / utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type)) << ']').str()] = { block_size, variable_size };
 
-            block_size += variable_size;
-        }
+        //                m_variables[(std::stringstream() << variables[i].first << '[' << static_cast<std::size_t>(u / utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type)) << ']' << '.' << (((u % utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type) != 3) ? static_cast<char>('x' + (u % utils::Get_GLSL_Scalar_Size(variables[i].second.scalar_type))) : 'w'))).str()] = { block_size, variable_size };
+
+        //            }
+
+        //        }
+
+        //    }
+
+        //}
+
+        //const std::size_t& array_count{ variables[i].second.array_count };
+        //for (std::size_t u{ 0 }; u < array_count; ++u)
+        //{
+
+        //    if (u == 0)
+        //        m_arrays[variables[i].first] = { block_size, 0, variable_size };
+
+        //    variable_size = round_up(variable_size, vec4_size);
+
+        //    std::stringstream var_name{};
+        //    var_name << variables[i].first << '[' << u << ']';
+
+        //    m_variables[var_name.str()] = { block_size, variable_size };
+
+        //    block_size += variable_size;
+
+        //    if (u == array_count - 1)
+        //        m_arrays[variables[i].first][1] = block_size;
+
+        //}
+
+        //if (!array_count)
+        //{
+
+        //    m_variables[variables[i].first] = { block_size, variable_size };
+
+        //    block_size += variable_size;
+        //}
+
+        Push_Variable(block_size, variables[i].first, variables[i].second);
 
     }
 
@@ -97,6 +152,12 @@ void tilia::gfx::Uniform_Buffer::debug_print()
     {
 
         std::cout << "name: " << var.first << " : offset: " << var.second[0] << " : size: " << var.second[1] << '\n';
+
+    }
+    for (auto& arr : m_arrays)
+    {
+
+        std::cout << "name: " << arr.first << " : offset: " << arr.second[0] << " : size: " << arr.second[1] << " : stride: " << arr.second[2] << '\n';
 
     }
 
@@ -172,8 +233,14 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
 
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const std::size_t& stride, const void* vs)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& array_size, const std::size_t& var_size, const void* vs)
 {
+
+    std::size_t variable_size{ 0 };
+
+    const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
+
+    const std::size_t stride{ round_up(var_size, vec4_size) };
 
     if (m_ID != s_bound_ID)
     {
@@ -181,12 +248,87 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
         Bind();
     }
 
-    for (std::size_t i{ offset }; i < size; i += stride)
+    for (std::size_t i{ offset }; i < (array_size + offset); i += stride)
     {
-        GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, i, stride, static_cast<const void*>(reinterpret_cast<const char*>(vs) + stride)));
+        GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + variable_size)));
+        variable_size += var_size;
     }
 
     if (m_ID == s_bound_ID && m_ID != s_previous_ID)
         Rebind();
+
+}
+
+void tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t& block_size, const std::string& name, const GLSL_Variable& variable)
+{
+
+    const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
+
+    if (*variable.container_type > *enums::GLSL_Container_Type::Vector2 && block_size % vec4_size != 0 || variable.array_count)
+    {
+        block_size = round_up(block_size, vec4_size);
+    }
+
+    std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variable.scalar_type) * *variable.container_type };
+
+    std::size_t array_count{};
+
+    if (variable.array_count || *variable.container_type >= *enums::GLSL_Container_Type::Matrix2)
+    {
+
+        if (!variable.array_count)
+        {
+            array_count = *variable.container_type / utils::Get_GLSL_Scalar_Size(variable.scalar_type);
+            m_arrays[name] = { block_size, 0, variable_size / array_count };
+        }
+        else
+        {
+            array_count = variable.array_count;
+            if (*variable.container_type >= *enums::GLSL_Container_Type::Matrix2)
+            {
+                m_arrays[name] = { block_size, 0, variable_size / (*variable.container_type / utils::Get_GLSL_Scalar_Size(variable.scalar_type)) };
+            }
+            else
+            {
+                m_arrays[name] = { block_size, 0, variable_size };
+            }
+        }
+
+        for (std::size_t u{ 0 }; u < array_count; ++u)
+        {
+
+            std::stringstream var_name{};
+            var_name << name << '[' << u << ']';
+
+            if (!variable.array_count)
+            {
+                m_variables[var_name.str()] = { block_size, variable_size / array_count };
+                block_size += round_up(variable_size, vec4_size) / array_count;
+            }
+            else
+            {
+                m_variables[var_name.str()] = { block_size, variable_size };
+                block_size += round_up(variable_size, vec4_size);
+            }
+
+        }
+
+        if (!variable.array_count)
+        {
+            m_arrays[name][1] = round_up(variable_size, vec4_size);
+        }
+        else
+        {
+            m_arrays[name][1] = round_up(variable_size, vec4_size) * array_count;
+        }
+
+    }
+    else
+    {
+
+        m_variables[name] = { block_size, variable_size };
+
+        block_size += variable_size;
+    }
 
 }

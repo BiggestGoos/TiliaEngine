@@ -175,13 +175,78 @@ int main()
 
         //ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier_r", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_g", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_b", { enums::GLSL_Scalar_Type::Float } } });
 
-        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } } });
+        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } }, { "arr_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector2, 5 } } });
 
         ub.debug_print();
 
         ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
 
         glm::mat4 matrix_4{ 1.0f };
+        glm::mat4 matrix_4_2{ 0.0f };
+
+        *(glm::value_ptr(matrix_4_2)  + 0)  = 1.0f;
+        *(glm::value_ptr(matrix_4_2)  + 1)  = 2.0f;
+        *(glm::value_ptr(matrix_4_2)  + 2)  = 3.0f;
+        *(glm::value_ptr(matrix_4_2)  + 3)  = 4.0f;
+        *(glm::value_ptr(matrix_4_2)  + 4)  = 5.0f;
+        *(glm::value_ptr(matrix_4_2)  + 5)  = 6.0f;
+        *(glm::value_ptr(matrix_4_2)  + 6)  = 7.0f;
+        *(glm::value_ptr(matrix_4_2)  + 7)  = 8.0f;
+        *(glm::value_ptr(matrix_4_2)  + 8)  = 9.0f;
+        *(glm::value_ptr(matrix_4_2)  + 9)  = 10.0f;
+        *(glm::value_ptr(matrix_4_2)  + 10) = 11.0f;
+        *(glm::value_ptr(matrix_4_2)  + 11) = 12.0f;
+        *(glm::value_ptr(matrix_4_2)  + 12) = 13.0f;
+        *(glm::value_ptr(matrix_4_2)  + 13) = 14.0f;
+        *(glm::value_ptr(matrix_4_2)  + 14) = 15.0f;
+        *(glm::value_ptr(matrix_4_2)  + 15) = 16.0f;
+
+        //matrix_4_2[0][0] = 1.0f;
+        //matrix_4_2[0][1] = 2.0f;
+        //matrix_4_2[0][2] = 3.0f;
+        //matrix_4_2[0][3] = 4.0f;
+        //matrix_4_2[1][0] = 5.0f;
+        //matrix_4_2[1][1] = 6.0f;
+        //matrix_4_2[1][2] = 7.0f;
+        //matrix_4_2[1][3] = 8.0f;
+        //matrix_4_2[2][0] = 9.0f;
+        //matrix_4_2[2][1] = 10.0f;
+        //matrix_4_2[2][2] = 11.0f;
+        //matrix_4_2[2][3] = 12.0f;
+        //matrix_4_2[3][0] = 13.0f;
+        //matrix_4_2[3][1] = 14.0f;
+        //matrix_4_2[3][2] = 15.0f;
+        //matrix_4_2[3][3] = 16.0f;
+
+        float value{ 1.0f };
+
+        glm::vec4 value_2{ 1.0f };
+
+        ub.Uniform("matrix_4[0]", value_2);
+        value_2 *= 2.0f;
+        ub.Uniform("matrix_4[1]", value_2);
+        value_2 *= 2.0f;
+        ub.Uniform("matrix_4[2]", value_2);
+        value_2 *= 2.0f;
+        ub.Uniform("matrix_4[3]", value_2);
+        value_2 *= 2.0f;
+
+        //matrix_4[0][0] = 1.0f;
+        //matrix_4[0][1] = 2.0f;
+        //matrix_4[0][2] = 3.0f;
+        //matrix_4[0][3] = 4.0f;
+        //matrix_4[1][0] = 5.0f;
+        //matrix_4[1][1] = 6.0f;
+        //matrix_4[1][2] = 7.0f;
+        //matrix_4[1][3] = 8.0f;
+        //matrix_4[2][0] = 9.0f;
+        //matrix_4[2][1] = 10.0f;
+        //matrix_4[2][2] = 11.0f;
+        //matrix_4[2][3] = 12.0f;
+        //matrix_4[3][0] = 13.0f;
+        //matrix_4[3][1] = 14.0f;
+        //matrix_4[3][2] = 15.0f;
+        //matrix_4[3][3] = 16.0f;
 
         ub.Uniform("matrix_4", matrix_4);
 
@@ -189,14 +254,35 @@ int main()
 
         ub.Uniform("arr", { 1.0f, 1.0f, 1.0f });
 
+        //ub.Uniform("arr[0]", 1.0f);
+        //ub.Uniform("arr[1]", 1.0f);
+        //ub.Uniform("arr[2]", 1.0f);
+
+        //ub.Uniform("arr_3[0]", { 1.0f, 2.0f });
+        //ub.Uniform("arr_3[1]", { 3.0f, 4.0f });
+        //ub.Uniform("arr_3[2]", { 5.0f, 6.0f });
+        //ub.Uniform("arr_3[3]", { 7.0f, 8.0f });
+        //ub.Uniform("arr_3[4]", { 9.0f, 10.0f });
+
+        ub.Uniform(64, 4, &value);
+        ub.Uniform(68, 4, &value);
+        ub.Uniform(72, 4, &value);
+
+        ub.Uniform(80, 4, &value);
+        ub.Uniform(84, 4, &value);
+        ub.Uniform(88, 4, &value);
+
         glm::mat3 matrix_3{ 1.0f };
+
+        std::cout << "x: " << matrix_3[0].x << " : y: " << matrix_3[0].y << " : z: " << matrix_3[0].z << " : mem_offset: " << (glm::value_ptr(matrix_3[0]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
+        std::cout << "x: " << matrix_3[1].x << " : y: " << matrix_3[1].y << " : z: " << matrix_3[1].z << " : mem_offset: " << (glm::value_ptr(matrix_3[1]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
+        std::cout << "x: " << matrix_3[2].x << " : y: " << matrix_3[2].y << " : z: " << matrix_3[2].z << " : mem_offset: " << (glm::value_ptr(matrix_3[2]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
 
         ub.Bind();
 
-        //ub.Uniform("matrix_3", matrix_3);
-        glBufferSubData(GL_UNIFORM_BUFFER, 16, 32, &matrix_3);
+        ub.Uniform("matrix_3", matrix_3);
 
-        ub.Uniform("arr_2", { matrix_3, matrix_3, matrix_3, matrix_3, matrix_3 });
+        ub.Uniform("arr_2", { matrix_4, matrix_4, matrix_4, matrix_4, matrix_4 });
 
         ub.Bind();
 
