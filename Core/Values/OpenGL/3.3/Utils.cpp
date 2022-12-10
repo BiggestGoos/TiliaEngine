@@ -173,7 +173,7 @@ std::size_t tilia::utils::Get_GLSL_Scalar_Size(const enums::GLSL_Scalar_Type& sc
 	switch (scalar)
 	{
 	case enums::GLSL_Scalar_Type::Bool:
-		return sizeof(GLboolean);
+		return sizeof(GLuint);
 	case enums::GLSL_Scalar_Type::Int:
 		return sizeof(GLint);
 	case enums::GLSL_Scalar_Type::Uint:
@@ -184,4 +184,17 @@ std::size_t tilia::utils::Get_GLSL_Scalar_Size(const enums::GLSL_Scalar_Type& sc
 		return 0;
 	}
 
+}
+
+std::size_t tilia::utils::Get_GLSL_Container_Alignment(const enums::GLSL_Container_Type& container)
+{
+	switch (container)
+	{
+	case enums::GLSL_Container_Type::Scalar:
+		return 1;
+	case enums::GLSL_Container_Type::Vector2:
+		return 2;	
+	default:
+		return 4;
+	}
 }

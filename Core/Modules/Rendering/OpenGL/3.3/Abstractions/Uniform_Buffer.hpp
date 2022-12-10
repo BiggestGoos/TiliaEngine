@@ -36,15 +36,45 @@ namespace tilia
         {
         public:
 
-			struct GLSL_Variable
+			struct GLSL_Variable_
 			{
+
 				enums::GLSL_Scalar_Type scalar_type{};
 				enums::GLSL_Container_Type container_type{};
 				std::size_t array_count{};
-				GLSL_Variable(const enums::GLSL_Scalar_Type& type) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ 0 } { }
-				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const std::size_t& count) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ count } { }
-				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type) : scalar_type{ type }, container_type{ c_type }, array_count{ 0 } { }
-				GLSL_Variable(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type, const std::size_t& count) : scalar_type{ type }, container_type{ c_type }, array_count{ count } { }
+
+				GLSL_Variable_(const enums::GLSL_Scalar_Type& type) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ 0 } { }
+
+				GLSL_Variable_(const enums::GLSL_Scalar_Type& type, const std::size_t& count) : scalar_type{ type }, container_type{ enums::GLSL_Container_Type::Scalar }, array_count{ count } { }
+
+				GLSL_Variable_(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type) : scalar_type{ type }, container_type{ c_type }, array_count{ 0 } { }
+
+				GLSL_Variable_(const enums::GLSL_Scalar_Type& type, const enums::GLSL_Container_Type& c_type, const std::size_t& count) : scalar_type{ type }, container_type{ c_type }, array_count{ count } { }
+
+			};
+
+			class GLSL_Variable
+			{
+			public:
+
+				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type) : m_scalar_type{ scalar_type }, m_container_type{ enums::GLSL_Container_Type::Scalar } {}
+
+				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type, const enums::GLSL_Container_Type& container_type) : m_scalar_type{ scalar_type }, m_container_type{ container_type } {}
+
+				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type, const std::size_t& array_count) : m_scalar_type{ scalar_type }, m_container_type{ enums::GLSL_Container_Type::Scalar }, m_array_count{ array_count } {}
+
+				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type, const enums::GLSL_Container_Type& container_type, const std::size_t& array_count) : m_scalar_type{ scalar_type }, m_container_type{ container_type }, m_array_count{ array_count } {}
+
+				inline enums::GLSL_Scalar_Type Get_Scalar_Type() const { return m_scalar_type; }
+				inline enums::GLSL_Container_Type Get_Container_Type() const { return m_container_type; }
+				inline std::size_t Get_Array_Count() const { return m_array_count; }
+				
+			private:
+
+				enums::GLSL_Scalar_Type m_scalar_type{};
+				enums::GLSL_Container_Type m_container_type{};
+
+				std::size_t m_array_count{};
 
 			};
 
@@ -163,13 +193,7 @@ namespace tilia
 			}
 
 			void Uniform(const std::string& loc, const std::size_t& var_size, const void* vs) {
-				if (m_variables.find(loc) != m_variables.end()) {
-					Uniform(m_variables[loc][0], m_variables[loc][1], vs);
-				}
-				else
-				{
-					Uniform(m_arrays[loc][0], m_arrays[loc][1], var_size, vs);
-				}
+					
 			}
 
 			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs);
@@ -185,8 +209,7 @@ namespace tilia
 
             std::uint32_t m_bind_point{};
 
-            std::unordered_map<std::string, std::array<std::size_t, 2>> m_variables{};
-			std::unordered_map<std::string, std::array<std::size_t, 3>> m_arrays{};
+            std::unordered_map<std::string, std::pair<std::size_t, GLSL_Variable>> m_variables{};
 
             static std::uint32_t s_bound_ID;
 			static std::uint32_t s_previous_ID;

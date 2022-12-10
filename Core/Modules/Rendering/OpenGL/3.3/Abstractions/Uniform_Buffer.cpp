@@ -14,7 +14,7 @@ std::uint32_t tilia::gfx::Uniform_Buffer::s_bound_ID{};
 std::uint32_t tilia::gfx::Uniform_Buffer::s_previous_ID{};
 
 template<typename T, typename U>
-static T round_up(const T& to_round, const U& multiple_of)
+static T align_to(const T& to_round, const U& multiple_of)
 {
     if (!to_round || !multiple_of)
         return to_round;
@@ -132,7 +132,7 @@ void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::stri
 
     }
 
-    block_size = round_up(block_size, vec4_size);
+    block_size = align_to(block_size, vec4_size);
 
     std::cout << block_size << '\n';
 
@@ -148,18 +148,18 @@ void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::stri
 void tilia::gfx::Uniform_Buffer::debug_print()
 {
 
-    for (auto& var : m_variables)
-    {
+    // for (auto& var : m_variables)
+    // {
 
-        std::cout << "name: " << var.first << " : offset: " << var.second[0] << " : size: " << var.second[1] << '\n';
+    //     std::cout << "name: " << var.first << " : offset: " << var.second.Get_Scalar_Type << " : size: " << var.second[1] << '\n';
 
-    }
-    for (auto& arr : m_arrays)
-    {
+    // }
+    // for (auto& arr : m_arrays)
+    // {
 
-        std::cout << "name: " << arr.first << " : offset: " << arr.second[0] << " : size: " << arr.second[1] << " : stride: " << arr.second[2] << '\n';
+    //     std::cout << "name: " << arr.first << " : offset: " << arr.second[0] << " : size: " << arr.second[1] << " : stride: " << arr.second[2] << '\n';
 
-    }
+    // }
 
 }
 
@@ -240,7 +240,7 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
 
     const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
 
-    const std::size_t stride{ round_up(var_size, vec4_size) };
+    const std::size_t stride{ align_to(var_size, vec4_size) };
 
     if (m_ID != s_bound_ID)
     {
@@ -264,29 +264,39 @@ void tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t& block_size, const st
 
     const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
 
-    if (*variable.container_type > *enums::GLSL_Container_Type::Vector2 && block_size % vec4_size != 0 || variable.array_count)
+    m_variables.at(name) = { align_to(block_size, utils::Get_GLSL_Container_Alignment(variable.Get_Container_Type()) * utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type())), variable };
+
+}
+
+/*
+void tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t& block_size, const std::string& name, const GLSL_Variable& variable)
+{
+
+    const std::size_t vec4_size{ (*enums::GLSL_Container_Type::Vector4 * utils::Get_GLSL_Scalar_Size(enums::GLSL_Scalar_Type::Float)) };
+
+    if (*variable.Get_Container_Type() > *enums::GLSL_Container_Type::Vector2 && block_size % vec4_size != 0 || variable.Get_Array_Count())
     {
-        block_size = round_up(block_size, vec4_size);
+        block_size = align_to(block_size, vec4_size);
     }
 
-    std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variable.scalar_type) * *variable.container_type };
+    std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * *variable.Get_Container_Type() };
 
     std::size_t array_count{};
 
-    if (variable.array_count || *variable.container_type >= *enums::GLSL_Container_Type::Matrix2)
+    if (variable.Get_Array_Count() || *variable.Get_Container_Type() >= *enums::GLSL_Container_Type::Matrix2)
     {
 
-        if (!variable.array_count)
+        if (!variable.Get_Array_Count())
         {
-            array_count = *variable.container_type / utils::Get_GLSL_Scalar_Size(variable.scalar_type);
+            array_count = *variable.Get_Container_Type() / utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type());
             m_arrays[name] = { block_size, 0, variable_size / array_count };
         }
         else
         {
-            array_count = variable.array_count;
-            if (*variable.container_type >= *enums::GLSL_Container_Type::Matrix2)
+            array_count = variable.Get_Array_Count();
+            if (*variable.Get_Container_Type() >= *enums::GLSL_Container_Type::Matrix2)
             {
-                m_arrays[name] = { block_size, 0, variable_size / (*variable.container_type / utils::Get_GLSL_Scalar_Size(variable.scalar_type)) };
+                m_arrays[name] = { block_size, 0, variable_size / (*variable.Get_Container_Type() / utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type())) };
             }
             else
             {
@@ -300,26 +310,26 @@ void tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t& block_size, const st
             std::stringstream var_name{};
             var_name << name << '[' << u << ']';
 
-            if (!variable.array_count)
+            if (!variable.Get_Array_Count())
             {
                 m_variables[var_name.str()] = { block_size, variable_size / array_count };
-                block_size += round_up(variable_size, vec4_size) / array_count;
+                block_size += align_to(variable_size, vec4_size) / array_count;
             }
             else
             {
                 m_variables[var_name.str()] = { block_size, variable_size };
-                block_size += round_up(variable_size, vec4_size);
+                block_size += align_to(variable_size, vec4_size);
             }
 
         }
 
-        if (!variable.array_count)
+        if (!variable.Get_Array_Count())
         {
-            m_arrays[name][1] = round_up(variable_size, vec4_size);
+            m_arrays[name][1] = align_to(variable_size, vec4_size);
         }
         else
         {
-            m_arrays[name][1] = round_up(variable_size, vec4_size) * array_count;
+            m_arrays[name][1] = align_to(variable_size, vec4_size) * array_count;
         }
 
     }
@@ -332,3 +342,4 @@ void tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t& block_size, const st
     }
 
 }
+*/
