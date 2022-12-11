@@ -57,6 +57,8 @@ namespace tilia
 			{
 			public:
 
+				GLSL_Variable() = default;
+
 				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type) : m_scalar_type{ scalar_type }, m_container_type{ enums::GLSL_Container_Type::Scalar } {}
 
 				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type, const enums::GLSL_Container_Type& container_type) : m_scalar_type{ scalar_type }, m_container_type{ container_type } {}
@@ -147,54 +149,52 @@ namespace tilia
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::vector<glm::vec<size, T, Q>> v)
 			{
-				Uniform(loc, sizeof(T), &v.front());
+				Uniform(loc, sizeof(T) * size, &v.front());
 			}
 
 			template<typename T, std::size_t S, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::array<glm::vec<size, T, Q>, S> v)
 			{
-				Uniform(loc, sizeof(T), &v.front());
+				Uniform(loc, sizeof(T) * size, &v.front());
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, std::initializer_list<glm::vec<size, T, Q>> v)
 			{
-				Uniform(loc, sizeof(T), v.begin());
+				Uniform(loc, sizeof(T) * size, v.begin());
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q, TILIA_ENABLE_IF_UNIFORM>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
-				Uniform(loc, sizeof(T), glm::value_ptr(v));
+				Uniform(loc, sizeof(T) * size, glm::value_ptr(v));
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::vector<glm::mat<size_x, size_y, float, Q>> v)
 			{
-				Uniform(loc, sizeof(float), &v.front());
+				Uniform(loc, sizeof(float) * size_y, &v.front());
 			}
 
 			template<std::size_t S, glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::array<glm::mat<size_x, size_y, float, Q>, S> v)
 			{
-				Uniform(loc, sizeof(float), &v.front());
+				Uniform(loc, sizeof(float) * size_y, &v.front());
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, std::initializer_list<glm::mat<size_x, size_y, float, Q>> v)
 			{
-				Uniform(loc, sizeof(float), v.begin());
+				Uniform(loc, sizeof(float) * size_y, v.begin());
 			}
 
 			template<glm::length_t size_x, glm::length_t size_y, glm::qualifier Q>
 			void Uniform(const std::string& loc, glm::mat<size_x, size_y, float, Q> v)
 			{
-				Uniform(loc, sizeof(float), glm::value_ptr(v));
+				Uniform(loc, sizeof(float) * size_y, glm::value_ptr(v));
 			}
 
-			void Uniform(const std::string& loc, const std::size_t& var_size, const void* vs) {
-					
-			}
+			void Uniform(const std::string& loc, const std::size_t& var_size, const void* vs);
 
 			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs);
 			void Uniform(const std::size_t& offset, const std::size_t& array_size, const std::size_t& var_size, const void* vs);
@@ -203,7 +203,7 @@ namespace tilia
 			
         private:
 
-			void Push_Variable(std::size_t& block_size, const std::string& name, const GLSL_Variable& variable);
+			std::size_t Push_Variable(std::size_t block_size, const std::string& name, const GLSL_Variable& variable);
 
             std::uint32_t m_ID{};
 

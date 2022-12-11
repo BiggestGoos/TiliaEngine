@@ -175,9 +175,23 @@ int main()
 
         //ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier_r", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_g", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_b", { enums::GLSL_Scalar_Type::Float } } });
 
-        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } }, { "arr_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector2, 5 } } });
+        
+
+        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } }, { "arr_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector4, 5 } } });
+        
+        
+        /*
+        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3, 1 } } });
+        */
+        /*
+        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "arr", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector2, 5 } } });
+        */
 
         ub.debug_print();
+
+        glm::vec4 vec_4{ 0.5f, 2.06f, 1.337f, -100.05f };
+
+        ub.Uniform("arr_3", { vec_4, 2.0f * vec_4, 3.0f * vec_4, 4.0f * vec_4, 5.0f * vec_4 });
 
         ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
 
@@ -248,7 +262,7 @@ int main()
         //matrix_4[3][2] = 15.0f;
         //matrix_4[3][3] = 16.0f;
 
-        ub.Uniform("matrix_4", matrix_4);
+        //ub.Uniform("matrix_4", matrix_4);
 
         ub.Uniform("scalar", { 1.0f });
 
@@ -283,6 +297,12 @@ int main()
         ub.Uniform("matrix_3", matrix_3);
 
         ub.Uniform("arr_2", { matrix_4, matrix_4, matrix_4, matrix_4, matrix_4 });
+
+        //ub.Uniform("arr_2[0]", matrix_4);
+        //ub.Uniform("arr_2[1]", matrix_4);
+        //ub.Uniform("arr_2[2]", matrix_4);
+        //ub.Uniform("arr_2[3]", matrix_4);
+        //ub.Uniform("arr_2[4]", matrix_4);
 
         ub.Bind();
 
