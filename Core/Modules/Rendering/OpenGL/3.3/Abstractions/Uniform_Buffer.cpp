@@ -34,6 +34,7 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
 
 }
 
+// The size of a vector4 is used to align things to its size
 static const std::size_t VEC4_SIZE{ (*tilia::enums::GLSL_Container_Type::Vector4 * tilia::utils::Get_GLSL_Scalar_Size(tilia::enums::GLSL_Scalar_Type::Float)) };
 
 void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables)

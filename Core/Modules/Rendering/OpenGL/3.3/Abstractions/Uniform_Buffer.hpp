@@ -199,7 +199,7 @@ namespace tilia
 			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs);
 			void Uniform(const std::size_t& offset, const std::size_t& array_size, const std::size_t& var_size, const void* vs);
 
-			//#undef TILIA_ENABLE_IF_UNIFORM
+			#undef TILIA_ENABLE_IF_UNIFORM
 			
         private:
 
