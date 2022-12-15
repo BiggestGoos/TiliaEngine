@@ -885,21 +885,6 @@
     <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Batch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -933,30 +918,33 @@
     <ClInclude Include="Core\Values\OpenGL\3.3\Utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.hpp">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.hpp">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.hpp">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Uniform_Buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map_Data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Modules\Console\Logging.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Batch.cpp">
@@ -995,16 +983,28 @@
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Uniform_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map_Data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

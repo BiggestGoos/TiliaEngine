@@ -26,9 +26,9 @@
 
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Vertex.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 #include "Core/Modules/Console/Logging.hpp"
 

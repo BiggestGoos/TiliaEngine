@@ -14,23 +14,23 @@
 #include <map>
 
 #include "Core/Values/OpenGL/3.3/Utils.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Part.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_2D.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Cube_Map.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Part.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Cube_Map.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 #include "Core/Modules/Console/Logging.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Renderer.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_Data.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Data.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 #include "Core/Temp/Camera.hpp"
 #include "Core/Temp/Input.hpp"
 #include "Core/Temp/Limit_Fps.hpp"
 #include "Core/Temp/Stopwatch.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Uniform_Buffer.hpp"
+#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Uniform_Buffer.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -151,166 +151,34 @@ int main()
 
         shader->Init({ shader_v }, { shader_f }, { shader_g });
 
-        // std::uint32_t ubo;
-        // glGenBuffers(1, &ubo);
-        // glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-        // glBufferData(GL_UNIFORM_BUFFER, 52, NULL, GL_STATIC_DRAW); // allocate 52 bytes of memory
-        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        int v{}, f{}, g{}, s{};
 
-        // std::uint32_t color_block_index{ glGetUniformBlockIndex(shader->Get_ID(), "color_block") };
+        glGetIntegerv(GL_MAX_VERTEX_UNIFORM_BLOCKS, &v);
+        glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_BLOCKS, &f);
+        glGetIntegerv(GL_MAX_GEOMETRY_UNIFORM_BLOCKS, &g);
+        glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &s);
 
-        // glUniformBlockBinding(shader->Get_ID(), color_block_index, 0);
+        std::cout << "V: " << v << " : F: " << f << " : G: " << g << " : S: " << s << '\n';
 
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, 52);
+        glm::mat<4, 4, float, glm::qualifier::packed_lowp> mat{ 1.0f };
 
-        // glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-        // glm::vec3 rgb{ 0.5f, 1.0f, 0.25f };
-        // glBufferSubData(GL_UNIFORM_BUFFER, 0, 16, &rgb[0]);
-        // float mult_r{ 0.325f }, mult_g{ 0.725 }, mult_b{ 0.125 };
-        // glBufferSubData(GL_UNIFORM_BUFFER, 16, 4, &mult_r);
-        // glBufferSubData(GL_UNIFORM_BUFFER, 32, 4, &mult_g);
-        // glBufferSubData(GL_UNIFORM_BUFFER, 48, 4, &mult_b);
-        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        std::cout << "Size: " << sizeof(mat) 
+        << " : [0] offset: " << reinterpret_cast<std::uintptr_t>(&mat[0]) - reinterpret_cast<std::uintptr_t>(&mat) 
+        << " : [1] offset: " << reinterpret_cast<std::uintptr_t>(&mat[1]) - reinterpret_cast<std::uintptr_t>(&mat)
+        << " : [2] offset: " << reinterpret_cast<std::uintptr_t>(&mat[2]) - reinterpret_cast<std::uintptr_t>(&mat)
+        << " : [3] offset: " << reinterpret_cast<std::uintptr_t>(&mat[3]) - reinterpret_cast<std::uintptr_t>(&mat) << '\n';
+
         Uniform_Buffer ub{};
 
-        //ub.Init({ { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "multiplier_r", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_g", { enums::GLSL_Scalar_Type::Float } }, { "multiplier_b", { enums::GLSL_Scalar_Type::Float } } });
-
-        
-
-        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3 } }, { "matrix_2x3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix2 } }, { "matrix_4", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "rgb", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector3 } }, { "arr_2", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4, 5 } }, { "arr", { enums::GLSL_Scalar_Type::Float, 3 } }, { "arr_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector4, 5 } } });
-        
-        
-        /*
-        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "matrix_3", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix3, 1 } } });
-        */
-        /*
-        ub.Init({ { "scalar", { enums::GLSL_Scalar_Type::Float } }, { "arr", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Vector2, 5 } } });
-        */
+        ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
         ub.debug_print();
-
-        glm::vec4 vec_4{ 0.5f, 2.06f, 1.337f, -100.05f };
-
-        ub.Uniform("arr_3", { vec_4, 2.0f * vec_4, 3.0f * vec_4, 4.0f * vec_4, 5.0f * vec_4 });
-
-        ub.Uniform("rgb", { 1.0f, 1.0f, 1.0f });
-
-        glm::mat4 matrix_4{ 1.0f };
-        glm::mat4 matrix_4_2{ 0.0f };
-
-        *(glm::value_ptr(matrix_4_2)  + 0)  = 1.0f;
-        *(glm::value_ptr(matrix_4_2)  + 1)  = 2.0f;
-        *(glm::value_ptr(matrix_4_2)  + 2)  = 3.0f;
-        *(glm::value_ptr(matrix_4_2)  + 3)  = 4.0f;
-        *(glm::value_ptr(matrix_4_2)  + 4)  = 5.0f;
-        *(glm::value_ptr(matrix_4_2)  + 5)  = 6.0f;
-        *(glm::value_ptr(matrix_4_2)  + 6)  = 7.0f;
-        *(glm::value_ptr(matrix_4_2)  + 7)  = 8.0f;
-        *(glm::value_ptr(matrix_4_2)  + 8)  = 9.0f;
-        *(glm::value_ptr(matrix_4_2)  + 9)  = 10.0f;
-        *(glm::value_ptr(matrix_4_2)  + 10) = 11.0f;
-        *(glm::value_ptr(matrix_4_2)  + 11) = 12.0f;
-        *(glm::value_ptr(matrix_4_2)  + 12) = 13.0f;
-        *(glm::value_ptr(matrix_4_2)  + 13) = 14.0f;
-        *(glm::value_ptr(matrix_4_2)  + 14) = 15.0f;
-        *(glm::value_ptr(matrix_4_2)  + 15) = 16.0f;
-
-        //matrix_4_2[0][0] = 1.0f;
-        //matrix_4_2[0][1] = 2.0f;
-        //matrix_4_2[0][2] = 3.0f;
-        //matrix_4_2[0][3] = 4.0f;
-        //matrix_4_2[1][0] = 5.0f;
-        //matrix_4_2[1][1] = 6.0f;
-        //matrix_4_2[1][2] = 7.0f;
-        //matrix_4_2[1][3] = 8.0f;
-        //matrix_4_2[2][0] = 9.0f;
-        //matrix_4_2[2][1] = 10.0f;
-        //matrix_4_2[2][2] = 11.0f;
-        //matrix_4_2[2][3] = 12.0f;
-        //matrix_4_2[3][0] = 13.0f;
-        //matrix_4_2[3][1] = 14.0f;
-        //matrix_4_2[3][2] = 15.0f;
-        //matrix_4_2[3][3] = 16.0f;
-
-        float value{ 1.0f };
-
-        glm::vec4 value_2{ 1.0f };
-
-        ub.Uniform("matrix_4[0]", value_2);
-        value_2 *= 2.0f;
-        ub.Uniform("matrix_4[1]", value_2);
-        value_2 *= 2.0f;
-        ub.Uniform("matrix_4[2]", value_2);
-        value_2 *= 2.0f;
-        ub.Uniform("matrix_4[3]", value_2);
-        value_2 *= 2.0f;
-
-        //matrix_4[0][0] = 1.0f;
-        //matrix_4[0][1] = 2.0f;
-        //matrix_4[0][2] = 3.0f;
-        //matrix_4[0][3] = 4.0f;
-        //matrix_4[1][0] = 5.0f;
-        //matrix_4[1][1] = 6.0f;
-        //matrix_4[1][2] = 7.0f;
-        //matrix_4[1][3] = 8.0f;
-        //matrix_4[2][0] = 9.0f;
-        //matrix_4[2][1] = 10.0f;
-        //matrix_4[2][2] = 11.0f;
-        //matrix_4[2][3] = 12.0f;
-        //matrix_4[3][0] = 13.0f;
-        //matrix_4[3][1] = 14.0f;
-        //matrix_4[3][2] = 15.0f;
-        //matrix_4[3][3] = 16.0f;
-
-        //ub.Uniform("matrix_4", matrix_4);
-
-        ub.Uniform("scalar", { 1.0f });
-
-        ub.Uniform("arr", { 1.0f, 1.0f, 1.0f });
-
-        //ub.Uniform("arr[0]", 1.0f);
-        //ub.Uniform("arr[1]", 1.0f);
-        //ub.Uniform("arr[2]", 1.0f);
-
-        //ub.Uniform("arr_3[0]", { 1.0f, 2.0f });
-        //ub.Uniform("arr_3[1]", { 3.0f, 4.0f });
-        //ub.Uniform("arr_3[2]", { 5.0f, 6.0f });
-        //ub.Uniform("arr_3[3]", { 7.0f, 8.0f });
-        //ub.Uniform("arr_3[4]", { 9.0f, 10.0f });
-
-        ub.Uniform(64, 4, &value);
-        ub.Uniform(68, 4, &value);
-        ub.Uniform(72, 4, &value);
-
-        ub.Uniform(80, 4, &value);
-        ub.Uniform(84, 4, &value);
-        ub.Uniform(88, 4, &value);
-
-        glm::mat3 matrix_3{ 1.0f };
-
-        std::cout << "x: " << matrix_3[0].x << " : y: " << matrix_3[0].y << " : z: " << matrix_3[0].z << " : mem_offset: " << (glm::value_ptr(matrix_3[0]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
-        std::cout << "x: " << matrix_3[1].x << " : y: " << matrix_3[1].y << " : z: " << matrix_3[1].z << " : mem_offset: " << (glm::value_ptr(matrix_3[1]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
-        std::cout << "x: " << matrix_3[2].x << " : y: " << matrix_3[2].y << " : z: " << matrix_3[2].z << " : mem_offset: " << (glm::value_ptr(matrix_3[2]) - glm::value_ptr(matrix_3[0])) * sizeof(float) << '\n';
-
-        ub.Bind();
-
-        ub.Uniform("matrix_3", matrix_3);
-
-        ub.Uniform("arr_2", { matrix_4, matrix_4, matrix_4, matrix_4, matrix_4 });
-
-        //ub.Uniform("arr_2[0]", matrix_4);
-        //ub.Uniform("arr_2[1]", matrix_4);
-        //ub.Uniform("arr_2[2]", matrix_4);
-        //ub.Uniform("arr_2[3]", matrix_4);
-        //ub.Uniform("arr_2[4]", matrix_4);
 
         ub.Bind();
 
         ub.Set_Bind_Point(0);
 
-        ub.Unbind();
-
-        shader->Bind_Uniform_Block("block", 0);
+        shader->Bind_Uniform_Block("Matrices", 0);
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
@@ -368,11 +236,11 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            shader->Uniform("projection", projection);
+            ub.Uniform("projection", projection);
 
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            shader->Uniform("view", view);
+            ub.Uniform("view", view);
 
             renderer.m_camera_pos = camera.Position;
 
@@ -499,22 +367,16 @@ int main()
 
         cube_shader->Init({ cube_v_shader }, { cube_f_shader }, {});
 
-        // uint32_t light_ubo{}, cube_ubo{};
+        Uniform_Buffer ub{};
 
-        // glGenBuffers(1, &light_ubo);
-        // glGenBuffers(1, &cube_ubo);
+        ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
-        // glUniformBlockBinding(light_shader->Get_ID(), light_ubo, 0);
-        // glUniformBlockBinding(cube_shader->Get_ID(), cube_ubo, 0);
+        ub.Set_Bind_Point(0);
 
-        // uint32_t ube_matrices{};
-        // glGenBuffers(1, &ube_matrices);
+        ub.Bind();
 
-        // glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
-        // glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
-        // glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-        // glBindBufferRange(GL_UNIFORM_BUFFER, 0, ube_matrices, 0, 2 * sizeof(glm::mat4));
+        light_shader->Bind_Uniform_Block("Matrices", 0);
+        cube_shader->Bind_Uniform_Block("Matrices", 0);
 
         Cube_Map_Data def{};
 
@@ -616,7 +478,7 @@ int main()
             meshes.push_back(new_mesh);
 
         }
-
+    
         // render loop
         // -----------
         while (!glfwWindowShouldClose(window))
@@ -628,7 +490,7 @@ int main()
                 light_z += 1.0f * deltaTime;
 
             pointLightPositions[0].z = -sinf(static_cast<float>(light_z)) * 5.0f;
-
+            
             for (size_t i = 0; i < cube_count + light_count; i++)
             {
 
@@ -676,13 +538,14 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            light_shader->Uniform("projection", projection);
-            cube_shader->Uniform("projection", projection);
+            ub.Uniform("projection[0]", projection[0]);
+            ub.Uniform("projection[1]", projection[1]);
+            ub.Uniform("projection[2]", projection[2]);
+            ub.Uniform("projection[3]", projection[3]);
 
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            light_shader->Uniform("view", view);
-            cube_shader->Uniform("view", view);
+            ub.Uniform("view", view);
 
             // glBindBuffer(GL_UNIFORM_BUFFER, ube_matrices);
             // glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));

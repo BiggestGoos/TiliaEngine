@@ -7,13 +7,13 @@ CXX_SRCS := \
 	Core\Modules\Console\Logging.cpp \
 	Core\Modules\Exceptions\Tilia_Exception.cpp \
 	Core\Modules\File_System\Windows\File_System.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Cube_Map_Data.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_Part.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_2D.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Uniform_Buffer.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map_Data.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Uniform_Buffer.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Batch.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Renderer.cpp \
@@ -21,7 +21,7 @@ CXX_SRCS := \
 	Core\Temp\Limit_Fps.cpp \
 	Core\Temp\Stopwatch.cpp \
 	Core\Values\OpenGL\3.3\Utils.cpp \
-	vendor\glm\include\glm\detail\glm.cpp
+	vendor\glm\include\glm\detail\glm.cpp \
 
 C_SRCS := \
 	vendor\glad\src\glad.c
@@ -34,7 +34,7 @@ LIBS_DIR := -L.\vendor\glfw\lib
 
 CXX := g++
 EXE_FLAGS := $(OBJS) -o $(BUILD_DIR)$(EXECUTABLE).exe $(LIBS_DIR) $(LIBS)
-C_FLAGS := -O3 -g -static -static-libgcc -static-libstdc++ -std=c++14
+C_FLAGS := -Ofast -g -static -static-libgcc -static-libstdc++ -std=c++14
 CPP_FLAGS := -I.
 
 RM := del
