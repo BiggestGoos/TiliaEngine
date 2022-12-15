@@ -39,7 +39,7 @@ namespace tilia
 		 */
         class Uniform_Buffer
         {
-        public:
+		private:
 
 			/**
 			 * @brief Representation of a variable in a GLSL uniform block.
@@ -61,7 +61,7 @@ namespace tilia
 				inline enums::GLSL_Scalar_Type Get_Scalar_Type() const { return m_scalar_type; }
 				inline enums::GLSL_Container_Type Get_Container_Type() const { return m_container_type; }
 				inline std::size_t Get_Array_Count() const { return m_array_count; }
-				
+
 			private:
 
 				// The type of scalar which the variable represents.
@@ -74,8 +74,10 @@ namespace tilia
 
 			};
 
+        public:
+
 			/**
-			 * @brief Initialization function. Should be called first.
+			 * @brief Initialization function. Should be called first and olny once.
 			 * 		  Stores given variables which can then be accessed in the uniform 
 			 * 		  block this ubo is attached to.
 			 * 
@@ -83,7 +85,11 @@ namespace tilia
 			 * @param indexing - Whether or not to also add indexing variables.
 			 * @param bind_point - The binding point to bind to.
 			 */
-            void Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables = {}, const bool& indexing = false, const std::uint32_t& bind_point = 0);
+            void Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables = {}, const bool& indexing = false, const std::int32_t& bind_point = -1);
+
+			void Init(const Uniform_Buffer& other, const std::int32_t& bind_point = -1);
+
+			void Init(Uniform_Buffer&& other, const std::int32_t& bind_point = -1);
 
 			/**
 			 * @brief Stores given variables which can then be accessed in the uniform 
@@ -93,6 +99,10 @@ namespace tilia
 			 * @param indexing - Whether or not to also add indexing variables.
 			 */
 			void Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing = false);
+
+			void Reset(const Uniform_Buffer& other);
+
+			void Reset(Uniform_Buffer&& other);
 
 			/**
 			 * @brief Clears the stored variables.

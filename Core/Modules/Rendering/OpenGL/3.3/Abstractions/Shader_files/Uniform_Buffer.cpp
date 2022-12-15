@@ -34,23 +34,41 @@ static T align_to(const T& to_round, const U& multiple_of)
     return static_cast<T>(((to_round + multiple_of - 1) / multiple_of) * multiple_of);
 }
 
-void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing, const std::uint32_t& bind_point)
+void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing, const std::int32_t& bind_point)
 {
-
     GL_CALL(glGenBuffers(1, &m_ID));
-
     // If any variables is given then adds them 
     if (block_variables.begin() != block_variables.end())
         Reset(std::move(block_variables), indexing);
-
     // Make sure the buffer is a uniform buffer
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
-
     // If given then sets binding point to the given
-    if (bind_point)
-        Set_Bind_Point(bind_point);
+    if (bind_point >= 0)
+        Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
+}
 
+void tilia::gfx::Uniform_Buffer::Init(const Uniform_Buffer& other, const std::int32_t& bind_point)
+{
+    // Copies variables from other uniform buffer
+    m_variables = other.m_variables;
+    // Calls default init fuction with bind point as argument which will generate a ubo which the id will be set to and bind it to bind point
+    Init({}, false, ((bind_point)? bind_point : other.m_bind_point));
+}
+
+void tilia::gfx::Uniform_Buffer::Init(Uniform_Buffer&& other, const std::int32_t& bind_point)
+{
+    // Copies id and then sets other id to 0 as default
+    m_ID = other.m_ID;
+    other.m_ID = 0;
+    // Copies bind point from other and then sets othe bind point to 0
+    m_bind_point = other.m_bind_point;
+    other.m_bind_point = 0;
+    // Moves other variables data to variables
+    m_variables = std::move(other.m_variables);
+    // If given then sets binding point to the given
+    if (bind_point >= 0)
+        Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
 }
 
 // The size of a vector4 is used to align things to its size
@@ -87,6 +105,14 @@ void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::stri
 
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 
+}
+
+void tilia::gfx::Uniform_Buffer::Reset(const Uniform_Buffer& other)
+{
+}
+
+void tilia::gfx::Uniform_Buffer::Reset(Uniform_Buffer&& other)
+{
 }
 
 void tilia::gfx::Uniform_Buffer::Clear()

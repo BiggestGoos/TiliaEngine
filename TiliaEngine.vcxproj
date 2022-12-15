@@ -91,6 +91,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +131,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -476,7 +478,6 @@
     <ClCompile Include="Core\Modules\Console\Logging.cpp" />
     <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp" />
     <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
-
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Data.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.cpp" />

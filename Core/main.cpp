@@ -172,7 +172,7 @@ int main()
 
         ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
-        ub.debug_print();
+        //ub.debug_print();
 
         ub.Bind();
 
