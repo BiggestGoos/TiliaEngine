@@ -172,7 +172,7 @@ int main()
 
         ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
-        //ub.debug_print();
+        ub.debug_print();
 
         ub.Bind();
 
@@ -236,8 +236,10 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            ub.Uniform("projection", projection);
-
+            ub.Uniform("projection[0].x", projection[0].x);
+            ub.Uniform("projection[1].y", projection[1].y);
+            ub.Uniform("projection[2].z", projection[2].z);
+            ub.Uniform("projection[3].w", projection[3].w);
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
             ub.Uniform("view", view);
