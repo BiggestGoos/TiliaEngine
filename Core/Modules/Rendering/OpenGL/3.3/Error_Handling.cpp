@@ -68,8 +68,7 @@ void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, cons
             "\n>>> Name: %v"
             "\n>>> Func: %v")
         (error)(Get_Error_String(error))(function) };
-        if (message != "")
-            x("\n>>> Message: ")(message);
+        if (message != "") x("\n>>> Message: ")(message);
         throw e;
     }
 }

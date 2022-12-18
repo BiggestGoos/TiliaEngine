@@ -1427,5 +1427,7 @@
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
     <None Include="x64\Release\res\shaders\cube_shader.vert" />
     <None Include="x64\Release\res\shaders\light_shader.vert" />
+    <None Include="x64\Release\res\shaders\compare.vert" />
+    <None Include="x64\Release\res\shaders\compare.frag" />
   </ItemGroup>
 </Project>

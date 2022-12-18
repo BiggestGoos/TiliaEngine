@@ -36,8 +36,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
 
 // settings
-unsigned int SCR_WIDTH = 1600;
-unsigned int SCR_HEIGHT = 1200;
+unsigned int SCR_WIDTH = 1920;
+unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -176,9 +176,17 @@ int main()
 
         ub.Bind();
 
+        std::uint32_t uniform_buffer{ };
+        GL_CALL(glGenBuffers(1, &uniform_buffer));
+
+        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.Get_ID()));
+        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer));
+
         ub.Set_Bind_Point(0);
 
         shader->Bind_Uniform_Block("Matrices", 0);
+
+        Uniform_Buffer ub_2{ std::move(ub) };
 
         auto mesh{ std::make_shared<Mesh<5>>() };
 
@@ -186,10 +194,10 @@ int main()
 
         mesh->vertices.clear();
         mesh->indices.clear();
-
+        
         mesh->vertices.push_back(Vertex<5>{ -0.5f,  0.5f, 1.0f, 0.0f, 0.0f });
-        mesh->vertices.push_back(Vertex<5>{ 0.5f,  0.5f, 0.0f, 1.0f, 0.0f });
-        mesh->vertices.push_back(Vertex<5>{ 0.5f, -0.5f, 0.0f, 0.0f, 1.0f });
+        mesh->vertices.push_back(Vertex<5>{  0.5f,  0.5f, 0.0f, 1.0f, 0.0f });
+        mesh->vertices.push_back(Vertex<5>{  0.5f, -0.5f, 0.0f, 0.0f, 1.0f });
         mesh->vertices.push_back(Vertex<5>{ -0.5f, -0.5f, 1.0f, 1.0f, 0.0f });
 
         mesh->indices.push_back(0);
@@ -236,13 +244,16 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            ub.Uniform("projection[0].x", projection[0].x);
-            ub.Uniform("projection[1].y", projection[1].y);
-            ub.Uniform("projection[2].z", projection[2].z);
-            ub.Uniform("projection[3].w", projection[3].w);
+            ub_2.Uniform("projection", projection, true);
+            //ub_2.Uniform("projection[0]", projection[0]);
+            //ub_2.Uniform("projection[1]", projection[1]);
+            //ub_2.Uniform("projection[2]", projection[2]);
+            //ub_2.Uniform("projection[3]", projection[3]);
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            ub.Uniform("view", view);
+            ub_2.Uniform("view", view, true);
+
+            ub_2.Map_Data();
 
             renderer.m_camera_pos = camera.Position;
 
@@ -277,6 +288,167 @@ int main()
         std::cout << "\n<<<Tilia_Exception>>>\n";
         std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
                      "File: " << e.Get_Origin_File() << '\n';
+        std::cout << e.what() << '\n';
+    }
+    catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
+
+    glfwTerminate();
+
+    std::int32_t w{};
+    std::cin >> w;
+
+    return 0;
+}
+
+#endif
+
+#if 0
+
+int main()
+{
+
+    try
+    {
+        // glfw: initialize and configure
+        // ------------------------------
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // glfw window creation
+        // --------------------
+        GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (window == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        glfwMakeContextCurrent(window);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+        // tell GLFW to capture our mouse
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        glfwSwapInterval(0);
+
+        //glad: load all OpenGL function pointers
+        //---------------------------------------
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return -1;
+        }
+
+        input.Init(window);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // configure global opengl state
+        // -----------------------------
+        glLineWidth(2);
+        glPointSize(10);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+
+        Renderer renderer{};
+
+        camera.Reset();
+
+        auto
+            shader_v{ std::make_shared<Shader_Part>("res/shaders/compare.vert", enums::Shader_Type::Vertex, true) },
+            shader_f{ std::make_shared<Shader_Part>("res/shaders/compare.frag", enums::Shader_Type::Fragment, true) };
+
+        auto shader{ std::make_shared<Shader>() };
+
+        shader->Init({ shader_v }, { shader_f }, {});
+
+        auto mesh{ std::make_shared<Mesh<3>>() };
+
+        mesh->Set_Shader()(shader);
+
+        mesh->vertices.clear();
+        mesh->indices.clear();
+
+        mesh->vertices.push_back(Vertex<3>{ -1.0f, -1.0f, 0.0f });
+        mesh->vertices.push_back(Vertex<3>{  1.0f, -1.0f, 0.0f });
+        mesh->vertices.push_back(Vertex<3>{  1.0f, 1.0f, 0.0  });
+        mesh->vertices.push_back(Vertex<3>{ -1.0f, 1.0f, 0.0f });
+
+        mesh->indices.push_back(0);
+        mesh->indices.push_back(1);
+        mesh->indices.push_back(2);
+        mesh->indices.push_back(2);
+        mesh->indices.push_back(3);
+        mesh->indices.push_back(0);
+
+        mesh->Set_Polymode()(enums::Polymode::Fill);
+        mesh->Set_Primitive()(enums::Primitive::Triangles);
+
+        Vertex_Info v_info{};
+
+        v_info.sizes = { 3 };
+        v_info.strides = { 3 };
+        v_info.offsets = { 0 };
+
+        mesh->Set_Vertex_Info()(v_info);
+
+        renderer.Add_Mesh(mesh->Get_Mesh_Data());
+
+        // render loop
+        // -----------
+        while (!glfwWindowShouldClose(window))
+        {
+
+            fps = static_cast<uint32_t>(static_cast<double>(passed_frames) / glfwGetTime());
+
+            float currentFrame = static_cast<float>(glfwGetTime());
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+
+            std::cout << fps << '\n';
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+            renderer.m_camera_pos = camera.Position;
+
+            try
+            {
+                renderer.Render();
+            }
+            catch (const std::exception& e)
+            {
+                std::cout << e.what() << '\n';
+            }
+
+            // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+            // -------------------------------------------------------------------------------
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+            //input.Update();
+
+            //reload_shader = false;
+
+            ++passed_frames;
+
+        }
+
+        // optional: de-allocate all resources once they've outlived their purpose:
+        // ------------------------------------------------------------------------
+
+        // glfw: terminate, clearing all previously allocated GLFW resources.
+        // ------------------------------------------------------------------
+    }
+    catch (const utils::Tilia_Exception& e) {
+        std::cout << "\n<<<Tilia_Exception>>>\n";
+        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
+            "File: " << e.Get_Origin_File() << '\n';
         std::cout << e.what() << '\n';
     }
     catch (const std::exception& e) {

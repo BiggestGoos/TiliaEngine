@@ -34,10 +34,73 @@ static T align_to(const T& to_round, const U& multiple_of)
     return static_cast<T>(((to_round + multiple_of - 1) / multiple_of) * multiple_of);
 }
 
+tilia::gfx::Uniform_Buffer::Uniform_Buffer(const Uniform_Buffer& other, const std::int32_t& bind_point)
+    : m_variables{ other.m_variables }
+{
+    // We call the init function to generate openGL resources
+    // We also potentially pass with a bind point which will be set
+    Init({}, false, ((bind_point >= 0) ? bind_point : -1));
+    // We allocate data and store the size
+    Allocate_Data(other.m_block_size);
+}
+
+tilia::gfx::Uniform_Buffer::Uniform_Buffer(Uniform_Buffer&& other, const std::int32_t& bind_point) noexcept
+    : m_ID{ other.m_ID },
+      m_bind_point{ other.m_bind_point },
+      m_variables{ std::move(other.m_variables) },
+      m_block_data{ std::move(other.m_block_data) },
+      m_block_size{ other.m_block_size }
+{
+    // We set the other id to 0 since we don't want shared openGL data between two uniform buffers
+    other.m_ID = 0;
+    // We set the other block size to 0 to show that it contains nothing
+    other.m_block_size = 0;
+    // If given we set binding point to the given one
+    if (bind_point >= 0)
+        Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
+}
+
+tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(const Uniform_Buffer& other)
+{
+    // Self check
+    if (this == &other)
+        return *this;
+    // We choose to just copy variables as the other data should not be copied for the fact that then we would share openGL resources with other
+    m_variables = other.m_variables;
+    // We allocate data and store the size
+    Allocate_Data(other.m_block_size);
+    return *this;
+}
+
+tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(Uniform_Buffer&& other) noexcept
+{
+    // Self check
+    if (this == &other)
+        return *this;
+    // If we already own openGL resources then we need to delete them
+    if (m_ID)
+        Terminate();
+    m_ID = other.m_ID;
+    // We set the other id to 0 since we don't want shared openGL data between two uniform buffers
+    other.m_ID = 0;
+    // If other bind point is valid then we set the binding point to the given one
+    if (other.m_bind_point >= 0)
+        Set_Bind_Point(static_cast<std::uint32_t>(other.m_bind_point));
+    // We move other variable data to ours
+    m_variables = std::move(other.m_variables);
+    // We move other block data to ours
+    m_block_data = std::move(other.m_block_data);
+    m_block_size = other.m_block_size;
+    // We set the other block size to 0 to show that it contains nothing
+    other.m_block_size = 0;
+    return *this;
+}
+
 void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing, const std::int32_t& bind_point)
 {
+    // Generates a new id for an openGL ubo
     GL_CALL(glGenBuffers(1, &m_ID));
-    // If any variables is given then adds them 
+    // If any variables is given then stores them 
     if (block_variables.begin() != block_variables.end())
         Reset(std::move(block_variables), indexing);
     // Make sure the buffer is a uniform buffer
@@ -48,27 +111,17 @@ void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::strin
         Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
 }
 
-void tilia::gfx::Uniform_Buffer::Init(const Uniform_Buffer& other, const std::int32_t& bind_point)
+void tilia::gfx::Uniform_Buffer::Terminate()
 {
-    // Copies variables from other uniform buffer
-    m_variables = other.m_variables;
-    // Calls default init fuction with bind point as argument which will generate a ubo which the id will be set to and bind it to bind point
-    Init({}, false, ((bind_point)? bind_point : other.m_bind_point));
-}
-
-void tilia::gfx::Uniform_Buffer::Init(Uniform_Buffer&& other, const std::int32_t& bind_point)
-{
-    // Copies id and then sets other id to 0 as default
-    m_ID = other.m_ID;
-    other.m_ID = 0;
-    // Copies bind point from other and then sets othe bind point to 0
-    m_bind_point = other.m_bind_point;
-    other.m_bind_point = 0;
-    // Moves other variables data to variables
-    m_variables = std::move(other.m_variables);
-    // If given then sets binding point to the given
-    if (bind_point >= 0)
-        Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
+    // If an openGL ubo id was never generated then throws exception
+    if (m_ID <= 0)
+    {
+        utils::Tilia_Exception e{ LOCATION };
+        e.Add_Message("Failed to terminate uniform buffer due to the fact that it was never initialized or something went very wrong");
+        throw e;
+    }
+    // Deletes the ubo
+    glDeleteBuffers(1, &m_ID);
 }
 
 // The size of a vector4 is used to align things to its size
@@ -77,42 +130,37 @@ static const std::size_t VEC4_SIZE{ (*tilia::enums::GLSL_Container_Type::Vector4
 void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
 {
 
-    // Clears the previous variables
-    Clear();
-
     // The type of elements in the given ones
     using T = decltype(block_variables)::value_type;
 
     // Moves given variables into vector in order to index to them
     std::vector<T> variables{ std::move(block_variables) };
-    
+
+    // Sends data to other function for logic
+    Reset(std::move(variables), indexing);
+
+}
+
+void tilia::gfx::Uniform_Buffer::Reset(std::vector<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
+{
+
+    // Clears the previous variables
+    Clear();
+
     std::size_t block_size{};
 
-    const std::size_t var_count{ variables.size() };
+    const std::size_t var_count{ block_variables.size() };
     for (std::size_t i{ 0 }; i < var_count; ++i)
     {
         // Pushes (adds) variable to storage which then allows for the setting of uniform data using the name
-        block_size = Push_Variable(block_size, std::move(variables[i].first), std::move(variables[i].second), indexing);
+        block_size = Push_Variable(block_size, std::move(block_variables[i].first), std::move(block_variables[i].second), indexing);
     }
 
     // Block size has to end in a multiple of a vector4
     block_size = align_to(block_size, VEC4_SIZE);
 
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    Allocate_Data(block_size);
 
-    // Allocates memory for the total size of the uniform block
-    glBufferData(GL_UNIFORM_BUFFER, block_size, NULL, GL_DYNAMIC_DRAW);
-
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
-
-}
-
-void tilia::gfx::Uniform_Buffer::Reset(const Uniform_Buffer& other)
-{
-}
-
-void tilia::gfx::Uniform_Buffer::Reset(Uniform_Buffer&& other)
-{
 }
 
 void tilia::gfx::Uniform_Buffer::Clear()
@@ -120,6 +168,8 @@ void tilia::gfx::Uniform_Buffer::Clear()
 
     // Clears the stored variables
     m_variables.clear();
+
+    m_block_size = 0;
 
 }
 
@@ -209,23 +259,32 @@ void tilia::gfx::Uniform_Buffer::Rebind() {
 	s_bound_ID = 0;
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay)
 {
-    // If ubo is not already bound then binds it
-    if (m_ID != s_bound_ID)
+    
+    if (!delay)
     {
-        Unbind(true);
-        Bind();
+        // If ubo is not already bound then binds it
+        if (m_ID != s_bound_ID)
+        {
+            Unbind(true);
+            Bind();
+        }
+
+        // Sets the data of the offset and size with the given data
+        GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, vs));
+
+        // If just bound the ubo then rebinds the old one
+        if (m_ID == s_bound_ID && m_ID != s_previous_ID)
+            Rebind();
     }
+
     // Sets the data of the offset and size with the given data
-    GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, vs));
-    // If just bound the ubo then rebinds the old one
-    if (m_ID == s_bound_ID && m_ID != s_previous_ID)
-        Rebind();
+    std::memcpy(m_block_data.get() + offset, vs, size);
 
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size_t& var_size, const void* vs)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size_t& var_size, const void* vs, const bool& delay)
 {
     // If ubo is not already bound then binds it
     if (m_ID != s_bound_ID)
@@ -233,12 +292,10 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         Unbind(true);
         Bind();
     }
-
     // The offset to the start of the variable in the uniform block
     std::size_t& start_offset{ m_variables[loc].first };
     // The variable of which to set the uniform data for
     GLSL_Variable& variable{ m_variables[loc].second };
-
     const std::size_t array_count{ variable.Get_Array_Count() };
     // If variable is not an array
     if (!array_count)
@@ -247,16 +304,12 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         if (*variable.Get_Container_Type() < *enums::GLSL_Container_Type::Matrix2)
         {
             // Sets the uniform data for the given variable
-            GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, start_offset, var_size, static_cast<const void*>(static_cast<const char*>(vs))));
-            // If just bound, the ubo then rebinds the old one
-            if (m_ID == s_bound_ID && m_ID != s_previous_ID)
-                Rebind();
+            // Also unbinds if just bound the ubo
+            Uniform(start_offset, var_size, vs, delay);
             // Early return
             return;
         }
-
         // If variable is matrix
-
         // The size in bytes between each element (vector4)
         const std::size_t stride{ VEC4_SIZE };
         // However many elements (vector4) there are in the matrix
@@ -264,17 +317,13 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         for (std::size_t u{ 0 }; u < element_count; ++u)
         {
             // Sets the uniform data for the element of the given matrix
-            GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, start_offset + stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u)));
+            // Also unbinds if just bound the ubo
+            Uniform(start_offset + stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), delay);
         }
-        // If just bound, the ubo then rebinds the old one
-        if (m_ID == s_bound_ID && m_ID != s_previous_ID)
-            Rebind();
         // Early return
         return;
     }
-
     // If variable is array
-
     // The size in bytes between each element in the array
     const std::size_t stride{ align_to(var_size, VEC4_SIZE) };
     for (std::size_t i{ 0 }; i < array_count; ++i)
@@ -283,19 +332,11 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         if (*variable.Get_Container_Type() < *enums::GLSL_Container_Type::Matrix2)
         {
             // Sets the uniform data for the element of the given array
-            GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, start_offset + stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i)));
-            // If just bound, the ubo then rebinds the old one
-            if (i == array_count - 1 && m_ID == s_bound_ID && m_ID != s_previous_ID)
-            {
-                Rebind();
-                // Early return
+            // Also unbinds if just bound the ubo
+            Uniform(start_offset + stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), delay);
+            // Early return
+            if (i == array_count - 1)
                 return;
-            }
-            else if (i == array_count - 1)
-            {
-                // Early return
-                return;
-            }
             // Early continue
             continue;
         }
@@ -304,14 +345,35 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         for (std::size_t u{ 0 }; u < element_count; ++u)
         {
             // Sets the uniform data of the matrix element of the array
-            GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, start_offset + (stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u))));
+            // Also unbinds if just bound the ubo
+            Uniform(start_offset + (stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u)), delay);
         }
     }
+}
 
-    // If just bound, the ubo then rebinds the old one
+void tilia::gfx::Uniform_Buffer::Map_Data()
+{
+    // If ubo is not already bound then binds it
+    if (m_ID != s_bound_ID)
+    {
+        Unbind(true);
+        Bind();
+    }
+    // Sets the data of the offset and size with the given data
+    GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, 0, m_block_size, m_block_data.get()));
+    // If just bound the ubo then rebinds the old one
     if (m_ID == s_bound_ID && m_ID != s_previous_ID)
         Rebind();
+}
 
+void tilia::gfx::Uniform_Buffer::Allocate_Data(const std::size_t& block_size)
+{
+    m_block_size = block_size;
+    m_block_data = std::make_unique<Byte[]>(block_size);
+    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    // Allocates memory for the total size of the uniform block
+    glBufferData(GL_UNIFORM_BUFFER, block_size, NULL, GL_DYNAMIC_DRAW);
+    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 }
 
 std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, const std::string& name, const GLSL_Variable& variable, const bool& indexing)

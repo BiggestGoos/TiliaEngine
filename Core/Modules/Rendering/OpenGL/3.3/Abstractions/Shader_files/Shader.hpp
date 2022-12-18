@@ -27,12 +27,11 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Part.hpp"
 #include "Core/Values/OpenGL/3.3/Utils.hpp"
 
+
 namespace tilia 
 {
-
 	namespace gfx 
 	{
-
 		/**
 		 * @brief Abstraction for openGL shader. Backend for Shader class.
 		 */
