@@ -188,6 +188,8 @@ int main()
 
         Uniform_Buffer ub_2{ std::move(ub) };
 
+        ub_2.Bind();
+
         auto mesh{ std::make_shared<Mesh<5>>() };
 
         mesh->Set_Shader()(shader);
@@ -253,7 +255,7 @@ int main()
             glm::mat4 view{ camera.GetViewMatrix() };
             ub_2.Uniform("view", view);
 
-            // ub_2.Map_Data();
+            //ub_2.Map_Data();
 
             renderer.m_camera_pos = camera.Position;
 
