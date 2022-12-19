@@ -244,16 +244,16 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
-            ub_2.Uniform("projection", projection, true);
+            ub_2.Uniform("projection", projection);
             //ub_2.Uniform("projection[0]", projection[0]);
             //ub_2.Uniform("projection[1]", projection[1]);
             //ub_2.Uniform("projection[2]", projection[2]);
             //ub_2.Uniform("projection[3]", projection[3]);
             // camera/view transformation
             glm::mat4 view{ camera.GetViewMatrix() };
-            ub_2.Uniform("view", view, true);
+            ub_2.Uniform("view", view);
 
-            ub_2.Map_Data();
+            // ub_2.Map_Data();
 
             renderer.m_camera_pos = camera.Position;
 

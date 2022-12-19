@@ -259,9 +259,10 @@ void tilia::gfx::Uniform_Buffer::Rebind() {
 	s_bound_ID = 0;
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay, Byte* buffer)
 {
     
+    // If we decide to delay the upload to openGL then we just don't make the calls
     if (!delay)
     {
         // If ubo is not already bound then binds it
@@ -279,24 +280,41 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
             Rebind();
     }
 
-    // Sets the data of the offset and size with the given data
-    std::memcpy(m_block_data.get() + offset, vs, size);
+    // Buffers the uniform data to a local buffer
+    // We take in a buffer to write to but if it is nullptr we write to our local buffer block data
+    if (buffer == nullptr)
+    {
+        std::memcpy(m_block_data.get() + offset, vs, size);
+    }
+    // If buffer isn't nullptr then we write to it instead
+    else
+    {
+        std::memcpy(buffer, vs, size);
+    }
 
 }
 
 void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size_t& var_size, const void* vs, const bool& delay)
 {
+    // The offset to the start of the variable in the uniform block
+    const std::size_t& start_offset{ m_variables[loc].first };
+    // The variable of which to set the uniform data for
+    const GLSL_Variable& variable{ m_variables[loc].second };
+    const std::size_t array_count{ variable.Get_Array_Count() };
+    // The total size of the variable.   
+    const std::size_t total_variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * *variable.Get_Container_Type() * ((array_count)? array_count : 1) };
+    // Local variable data buffer which will help if uploading array or matrix in that it will reduce calls to openGL. Only needed if we don't already buffer everything to a local buffer with delay.
+    std::unique_ptr<Byte[]> variable_data{ nullptr };
+    if (!delay)
+        variable_data = std::make_unique<Byte[]>(total_variable_size);
+
     // If ubo is not already bound then binds it
     if (m_ID != s_bound_ID)
     {
         Unbind(true);
         Bind();
     }
-    // The offset to the start of the variable in the uniform block
-    std::size_t& start_offset{ m_variables[loc].first };
-    // The variable of which to set the uniform data for
-    GLSL_Variable& variable{ m_variables[loc].second };
-    const std::size_t array_count{ variable.Get_Array_Count() };
+
     // If variable is not an array
     if (!array_count)
     {
@@ -318,7 +336,7 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         {
             // Sets the uniform data for the element of the given matrix
             // Also unbinds if just bound the ubo
-            Uniform(start_offset + stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), delay);
+            Uniform(start_offset + stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), delay, variable_data.get() - start_offset);
         }
         // Early return
         return;
@@ -333,7 +351,7 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         {
             // Sets the uniform data for the element of the given array
             // Also unbinds if just bound the ubo
-            Uniform(start_offset + stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), delay);
+            Uniform(start_offset + stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), delay, variable_data.get());
             // Early return
             if (i == array_count - 1)
                 return;
@@ -346,9 +364,16 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         {
             // Sets the uniform data of the matrix element of the array
             // Also unbinds if just bound the ubo
-            Uniform(start_offset + (stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u)), delay);
+            Uniform(start_offset + (stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u)), delay, variable_data.get());
         }
     }
+
+    // If delay was false and we buffered data to our local buffer then we need to finally upload it
+    if (!delay)
+    {
+        Uniform(start_offset, total_variable_size, variable_data.get(), false);
+    }
+
 }
 
 void tilia::gfx::Uniform_Buffer::Map_Data()

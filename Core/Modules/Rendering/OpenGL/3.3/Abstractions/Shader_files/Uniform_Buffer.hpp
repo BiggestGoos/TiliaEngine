@@ -75,6 +75,9 @@ namespace tilia
 
 			};
 
+			// Alias for byte assuming char is 1 byte.
+			using Byte = char;
+
         public:
 
 			Uniform_Buffer() = default;
@@ -292,8 +295,10 @@ namespace tilia
 			 * @param offset - The offset to the data to be set.
 			 * @param size - The size of the chunk of data to set.
 			 * @param vs - A pointer to the start of the data.
+			 * @param delay - Wheter or not to delay the upload of the uniform data.
+			 * @param buffer - If a separate buffer is sent then the data is written to it. If buffer is nullptr then the data is written to buffer held by this.
 			 */
-			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay = false);
+			void Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay = false, Byte* buffer = nullptr);
 
 			/**
 			 * @brief Uploads the locally stored data to the uniform block.
@@ -319,6 +324,7 @@ namespace tilia
 			 * @param loc - The name of the uniform to set.
 			 * @param var_size - The size of the data. If uniform is matrix or array then var size is equal to the size of each element.
 			 * @param vs - A pointer to the start of the data.
+			 * @param delay - Wheter or not to delay the upload of the uniform data.
 			 */
 			void Uniform(const std::string& loc, const std::size_t& var_size, const void* vs, const bool& delay = false);
 
@@ -342,9 +348,6 @@ namespace tilia
 
 			// The stored variables and their offsets in the block the ubo is bound.
             std::unordered_map<std::string, std::pair<std::size_t, GLSL_Variable>> m_variables{};
-
-			// Alias for byte assuming char is 1 byte.
-			using Byte = char;
 
 			// Stored local data which can be added to and then mapped to the ubo data.
 			std::unique_ptr<Byte[]> m_block_data{};
