@@ -362,9 +362,7 @@ namespace tilia
 			static std::uint32_t s_previous_ID;
 
         }; // Uniform_Buffer
-
     } // gfx
-    
 } // tilia
 
 #endif // TILIA_UNIFORM_BUFFER_HPP

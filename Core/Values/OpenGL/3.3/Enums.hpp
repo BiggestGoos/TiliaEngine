@@ -204,16 +204,23 @@ namespace tilia {
 
 		// Different ways to access openGL buffers. Underlying value is the value defined by openGL.
 		enum class Buffer_Access_Type {
-			Draw, // The user will be writing data to the buffer, but the user will not read it.
-			Read, // The user will not be writing data, but the user will be reading it back.
-			Copy  // The user will be neither writing nor reading the data. 
+			Draw = 0x0000, // The user will be writing data to the buffer, but the user will not read it.
+			Read = 0x0001, // The user will not be writing data, but the user will be reading it back.
+			Copy = 0x0002 // The user will be neither writing nor reading the data. 
 		};
 
 		// Different frequencies to access openGL buffers. Underlying value is the value defined by openGL.
 		enum class Buffer_Access_Frequency {
-			Static,
-			Dynamic,
-			Stream
+			Static  = 0x88E0, // The user will set the data once.
+			Dynamic = 0x88E8, // The user will set the data occasionally.
+			Stream  = 0x88E0  // The user will be changing the data after every use. Or almost every use.
+		};
+
+		// Different ways to map to openGL buffers. Underlying value is the value defined by openGL.
+		enum class Map_Access_Type {
+			Read_Only  = 0x88B8, // The user will only be able to read from the mapped memory.
+			Write_Only = 0x88B9, // The user will only be able to write to the mapped memory.
+			Read_Write = 0x88BA // The user will be able to both read from and write to the mapped memory.
 		};
 
 		/**
