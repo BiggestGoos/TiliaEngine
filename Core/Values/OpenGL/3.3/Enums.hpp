@@ -195,6 +195,27 @@ namespace tilia {
 			Matrix4   = 4 * Vector4, // mat4, mat4x3, mat4x2.
 		};
 
+		// OpenGL buffer types. Underlying value is the value defined by openGL.
+		enum class Buffer_Type {
+			Vertex_Buffer  = 0x8892, // Vertex buffer object, vbo.
+		    Element_Buffer = 0x8893, // Element buffer object, ebo.
+			Uniform_Buffer = 0x8A11  // Uniform buffer object, ubo.
+		};
+
+		// Different ways to access openGL buffers. Underlying value is the value defined by openGL.
+		enum class Buffer_Access_Type {
+			Draw, // The user will be writing data to the buffer, but the user will not read it.
+			Read, // The user will not be writing data, but the user will be reading it back.
+			Copy  // The user will be neither writing nor reading the data. 
+		};
+
+		// Different frequencies to access openGL buffers. Underlying value is the value defined by openGL.
+		enum class Buffer_Access_Frequency {
+			Static,
+			Dynamic,
+			Stream
+		};
+
 		/**
 		 * @brief Can take any enum class as parameter and will return, if there is any the underlying value.
 		 *

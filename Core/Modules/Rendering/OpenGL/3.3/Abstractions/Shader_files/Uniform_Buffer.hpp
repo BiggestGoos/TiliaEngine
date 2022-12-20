@@ -3,11 +3,14 @@
  * 
  * @brief  The Uniform Buffer is an abstraction for an openGL ubo which automatically calculates 
  * 		   things like offsets and sizes for given variables which are represented by the GLSL 
- *         Variable class.
+ *         Variable class. You can then easily set the data of the ubo.
  * 
  * @author Gustav Fagerlind
  * @date   11/08/2022
  *************************************************************************************************/
+
+#ifndef TILIA_UNIFORM_BUFFER_HPP
+#define TILIA_UNIFORM_BUFFER_HPP
 
 // Vendor
 #include "vendor/glm/include/glm/glm.hpp"
@@ -26,15 +29,10 @@
 // Tilia
 #include "Core/Values/OpenGL/3.3/Enums.hpp"
 
-#ifndef TILIA_UNIFORM_BUFFER_HPP
-#define TILIA_UNIFORM_BUFFER_HPP
-
 namespace tilia
 {
-    
     namespace gfx
-    {   
-        
+    {           
 		/**
 		 * @brief Abstraction of an openGL ubo. Can be given a list of variables of different types and can then calculate all of the offsets, sizes, and strides for a GLSL std140 uniform block. Can then set the data for the variables in this block using uniform functions.
 		 */
@@ -59,9 +57,9 @@ namespace tilia
 
 				GLSL_Variable(const enums::GLSL_Scalar_Type& scalar_type, const enums::GLSL_Container_Type& container_type, const std::size_t& array_count) : m_scalar_type{ scalar_type }, m_container_type{ container_type }, m_array_count{ array_count } {}
 
-				inline enums::GLSL_Scalar_Type Get_Scalar_Type() const { return m_scalar_type; }
-				inline enums::GLSL_Container_Type Get_Container_Type() const { return m_container_type; }
-				inline std::size_t Get_Array_Count() const { return m_array_count; }
+				inline auto Get_Scalar_Type() const { return m_scalar_type; }
+				inline auto Get_Container_Type() const { return m_container_type; }
+				inline auto Get_Array_Count() const { return m_array_count; }
 
 			private:
 
@@ -83,7 +81,7 @@ namespace tilia
 			Uniform_Buffer() = default;
 
 			/**
-			 * @brief Copy constructor which also takes in a binding point. Copies variable data and generates openGL resources. If binding point is given then binds to that point.
+			 * @brief Copy constructor which also takes in a binding point. Copies variable data and generates resources. If positive binding point is given then binds to that point.
 			 * 
 			 * @param other - The other uniform buffer.
 			 * @param bind_point - The bind point where we want to bind to.
@@ -91,7 +89,7 @@ namespace tilia
 			Uniform_Buffer(const Uniform_Buffer& other, const std::int32_t& bind_point = -1);
 
 			/**
-			 * @brief Move constructor which also takes in a binding point. Moves variable data and openGL resources to this. If binding point is given then binds to that point.
+			 * @brief Move constructor which also takes in a binding point. Moves variable data and resources to this. If positive binding point is given then binds to that point.
 			 * 
 			 * @param other - The other uniform buffer.
 			 * @param bind_point - The bind point where we want to bind to.
@@ -99,7 +97,7 @@ namespace tilia
 			Uniform_Buffer(Uniform_Buffer&& other, const std::int32_t& bind_point = -1) noexcept;
 
 			/**
-			 * @brief Copy assignment operator. Copies variable data.
+			 * @brief Copy assignment operator. Copies variable data and generates resources.
 			 * 
 			 * @param other - The other uniform buffer.
 			 * 
@@ -117,9 +115,9 @@ namespace tilia
 			Uniform_Buffer& operator=(Uniform_Buffer&& other) noexcept;
 
 			/**
-			 * @brief Initialization function. Should be called first and olny once.
+			 * @brief Initialization function. Should be called first and can be called again if terminate has been called before.
 			 * 		  Stores given variables which can then be accessed in the uniform 
-			 * 		  block this ubo is attached to.
+			 * 		  block this shares bind point with using the uniform functions.
 			 * 
 			 * @param block_variables - The variables to add.
 			 * @param indexing - Whether or not to also add indexing variables.
@@ -128,13 +126,13 @@ namespace tilia
             void Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables = {}, const bool& indexing = false, const std::int32_t& bind_point = -1);
 
 			/**
-			 * @brief Terminates the uniform buffer by deleting the openGL ubo. If the uniform buffer was never initialized then this will throw an exception.
+			 * @brief Terminates the uniform buffer by deleting the openGL ubo. Also clears the stored variables. If this was not initialized then this will throw an exception.
 			 */
 			void Terminate();
 
 			/**
 			 * @brief Stores given variables which can then be accessed in the uniform 
-			 * 		  block this ubo is attached to.
+			 * 		  block this shares bind point with using the uniform functions.
 			 * 
 			 * @param block_variables - The variables to add.
 			 * @param indexing - Whether or not to also add indexing variables.
@@ -142,8 +140,8 @@ namespace tilia
 			void Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing = false);
 
 			/**
-			 * @brief Stores given variables which can then be accessed in the uniform
-			 * 		  block this ubo is attached to.
+			 * @brief Stores given variables which can then be accessed in the uniform 
+			 * 		  block this shares bind point with using the uniform functions.
 			 *
 			 * @param block_variables - The variables to add.
 			 * @param indexing - Whether or not to also add indexing variables.
@@ -151,10 +149,13 @@ namespace tilia
 			void Reset(std::vector<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing = false);
 
 			/**
-			 * @brief Clears the stored variables.
+			 * @brief Clears the stored variables and resets the local buffer.
 			 */
 			void Clear();
 
+			/**
+			 * @brief Temporary debug print function which prints all stored variables to the console.
+			 */
             void debug_print();
             
 			/**

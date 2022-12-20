@@ -166,6 +166,7 @@
     <ClInclude Include="Core\Modules\Console\Logging.hpp" />
     <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.hpp" />
     <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Buffer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Data.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.hpp" />
@@ -478,6 +479,7 @@
     <ClCompile Include="Core\Modules\Console\Logging.cpp" />
     <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp" />
     <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Buffer.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Data.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.cpp" />

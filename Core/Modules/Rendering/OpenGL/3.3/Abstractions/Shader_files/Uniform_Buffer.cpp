@@ -19,6 +19,7 @@ std::uint32_t tilia::gfx::Uniform_Buffer::s_previous_ID{};
  * 
  * @tparam T - The type of the number to align.
  * @tparam U - The type of the number which to align to.
+ *
  * @param to_round - The number to align.
  * @param multiple_of - The number which to align to.
  * 
@@ -83,9 +84,8 @@ tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(Uniform_Buffer
     m_ID = other.m_ID;
     // We set the other id to 0 since we don't want shared openGL data between two uniform buffers
     other.m_ID = 0;
-    // If other bind point is valid then we set the binding point to the given one
-    if (other.m_bind_point >= 0)
-        Set_Bind_Point(static_cast<std::uint32_t>(other.m_bind_point));
+    // We don't need to bind again since if the other one was bound then we would be bound now since we took it's openGL id.
+    m_bind_point = other.m_bind_point;
     // We move other variable data to ours
     m_variables = std::move(other.m_variables);
     // We move other block data to ours
@@ -98,107 +98,99 @@ tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(Uniform_Buffer
 
 void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing, const std::int32_t& bind_point)
 {
-    // Generates a new id for an openGL ubo
+    // The type of elements in the given ones
+    using T = decltype(block_variables)::value_type;
+    // We store the block variables in temporary vector for further moving
+    std::vector<T> temp{ std::move(block_variables) };
+    // We generate a new id for an openGL ubo
     GL_CALL(glGenBuffers(1, &m_ID));
-    // If any variables is given then stores them 
+    // If any variables is given then we store them 
     if (block_variables.begin() != block_variables.end())
-        Reset(std::move(block_variables), indexing);
-    // Make sure the buffer is a uniform buffer
+        Reset(temp, indexing);
+    // We make sure the buffer is a uniform buffer by binding to it
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
-    // If given then sets binding point to the given
+    // If given then we set the binding point to the given one
     if (bind_point >= 0)
         Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
 }
 
 void tilia::gfx::Uniform_Buffer::Terminate()
 {
-    // If an openGL ubo id was never generated then throws exception
+    // If an openGL ubo id was never generated then we throw an exception
     if (m_ID <= 0)
     {
         utils::Tilia_Exception e{ LOCATION };
         e.Add_Message("Failed to terminate uniform buffer due to the fact that it was never initialized or something went very wrong");
         throw e;
     }
-    // Deletes the ubo
+    // We delete the underlying ubo
     glDeleteBuffers(1, &m_ID);
+    // We clear the old variables and the local buffer
+    Clear();
+}
+
+void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
+{
+    // The type of elements in the given ones
+    using T = decltype(block_variables)::value_type;
+    // We send data to other function for furter logic and storing
+    Reset(static_cast<std::vector<T>>(std::move(block_variables)), indexing);
 }
 
 // The size of a vector4 is used to align things to its size
 static const std::size_t VEC4_SIZE{ (*tilia::enums::GLSL_Container_Type::Vector4 * tilia::utils::Get_GLSL_Scalar_Size(tilia::enums::GLSL_Scalar_Type::Float)) };
 
-void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
-{
-
-    // The type of elements in the given ones
-    using T = decltype(block_variables)::value_type;
-
-    // Moves given variables into vector in order to index to them
-    std::vector<T> variables{ std::move(block_variables) };
-
-    // Sends data to other function for logic
-    Reset(std::move(variables), indexing);
-
-}
-
 void tilia::gfx::Uniform_Buffer::Reset(std::vector<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
 {
-
-    // Clears the previous variables
+    // We clear the old variables
     Clear();
-
     std::size_t block_size{};
-
     const std::size_t var_count{ block_variables.size() };
     for (std::size_t i{ 0 }; i < var_count; ++i)
     {
-        // Pushes (adds) variable to storage which then allows for the setting of uniform data using the name
+        // We push (add) variable to storage which then allows for the setting of uniform data using the name
         block_size = Push_Variable(block_size, std::move(block_variables[i].first), std::move(block_variables[i].second), indexing);
     }
-
     // Block size has to end in a multiple of a vector4
     block_size = align_to(block_size, VEC4_SIZE);
-
+    // We allocate data for our local buffer to be able to hold all of the uniform data of all of the variables by using the block size.
     Allocate_Data(block_size);
 
 }
 
 void tilia::gfx::Uniform_Buffer::Clear()
 {
-
-    // Clears the stored variables
+    // We clear the stored variables
     m_variables.clear();
 
+    // We reset the local buffer to nullptr since the variable size is 0
+    m_block_data.reset();
     m_block_size = 0;
 
 }
 
 void tilia::gfx::Uniform_Buffer::debug_print()
 {
-
     for (auto& variable : m_variables)
     {
         std::cout << "Name: " << variable.first << " : Offset " << variable.second.first << '\n';
     }
-
 }
 
 void tilia::gfx::Uniform_Buffer::Set_Bind_Point(const std::uint32_t& bind_point)
 {
-    // If id is zero then throws exception
+    // If id is zero then we throw exception
     if (!m_ID)
 	{
 		utils::Tilia_Exception e{ LOCATION };
-
 		e.Add_Message("Failed to set binding point for uniform buffer { ID: %v }"
 		)(m_ID);
-
 		throw e;
-
 	}
-    // Stores given binding point
+    // We store given binding point
     m_bind_point = bind_point;
-    // Binds the ubo to the given binding point
+    // We Bind the ubo to the given binding point
     GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, bind_point, m_ID));
 }
 

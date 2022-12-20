@@ -942,6 +942,9 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Buffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Modules\Console\Logging.cpp">
@@ -1005,6 +1008,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
