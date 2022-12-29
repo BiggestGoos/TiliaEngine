@@ -73,7 +73,7 @@ void tilia::gfx::Buffer::Set_Data(const std::size_t& offset, const std::size_t& 
         if (!m_local_data)
             Allocate_Local(m_memory_size);
         // We copy the given data into our local buffer
-        std::memcpy(m_local_data.get() + offset, data, (size)? size : m_memory_size);
+        std::memcpy(m_local_data.get() + offset, data, (size == 0 && offset == 0)? m_memory_size : size);
     }
     // If auto upload isn't true then we just return. This can allow for this function to be called without effect if we don't set the local buffer and auto upload is false
     if (!m_auto_upload)
@@ -85,7 +85,7 @@ void tilia::gfx::Buffer::Set_Data(const std::size_t& offset, const std::size_t& 
         Bind();
     }
     // We set the data in the already allocated memory for the buffer of type with the given data between the offset and offset + size.
-    GL_CALL(glBufferSubData(*m_type, offset, (size)? size : m_memory_size, data));
+    GL_CALL(glBufferSubData(*m_type, offset, (size == 0 && offset == 0)? m_memory_size : size, data));
     // If we just bound this then we rebind the old one
     if (m_ID == s_bound_IDs[m_type] && m_ID != s_saved_IDs[m_type])
         Rebind();
@@ -99,12 +99,12 @@ void tilia::gfx::Buffer::Get_Data(const std::size_t& offset, const std::size_t& 
         // If our local buffer is nullptr then we instead just set the data to 0
         if (!m_local_data) 
         {
-            std::memset(static_cast<Byte*>(data) + offset, 0, (size)? size : m_memory_size);
+            std::memset(static_cast<Byte*>(data) + offset, 0, (size == 0 && offset == 0)? m_memory_size : size);
             // Early return
             return;
         }
         // We copy the data from the local buffer to our return data
-        std::memcpy(static_cast<Byte*>(data) + offset, m_local_data.get(), (size)? size : m_memory_size);
+        std::memcpy(static_cast<Byte*>(data) + offset, m_local_data.get(), (size == 0 && offset == 0)? m_memory_size : size);
         // Early return
         return;
     }
@@ -115,7 +115,7 @@ void tilia::gfx::Buffer::Get_Data(const std::size_t& offset, const std::size_t& 
         Bind();
     }
     // We get the data contained in the currently bound buffer of type within the offset and size of the memory.
-    GL_CALL(glGetBufferSubData(*m_type, offset, (size)? size : m_memory_size, data));
+    GL_CALL(glGetBufferSubData(*m_type, offset, (size == 0 && offset == 0)? m_memory_size : size, data));
     // If we just bound this then we rebind the old one
     if (m_ID == s_bound_IDs[m_type] && m_ID != s_saved_IDs[m_type])
         Rebind();
@@ -123,12 +123,16 @@ void tilia::gfx::Buffer::Get_Data(const std::size_t& offset, const std::size_t& 
 
 void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& map_type, void*& data, const bool& map_local)
 {
+    // If we choose to then we map to our local memory instead of mapping to the openGL memory
     if (map_local)
     {
         // If our local buffer isn't already allocated then we do so before copying data to it
         if (!m_local_data)
             Allocate_Local(m_memory_size);
+        // We set the data pointer to our local buffer
         data = m_local_data.get();
+        // Since we don't map to an openGL memory block then we choose to say that we don't have a map type since that value is supposed to show in what way the openGL buffer has been mapped to
+        m_map_type = enums::Buffer_Map_Type::None;
         // Early return
         return;
     }
@@ -138,43 +142,44 @@ void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& map_type, void*&
         Unbind(true);
         Bind();
     }
-    if (map_type != enums::Buffer_Map_Type::None && data != nullptr)
+    // If the given mapping type is not none then we map set the given data pointer to the mapped one which points to the openGL buffer memory
+    if (map_type != enums::Buffer_Map_Type::None)
     {
         GL_CALL(data = glMapBuffer(*m_type, *map_type));
-        m_map_type = map_type;
     }
+    // If the mapping type is none then we unmap the buffer of type
     else
     {
-
+        GL_CALL(glUnmapBuffer(*m_type));
     }
+    // We store the map type which will indicate how the buffer is mapped
+    m_map_type = map_type;
     // If we just bound this then we rebind the old one
     if (m_ID == s_bound_IDs[m_type] && m_ID != s_saved_IDs[m_type])
         Rebind();
 }
 
-void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& map_type, const std::size_t& offset, const std::size_t& size, void*& data, const bool& map_local)
-{
-}
-
 void tilia::gfx::Buffer::Unmap_Data()
 {
+    // Since the mapping function takes a referene to a pointer we create a temporary object to satisfy it. We choose to call the mapping function here since it will unmap the buffer if the given mapping type is none
     void* temp{ nullptr };
+    // As we already went through we call the mapping function in order to unmap the buffer
     Map_Data(enums::Buffer_Map_Type::None, temp);
 }
 
-void tilia::gfx::Buffer::Bind() const {
-    // If id is zero then we throw exception
-    if (!m_ID)
+void tilia::gfx::Buffer::Upload_Data() const
+{
+    // If this is not already bound then we bind it
+    if (m_ID != s_bound_IDs[m_type])
     {
-        utils::Tilia_Exception e{ LOCATION };
-        e.Add_Message("Failed to bind buffer { Type: %v : ID: %v }"
-        )(*m_type)(m_ID);
-        throw e;
+        Unbind(true);
+        Bind();
     }
-    // We bind buffer of type with id
-    GL_CALL(glBindBuffer(*m_type, m_ID));
-    // We store the id of type as the new bound id
-    s_bound_IDs[m_type] = m_ID;
+    // We upload the locally stored data to our openGL buffer
+    GL_CALL(glBufferSubData(*m_type, 0, m_memory_size, m_local_data.get()));
+    // If we just bound this then we rebind the old one
+    if (m_ID == s_bound_IDs[m_type] && m_ID != s_saved_IDs[m_type])
+        Rebind();
 }
 
 void tilia::gfx::Buffer::Bind(const enums::Buffer_Type& type, const std::uint32_t& id) {
@@ -192,17 +197,6 @@ void tilia::gfx::Buffer::Bind(const enums::Buffer_Type& type, const std::uint32_
     s_bound_IDs[type] = id;
 }
 
-void tilia::gfx::Buffer::Unbind(const bool& save_id) {
-    // We bind the openGL buffer of type to zero which effectively unbinds the previously bound buffer of type.
-    GL_CALL(glBindBuffer(*m_type, 0));
-    // If true then we save the old bound id
-    if (save_id)
-    {
-        s_saved_IDs[m_type] = s_bound_IDs[m_type];
-    }
-    s_bound_IDs[m_type] = 0;
-}
-
 void tilia::gfx::Buffer::Unbind(const enums::Buffer_Type& type, const bool& save_id)
 {
     // We bind the openGL buffer of type to zero which effectively unbinds the previously bound buffer of type.
@@ -213,14 +207,6 @@ void tilia::gfx::Buffer::Unbind(const enums::Buffer_Type& type, const bool& save
         s_saved_IDs[type] = s_bound_IDs[type];
     }
     s_bound_IDs[type] = 0;
-}
-
-void tilia::gfx::Buffer::Rebind() {
-    // We bind the previously bound id
-    GL_CALL(glBindBuffer(*m_type, s_saved_IDs[m_type]));
-    // We set the current bound id to the saved id
-    s_bound_IDs[m_type] = s_saved_IDs[m_type];
-    s_saved_IDs[m_type] = 0;
 }
 
 void tilia::gfx::Buffer::Rebind(const enums::Buffer_Type& type)

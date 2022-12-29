@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * @file   Buffer.hpp
  * 
- * @brief  
+ * @brief  The Buffer class is an abstraction of a general openGL buffer.
  * 
  * @author Gustav Fagerlind
  * @date   20/12/2022
@@ -25,6 +25,9 @@ namespace tilia
 {
 	namespace gfx 
 	{
+		/**
+		 * // TODO: finnish writing comments etc, look up how to structure unit tests and implement one for buffer
+		 */
 		class Buffer 
 		{
 		private:
@@ -48,46 +51,29 @@ namespace tilia
 
 			void Map_Data(const enums::Buffer_Map_Type& map_type, void*& data, const bool& map_local = false);
 
-			void Map_Data(const enums::Buffer_Map_Type& map_type, const std::size_t& offset, const std::size_t& size, void*& data, const bool& map_local = false);
-
 			void Unmap_Data();
 
 			void Upload_Data() const;
 
-			/**
-			 * @brief Binds the uniform buffer.
-			 */
-			void Bind() const;
+			inline void Bind() const {
+				// We call the static version with our member type and id in order to bind this buffer
+				Bind(m_type, m_ID);
+			}
 
-			/**
-			 * @brief Binds the given uniform buffer.
-			 *
-			 * @param id - The id of the uniform buffer which will be bound.
-			 */
 			static void Bind(const enums::Buffer_Type& type, const std::uint32_t& id);
 
-			/**
-			 * @brief Unbinds the bound uniform buffer. Static version
-			 * of Unbind.
-			 */
-			void Unbind(const bool& save_id = false);
+			inline void Unbind(const bool& save_id = false) const {
+				// We call the static version with our type and given save id in order to unbind this buffer
+				Unbind(m_type, save_id);
+			}
 
-			/**
-			 * @brief Unbinds the bound uniform buffer. Static version
-			 * of Unbind.
-			 */
 			static void Unbind(const enums::Buffer_Type& type, const bool& save_id = false);
 
-			/**
-			 * @brief Binds the stored previously bound uniform buffer. Static version
-			 * of Rebind.
-			 */
-			void Rebind();
+			inline void Rebind() const {
+				// We call the static version with our type in order to rebind the old buffer
+				Rebind(m_type);
+			}
 
-			/**
-			 * @brief Binds the stored previously bound uniform buffer. Static version
-			 * of Rebind.
-			 */
 			static void Rebind(const enums::Buffer_Type& type);
 
 			inline auto Get_ID() const { return m_ID; }
@@ -126,11 +112,13 @@ namespace tilia
 
 			// The currently bound buffer of each type.
 			static std::map<enums::Buffer_Type, std::uint32_t> s_bound_IDs;
-			// The saved buffers of each type.
+			// The saved buffer of each type.
 			static std::map<enums::Buffer_Type, std::uint32_t> s_saved_IDs;
 
 		}; // Buffer
+
 	} // gfx
+
 } // tilia
 
 #endif // TILIA_BUFFER_HPP
