@@ -15,6 +15,7 @@ void tilia::gfx::Buffer::Init(const enums::Buffer_Type& type, const std::size_t&
     // We store the given type, generate an openGL buffer which gives us an id and then if a size is given then we allocate memory with that size with given parameters for what type of access we want etc
     m_type = type;
     GL_CALL(glGenBuffers(*m_type, &m_ID));
+    // If the given size is more than zero then we allocate memory of that size
     if (size)
         Allocate(size, access_type, access_frequency, data, allocate_local);
 }
@@ -23,6 +24,12 @@ void tilia::gfx::Buffer::Terminate()
 {
     // We delete the openGL buffer of type with id
     GL_CALL(glDeleteBuffers(*m_type, &m_ID));
+    // We set the id to 0 in order to show that we deleted the openGL buffer
+    m_ID = 0;
+    // We reset the local buffer to show that we have terminated the buffer
+    m_local_data.reset();
+    // In order to show that we have deleted the buffers we also set the memory size to zero to showcase this
+    m_memory_size = 0;
 }
 
 void tilia::gfx::Buffer::Allocate(const std::size_t& size, const enums::Buffer_Access_Type& access_type, const enums::Buffer_Access_Frequency& access_frequency, const void* data, const bool& allocate_local)

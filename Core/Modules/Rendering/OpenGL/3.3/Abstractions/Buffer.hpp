@@ -26,7 +26,7 @@ namespace tilia
 	namespace gfx 
 	{
 		/**
-		 * // TODO: finnish writing comments etc, look up how to structure unit tests and implement one for buffer
+		 * @brief An abstraction for a general openGL buffer.
 		 */
 		class Buffer 
 		{
@@ -37,8 +37,21 @@ namespace tilia
 
 		public:
 
-			void Init(const enums::Buffer_Type& type, const std::size_t& size, const enums::Buffer_Access_Type& access_type = enums::Buffer_Access_Type::Draw, const enums::Buffer_Access_Frequency& access_frequency = enums::Buffer_Access_Frequency::Dynamic, const void* data = nullptr, const bool& allocate_local = false);
+			/**
+			 * @brief Initializes the buffer with the given values. If a size larger than zero is given then we also allocate memory for the buffer.
+			 *
+			 * @param type - The buffer type which this will be initialized as.
+			 * @param size - The size which the buffer will be allocated for in bytes.
+			 * @param access_type - The access type that the memory will be accessed with.
+			 * @param access_frequency - The frequency that the memory will be accessed.
+			 * @param data - The data which will be copied into the buffer at initialization. Can be nullptr (is at default).
+			 * @param allocate_local - Whether or not we will allocate a local buffer which we can write to instead of the openGL buffer and which we then can upload to openGL at once.
+			 */
+			void Init(const enums::Buffer_Type& type, const std::size_t& size = 0, const enums::Buffer_Access_Type& access_type = enums::Buffer_Access_Type::Draw, const enums::Buffer_Access_Frequency& access_frequency = enums::Buffer_Access_Frequency::Dynamic, const void* data = nullptr, const bool& allocate_local = false);
 
+			/**
+			 * @brief Deletes 
+			 */
 			void Terminate();
 
 			void Allocate(const std::size_t& size, const enums::Buffer_Access_Type& access_type, const enums::Buffer_Access_Frequency& access_frequency, const void* data = nullptr, const bool& allocate_local = false);
