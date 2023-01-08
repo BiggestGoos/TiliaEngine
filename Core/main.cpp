@@ -1,6 +1,8 @@
+#define TILIA_UNIT_TEST 1
 
 #include "vendor/glad/include/glad/glad.h"
 #include "vendor/glfw/include/GLFW/glfw3.h"
+#undef APIENTRY
 
 #include "vendor/glm/include/glm/glm.hpp"
 #include "vendor/glm/include/glm/gtc/matrix_transform.hpp"
@@ -87,6 +89,44 @@ template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
 #if 1
+
+#define CATCH_CONFIG_RUNNER
+#include "vendor/Catch2/Catch2.hpp"
+
+int main(int argc, char* argv[])
+{
+    const int retval = Catch::Session().run(argc, argv);
+    std::cin.get();
+    return retval;
+}
+
+void factorials_are_computed()
+{
+    REQUIRE(1 == 1);
+    REQUIRE(2 == 2);
+    REQUIRE(6 == 6);
+    REQUIRE(3628800 == 3628800);
+}
+
+TEST_CASE("Factorials are computed", "[factorial]") {
+    factorials_are_computed();
+}
+
+void factorials_are_not_computed()
+{
+    REQUIRE_FALSE(2 == 1);
+    REQUIRE_FALSE(3 == 2);
+    REQUIRE_FALSE(7 == 6);
+    REQUIRE_FALSE(3628801 == 3628800);
+}
+
+TEST_CASE("Factorials are not computed", "[not_factorial]") {
+    factorials_are_not_computed();
+}
+
+#endif
+
+#if 0
 
 int main()
 {

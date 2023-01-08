@@ -81,10 +81,9 @@ void tilia::gfx::Buffer::Set_Data(const std::size_t& offset, const std::size_t& 
             Allocate_Local(m_memory_size);
         // We copy the given data into our local buffer
         std::memcpy(m_local_data.get() + offset, data, (size == 0 && offset == 0)? m_memory_size : size);
-    }
-    // If auto upload isn't true then we just return. This can allow for this function to be called without effect if we don't set the local buffer and auto upload is false
-    if (!m_auto_upload)
+        // Early return
         return;
+    }
     // If this is not already bound then we bind it
     if (m_ID != s_bound_IDs[m_type])
     {
@@ -176,6 +175,13 @@ void tilia::gfx::Buffer::Unmap_Data()
 
 void tilia::gfx::Buffer::Upload_Data() const
 {
+    // If data is nullptr then we throw exception
+    if (!m_local_data)
+    {
+        utils::Tilia_Exception e{ LOCATION };
+        e.Add_Message("Failed to upload local buffer to openGL due to the data being nullptr { Type: %v : ID: %v }")(*m_type)(m_ID);
+        throw e;
+    }
     // If this is not already bound then we bind it
     if (m_ID != s_bound_IDs[m_type])
     {

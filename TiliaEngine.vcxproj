@@ -184,8 +184,10 @@
     <ClInclude Include="Core\Temp\Input.hpp" />
     <ClInclude Include="Core\Temp\Limit_Fps.hpp" />
     <ClInclude Include="Core\Temp\Stopwatch.hpp" />
-    <ClInclude Include="Core\Values\OpenGL\3.3\Enums.hpp" />
-    <ClInclude Include="Core\Values\OpenGL\3.3\Utils.hpp" />
+    <ClInclude Include="Core\Values\Enums.hpp" />
+    <ClInclude Include="Core\Values\OpenGL\3_3\OpenGL_3_3_Enums.hpp" />
+    <ClInclude Include="Core\Values\OpenGL\3_3\Utils.hpp" />
+    <ClInclude Include="vendor\Catch2\Catch2.hpp" />
     <ClInclude Include="vendor\glad\include\glad\glad.h" />
     <ClInclude Include="vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
@@ -494,7 +496,7 @@
     <ClCompile Include="Core\Temp\Input.cpp" />
     <ClCompile Include="Core\Temp\Limit_Fps.cpp" />
     <ClCompile Include="Core\Temp\Stopwatch.cpp" />
-    <ClCompile Include="Core\Values\OpenGL\3.3\Utils.cpp" />
+    <ClCompile Include="Core\Values\OpenGL\3_3\Utils.cpp" />
     <ClCompile Include="vendor\glad\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
   </ItemGroup>

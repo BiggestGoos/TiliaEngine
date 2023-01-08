@@ -1,17 +1,13 @@
 /*****************************************************************//**
- * @file   Enums.h
+ * @file   OpenGL_3_3_Enums.hpp
  * @brief  A header file holding enumerations for the TiliaEnigne as well as a function which returns the underlying value of the given enum
- * 
- * Standard:
- * @include <cstdint>
- * @include <type_traits>
  * 
  * @author Gustav Fagerlind
  * @date   28/05/2022
  *********************************************************************/
 
-#ifndef TILIA_ENUMS_H
-#define TILIA_ENUMS_H
+#ifndef TILIA_OPENGL_3_3_ENUMS_HPP
+#define TILIA_OPENGL_3_3_ENUMS_HPP
 
 // Standard
 #include <cstdint>
@@ -252,4 +248,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_ENUMS_HPP
