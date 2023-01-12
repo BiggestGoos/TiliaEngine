@@ -8,7 +8,7 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Uniform_Buffer.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Values/OpenGL/3_3/Utils.hpp"
 
 // Defines static variables
 std::uint32_t tilia::gfx::Uniform_Buffer::s_bound_ID{};

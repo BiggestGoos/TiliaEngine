@@ -17,7 +17,7 @@
 #include "vendor/glad/include/glad/glad.h"
 
 // Headers
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Values/OpenGL/3_3/Utils.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 
 /**

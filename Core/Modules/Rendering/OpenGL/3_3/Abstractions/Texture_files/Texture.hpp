@@ -26,7 +26,7 @@
 #include <unordered_map>
 
 // Headers
-#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Values/OpenGL/3_3/Enums.hpp"
 
 namespace tilia {
 

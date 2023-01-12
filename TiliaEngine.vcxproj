@@ -184,8 +184,9 @@
     <ClInclude Include="Core\Temp\Input.hpp" />
     <ClInclude Include="Core\Temp\Limit_Fps.hpp" />
     <ClInclude Include="Core\Temp\Stopwatch.hpp" />
+    <ClInclude Include="Core\Values\Directories.hpp" />
     <ClInclude Include="Core\Values\Enums.hpp" />
-    <ClInclude Include="Core\Values\OpenGL\3_3\OpenGL_3_3_Enums.hpp" />
+    <ClInclude Include="Core\Values\OpenGL\3_3\Enums.hpp" />
     <ClInclude Include="Core\Values\OpenGL\3_3\Utils.hpp" />
     <ClInclude Include="vendor\Catch2\Catch2.hpp" />
     <ClInclude Include="vendor\glad\include\glad\glad.h" />

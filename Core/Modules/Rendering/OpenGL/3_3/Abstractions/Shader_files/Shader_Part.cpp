@@ -8,8 +8,8 @@
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Part.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
-#include "Core/Values/OpenGL/3.3/Enums.hpp"
+#include "Core/Values/OpenGL/3_3/Utils.hpp"
+#include "Core/Values/OpenGL/3_3/Enums.hpp"
 #include "Core/Modules/File_System/Windows/File_System.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader.hpp"
 

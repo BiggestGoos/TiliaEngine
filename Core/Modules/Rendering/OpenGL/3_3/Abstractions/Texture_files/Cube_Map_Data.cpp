@@ -8,7 +8,7 @@
 #include "Core/Modules/File_System/Windows/File_System.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 #include "Core/Modules/Console/Logging.hpp"
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Values/OpenGL/3_3/Utils.hpp"
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;

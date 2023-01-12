@@ -30,8 +30,8 @@
 // Headers
 #include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
 #include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Values/OpenGL/3.3/Enums.hpp"
-#include "Core/Values/OpenGL/3.3/Utils.hpp"
+#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/OpenGL/3_3/Utils.hpp"
 
 #include <iostream>
 
