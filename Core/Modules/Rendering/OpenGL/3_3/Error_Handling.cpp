@@ -24,9 +24,10 @@
 #include <iostream>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Console/Logging.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
 
 /**
  * Checks what error string pertains to error_code. If there is no

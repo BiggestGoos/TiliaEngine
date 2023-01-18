@@ -16,8 +16,9 @@
 #include <algorithm>
 
 // Tilia
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Cube_Map_Data.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_TEXTURE_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP_INCLUDE
 
 namespace tilia {
 

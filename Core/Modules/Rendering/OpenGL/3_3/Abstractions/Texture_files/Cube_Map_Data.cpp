@@ -4,11 +4,12 @@
 #include <iostream>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Cube_Map_Data.hpp"
-#include "Core/Modules/File_System/Windows/File_System.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
-#include "Core/Modules/Console/Logging.hpp"
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
+#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;

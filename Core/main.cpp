@@ -15,24 +15,26 @@
 #include <vector>
 #include <map>
 
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Part.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture_2D.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Cube_Map.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Console/Logging.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Batch.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Data.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
-#include "Core/Temp/Camera.hpp"
-#include "Core/Temp/Input.hpp"
-#include "Core/Temp/Limit_Fps.hpp"
-#include "Core/Temp/Stopwatch.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Uniform_Buffer.hpp"
+#include "Values/Directories.hpp"
+
+#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_PART_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_CUBE_MAP_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_BATCH_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_RENDERER_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_MESH_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_DATA_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
+#include TILIA_TEMP_CAMERA_HPP_INCLUDE
+#include TILIA_TEMP_INPUT_HPP_INCLUDE
+#include TILIA_TEMP_LIMIT_FPS_HPP_INCLUDE
+#include TILIA_TEMP_STOPWATCH_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_UNIFORM_BUFFER_HPP_INCLUDE
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -88,7 +90,7 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 1
+#if 0
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
@@ -126,7 +128,7 @@ TEST_CASE("Factorials are not computed", "[not_factorial]") {
 
 #endif
 
-#if 0
+#if 1
 
 int main()
 {

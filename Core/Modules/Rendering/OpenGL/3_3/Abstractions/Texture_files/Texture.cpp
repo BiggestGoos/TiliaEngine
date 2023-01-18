@@ -25,11 +25,12 @@
 #include <string.h>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_files/Texture.hpp"
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
-#include "Core/Modules/Console/Logging.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_TEXTURE_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
 
 // Initialize static member which holds the bound textures ids
 std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::gfx::Texture::s_bound_ID{};

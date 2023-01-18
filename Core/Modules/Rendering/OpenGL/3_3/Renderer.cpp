@@ -16,7 +16,8 @@
 #include <map>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Renderer.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_RENDERER_HPP_INCLUDE
 
 #include <iostream>
 

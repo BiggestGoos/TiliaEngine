@@ -2,9 +2,10 @@
 #include "vendor/glad/include/glad/glad.h"
 
 // Tilia
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Buffer.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_BUFFER_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
 
 // Defines static variables
 std::map<tilia::enums::Buffer_Type, std::uint32_t> tilia::gfx::Buffer::s_bound_IDs{ { enums::Buffer_Type::Vertex_Buffer, 0 }, { enums::Buffer_Type::Element_Buffer, 0 }, { enums::Buffer_Type::Uniform_Buffer, 0 } };

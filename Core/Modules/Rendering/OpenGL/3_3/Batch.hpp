@@ -27,9 +27,9 @@
 #include <map>
 
 // Headers
-#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Mesh.hpp"
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_MESH_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
 
 namespace tilia {
 

@@ -24,7 +24,7 @@
 #include <initializer_list>
 
 // Tilia
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader_Part.hpp"
+#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_files/Shader_Part.hpp"
 #include "Core/Values/OpenGL/3_3/Utils.hpp"
 
 

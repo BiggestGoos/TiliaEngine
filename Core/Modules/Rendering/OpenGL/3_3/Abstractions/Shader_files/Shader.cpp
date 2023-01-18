@@ -4,9 +4,10 @@
 // Standard
 
 // Tilia
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Shader_files/Shader.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_SHADER_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
 
 std::uint32_t tilia::gfx::Shader::s_bound_ID{};
 std::uint32_t tilia::gfx::Shader::s_previous_ID{};

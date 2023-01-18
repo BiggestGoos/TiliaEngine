@@ -17,8 +17,9 @@
 #include "vendor/glad/include/glad/glad.h"
 
 // Headers
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
 
 /**
  * Gets the max amount of texture units supported and then returns them to the caller

@@ -28,12 +28,13 @@
 #include <cstring>
 
 // Headers
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Abstractions/Texture_Files/Texture_2D.hpp"
-#include "Core/Modules/Rendering/OpenGL/3.3/Error_Handling.hpp"
-#include "Core/Modules/Console/Logging.hpp"
-#include "Core/Modules/File_System/Windows/File_System.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
 
 extern tilia::utils::File_System file_system;
 
