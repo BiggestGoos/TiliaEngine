@@ -36,6 +36,14 @@
 #include TILIA_TEMP_STOPWATCH_HPP_INCLUDE
 #include TILIA_OPENGL_3_3_UNIFORM_BUFFER_HPP_INCLUDE
 
+enum class test_enums {
+    elem_1,
+    elem_2,
+    elem_3
+};
+
+using type = __underlying_type(test_enums);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
 
@@ -215,6 +223,8 @@ int main()
         ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
         ub.debug_print();
+
+        std::cout << typeid(test_enums).name() << " : " << typeid(type).name() << '\n';
 
         ub.Bind();
 
