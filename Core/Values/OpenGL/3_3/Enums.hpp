@@ -224,23 +224,23 @@ namespace tilia {
 #define TILIA_GET_ENUM_VALUE
 
 		/**
-		 * @brief Can take any enum class as parameter and will return, if there is any the underlying value.
+		 * @brief Can take any enum value as parameter and will return (if any) the underlying value.
 		 *
-		 * @param e - The enum class value
+		 * @param e - The enum value
 		 *
-		 * @return The underlying value of the enum class value
+		 * @return The underlying value of the enum value
 		 */
 		template<typename E>
-		constexpr typename std::underlying_type<E>::type Get_Enum_Value(E e) noexcept {
-			return static_cast<typename std::underlying_type<E>::type>(e);
+		constexpr std::underlying_type_t<E> Get_Enum_Value(const E& e) noexcept {
+			return static_cast<std::underlying_type_t<E>>(e);
 		}
 
 		/**
-		 * @brief Template operator for the enumerators.
-		 * 
-		 * @param e - The enumerator value the get the value of.
-		 * 
-		 * @return The value of the given enumerator value.
+		 * @brief Can take any enum value as parameter and will return (if any) the underlying value.
+		 *
+		 * @param e - The enum value
+		 *
+		 * @return The underlying value of the enum value
 		 */
 		template<typename E>
 		constexpr auto operator*(const E& e) {
