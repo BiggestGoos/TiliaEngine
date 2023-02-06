@@ -17,8 +17,8 @@
  * @date   29/05/2022
  *********************************************************************/
 
-#ifndef TILIA_RENDERER_H
-#define TILIA_RENDERER_H
+#ifndef TILIA_OPENGL_3_3_RENDERER_HPP
+#define TILIA_OPENGL_3_3_RENDERER_HPP
 
 // Standard
 #include <vector>
@@ -26,8 +26,8 @@
 
 // Headers
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_MESH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_BATCH_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_MESH_INCLUDE
+#include TILIA_OPENGL_3_3_BATCH_INCLUDE
 
 namespace tilia {
 
@@ -36,7 +36,8 @@ namespace tilia {
 		class Renderer {
 		public:
 
-			inline void Add_Mesh(std::weak_ptr<Mesh_Data> mesh_data) { m_mesh_data.push_back(mesh_data); };
+			inline void Add_Mesh(std::weak_ptr<Mesh_Data> mesh_data) { 
+				m_mesh_data.push_back(mesh_data); };
 
 			inline void Remove_Mesh(Mesh_Data* mesh_data) {
 				size_t size{ m_mesh_data.size() };
@@ -66,4 +67,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_RENDERER_HPP

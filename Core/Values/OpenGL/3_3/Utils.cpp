@@ -17,9 +17,9 @@
 #include "vendor/glad/include/glad/glad.h"
 
 // Headers
+#include "Utils.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
 
 /**
  * Gets the max amount of texture units supported and then returns them to the caller
@@ -93,7 +93,8 @@ const char* tilia::utils::Get_Cube_Map_Side_String(const std::uint32_t& cube_map
 	}
 }
 
-tilia::enums::Data_Color_Format tilia::utils::Get_Data_Color_Format(const std::uint32_t& color_format_count)
+tilia::enums::Data_Color_Format tilia::utils::Get_Data_Color_Format(
+	const std::uint32_t& color_format_count)
 {
 	switch (color_format_count)
 	{

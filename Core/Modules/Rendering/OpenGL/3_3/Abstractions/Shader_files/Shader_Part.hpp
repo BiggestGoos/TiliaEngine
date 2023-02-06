@@ -7,8 +7,8 @@
  * @date   03/10/2022
  *************************************************************************************************/
 
-#ifndef TILIA_SHADER_PART_HPP
-#define TILIA_SHADER_PART_HPP
+#ifndef TILIA_OPENGL_3_3_SHADER_PART_HPP
+#define TILIA_OPENGL_3_3_SHADER_PART_HPP
 
 // Standard
 #include <cstdint>
@@ -16,7 +16,8 @@
 #include <memory>
 
 // Tilia
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -34,8 +35,13 @@ namespace tilia {
 
 			friend class Shader;
 
-			Shader_Part(const std::string& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ path } { if (init) Init(true); }
-			Shader_Part(std::string&& path, const enums::Shader_Type& type, const bool& init = false) : m_type{ type }, m_path{ std::move(path) } { if (init) Init(true); }
+			Shader_Part(const std::string& path, const enums::Shader_Type& type, 
+				const bool& init = false) : m_type{ type }, m_path{ path } 
+			{ if (init) Init(true); }
+
+			Shader_Part(std::string&& path, const enums::Shader_Type& type, 
+				const bool& init = false) : m_type{ type }, m_path{ std::move(path) } 
+			{ if (init) Init(true); }
 
 			Shader_Part(const Shader_Part& other, const bool& init = false) noexcept :
 				m_type{ other.m_type },
@@ -114,4 +120,4 @@ namespace tilia {
 
 } // tilia
 
-#endif // TILIA_SHADER_PART_HPP
+#endif // TILIA_OPENGL_3_3_SHADER_PART_HPP

@@ -1,6 +1,7 @@
 /*****************************************************************//**
  * @file   Texture_2D.h
- * @brief  Declares and defines a class called @Texture_2D deriving from @Texture in @include "headers/Texture.h", which works as an abstraction for an openGL 2d texture 
+ * @brief  Declares and defines a class called @Texture_2D deriving from @Texture in @include
+ * "headers/Texture.h", which works as an abstraction for an openGL 2d texture 
  *		   as well as a struct called @Texture_2D_Def that holds some information about the class.
  * 
  * @define TILIA_TEXTURE_H
@@ -17,8 +18,8 @@
  * @date   15/05/2022
  *********************************************************************/
 
-#ifndef TILIA_TEXTURE_2D_H
-#define TILIA_TEXTURE_2D_H
+#ifndef TILIA_OPENGL_3_3_TEXTURE_2D_HPP
+#define TILIA_OPENGL_3_3_TEXTURE_2D_HPP
 
 // Standard
 #include <string>
@@ -26,8 +27,8 @@
 
 // Headers
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_TEXTURE_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_INCLUDE
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -40,12 +41,18 @@ namespace tilia {
 		 * @param texture_data      - The texel data of the texture
 		 * @param width             - The width of the texture
 		 * @param height		    - The height of the texture
-		 * @param color_format      - The color format of the texture						  - Default: Color_Format::RGBA8
-		 * @param load_color_format - The color format loaded in							  - Default: Color_Format::None
-		 * @param filter_min        - The filtering mode when the texture has been zoomed in  - Default: Filter_Mode::Point
-		 * @param filter_mag        - The filtering mode when the texture has been zoomed out - Default: Filter_Mode::Point
-		 * @param wrap_s	        - The wrapping mode for the x-axis						  - Default: Wrap_Mode::Repeat
-		 * @param wrap_t	        - The wrapping mode for the y-axis						  - Default: Wrap_Mode::Repeat
+		 * @param color_format      - The color format of the texture						  -
+		 * Default: Color_Format::RGBA8
+		 * @param load_color_format - The color format loaded in							  -
+		 * Default: Color_Format::None
+		 * @param filter_min        - The filtering mode when the texture has been zoomed in  -
+		 * Default: Filter_Mode::Point
+		 * @param filter_mag        - The filtering mode when the texture has been zoomed out -
+		 * Default: Filter_Mode::Point
+		 * @param wrap_s	        - The wrapping mode for the x-axis						  -
+		 * Default: Wrap_Mode::Repeat
+		 * @param wrap_t	        - The wrapping mode for the y-axis						  -
+		 * Default: Wrap_Mode::Repeat
 		 */
 		struct Texture_2D_Def
 		{
@@ -54,7 +61,8 @@ namespace tilia {
 			int32_t							   width{};
 			int32_t							   height{};
 			enums::Color_Format	   color_format{ enums::Color_Format::RGBA8 };
-			enums::Data_Color_Format				   load_color_format{ enums::Data_Color_Format::None };
+			enums::Data_Color_Format				   load_color_format{ 
+				enums::Data_Color_Format::None };
 			enums::Filter_Mode				   filter_min{ enums::Filter_Mode::Point };
 			enums::Filter_Mode				   filter_mag{ enums::Filter_Mode::Point };
 			enums::Wrap_Mode				   wrap_s{ enums::Wrap_Mode::Repeat };
@@ -82,13 +90,15 @@ namespace tilia {
 		};
 
 		/**
-		 * @brief A class deriving from Texture class which works as an abstraction for an openGL texture. Also contains a Texture_Def struct
+		 * @brief A class deriving from Texture class which works as an abstraction for an openGL
+		 * texture. Also contains a Texture_Def struct
 		 */
 		class Texture_2D : public Texture {
 		public:
 
 			/**
-			 * @brief The default constructor which generates an openGL texture and sets the texture id
+			 * @brief The default constructor which generates an openGL texture and sets the
+			 * texture id
 			 */
 			Texture_2D();
 
@@ -152,7 +162,8 @@ namespace tilia {
 			 * @param filter_size - The size of filtering for which to set the mode of
 			 * @param filter_mode - The mode of filtreing for which to use for the size
 			 */
-			void Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) override;
+			void Set_Filter(const enums::Filter_Size& filter_size, 
+				const enums::Filter_Mode& filter_mode) override;
 
 			/**
 			 * @brief Set wrapping for the given side
@@ -160,14 +171,16 @@ namespace tilia {
 			 * @param wrap_side - The side of which to set wrapping for
 			 * @param wrap_mode - The wrapping mode to set for the given side
 			 */
-			void Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) override;
+			void Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
+				const enums::Wrap_Mode& wrap_mode) override;
 
 		private:
 
 			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
 			
 			/**
-			 * @brief Prints information about the shader indented. Prints the dimensions, color format,
+			 * @brief Prints information about the shader indented. Prints the dimensions, color
+			 * format,
 			 * filtering modes and wrapping modes.
 			 */
 			void Print_Information() const;
@@ -178,4 +191,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_TEXTURE_2D_HPP

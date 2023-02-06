@@ -1,6 +1,7 @@
 /*****************************************************************//**
  * @file   Batch.cpp
- * @brief  Defines all non-inline member functions and constructors/destructors of the @Batch class in @include "headers/Batch.h"
+ * @brief  Defines all non-inline member functions and constructors/destructors of the @Batch class
+ * in @include "headers/Batch.h"
  * 
  * Dependencies:
  * @include "dependencies/glad/include/glad/glad.h"
@@ -28,15 +29,16 @@
 #include <cstring>
 
 // Headers
+#include "Batch.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_BATCH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
 
 #include <iostream>
 
 /**
- * Sets the batch to be compatible with the given mesh_data. Also calls Set_Vertex_Attribs, generates some buffers, and allocates memory for them.
+ * Sets the batch to be compatible with the given mesh_data. Also calls Set_Vertex_Attribs,
+ * generates some buffers, and allocates memory for them.
  */
 tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	: // Sets batch to be compatible
@@ -53,7 +55,8 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	m_stencil_funcs	  { *mesh_data.lock()->stencil_funcs },
 	m_compare_s_values{ *mesh_data.lock()->compare_s_values },
 	m_compare_s_masks { *mesh_data.lock()->compare_s_masks },
-	m_stencil_actions { mesh_data.lock()->stencil_actions[0], mesh_data.lock()->stencil_actions[1], mesh_data.lock()->stencil_actions[2] },
+	m_stencil_actions { mesh_data.lock()->stencil_actions[0], mesh_data.lock()->stencil_actions[1], 
+	mesh_data.lock()->stencil_actions[2] },
 	m_vertex_size	  { mesh_data.lock()->vertex_size },
 	m_vertex_info	  { *mesh_data.lock()->vertex_info }
 {
@@ -69,14 +72,16 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 
 	// Allocates memory for vertex buffer
 	GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-	GL_CALL(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * m_vertex_size * *enums::Misc::Max_Vertices), nullptr, GL_DYNAMIC_DRAW));
+	GL_CALL(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * m_vertex_size * 
+		*enums::Batch_Limits::Max_Vertices), nullptr, GL_DYNAMIC_DRAW));
 
 	// Calls Set_Vertex_Attribs to set vertex attributes
 	Set_Vertex_Attribs();
 
 	// Allocates memory for element buffer
 	GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
-	GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast <GLsizeiptr>(sizeof(uint32_t) * *enums::Misc::Max_Indices), nullptr, GL_DYNAMIC_DRAW));
+	GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast <GLsizeiptr>(sizeof(uint32_t) * 
+		*enums::Batch_Limits::Max_Indices), nullptr, GL_DYNAMIC_DRAW));
 
 }
 
@@ -110,7 +115,8 @@ void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 	m_stencil_funcs	   = *mesh_data.lock()->stencil_funcs;
 	m_compare_s_values = *mesh_data.lock()->compare_s_values;
 	m_compare_s_masks  = *mesh_data.lock()->compare_s_masks;
-	memcpy_s(m_stencil_actions, 3 * sizeof(enums::Test_Action), mesh_data.lock()->stencil_actions, 3 * sizeof(enums::Test_Action));
+	memcpy_s(m_stencil_actions, 3 * sizeof(enums::Test_Action), mesh_data.lock()->stencil_actions, 
+		3 * sizeof(enums::Test_Action));
 	m_vertex_size	   = mesh_data.lock()->vertex_size;
 	m_vertex_info	   = *mesh_data.lock()->vertex_info;
 
@@ -126,7 +132,8 @@ void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 
 }
 
-void tilia::gfx::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets) {
+void tilia::gfx::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, 
+	std::unordered_map<uint32_t, uint32_t>& offsets) {
 
 	const size_t vertex_count{ mesh_data.lock()->vertex_data->size() };
 	const size_t index_count{ mesh_data.lock()->indices->size() };
@@ -138,7 +145,8 @@ void tilia::gfx::Batch::Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_
 		{
 			for (size_t k = 0; k < m_texture_count; k++) {
 
-				if (m_textures[k].lock()->Get_ID() == (*mesh_data.lock()->textures)[j].lock()->Get_ID()) {
+				if (m_textures[k].lock()->Get_ID() == 
+					(*mesh_data.lock()->textures)[j].lock()->Get_ID()) {
 
 					offsets[static_cast<uint32_t>(i)] = static_cast<uint32_t>(k - j);
 					goto end_loop;
@@ -192,13 +200,15 @@ bool tilia::gfx::Batch::Push_Mesh(std::weak_ptr<Mesh_Data> mesh_data, float dist
 	{
 		m_vertex_data.push_back(new_vertex_data[i]);
 		if ((i) % m_vertex_size == *mesh_data.lock()->texture_offset) {
-			m_vertex_data[m_vertex_count + i] += static_cast<float>(texture_indices[static_cast<uint32_t>(i)]);
+			m_vertex_data[m_vertex_count + i] += 
+				static_cast<float>(texture_indices[static_cast<uint32_t>(i)]);
 		}
 	}
 
 	for (size_t i = 0; i < index_count; i++)
 	{
-		m_index_data.push_back(new_index_data[i] + static_cast<uint32_t>(m_vertex_count / m_vertex_size));
+		m_index_data.push_back(new_index_data[i] + static_cast<uint32_t>(m_vertex_count / 
+			m_vertex_size));
 	}
 
 	//// Buffers vertex-data
@@ -313,7 +323,8 @@ void tilia::gfx::Batch::Render()
 		}
 
 		// Draws stuff
-		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, nullptr));
+		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+			nullptr));
 	}
 	else
 	{
@@ -326,12 +337,14 @@ void tilia::gfx::Batch::Render()
 		//GL_CALL(glCullFace(GL_FRONT));
 
 		// Draws stuff
-		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, nullptr));
+		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+			nullptr));
 
 		//GL_CALL(glCullFace(GL_BACK));
 
 		//// Draws stuff
-		//GL_CALL(glDrawElements(m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, nullptr));
+		//GL_CALL(glDrawElements(m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+		//nullptr));
 
 		GL_CALL(glDepthMask(true));
 
@@ -394,7 +407,8 @@ void tilia::gfx::Batch::Map_Data() const
 
 }
 
-void tilia::gfx::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data, std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end)
+void tilia::gfx::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data, 
+	std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end)
 {
 
 	const size_t seq_length{ 6 };
@@ -418,7 +432,8 @@ void tilia::gfx::Batch::Sort_Mesh_Data(const std::vector<float>& vertex_data, st
 			if (used_vertices.find(index_data[i + j]) == used_vertices.end()) {
 				for (size_t k = start; k <= end; k++)
 				{
-					length += fabs(vertex_data[(index_data[i + j] * m_vertex_size) + k] - m_camera_pos[static_cast<glm::vec3::length_type>(k - start)]);
+					length += fabs(vertex_data[(index_data[i + j] * m_vertex_size) + k] - 
+						m_camera_pos[static_cast<glm::vec3::length_type>(k - start)]);
 				}
 				used_vertices[index_data[i + j]] = true;
 			}
@@ -484,13 +499,16 @@ void tilia::gfx::Batch::Set_Vertex_Attribs() const
 	for (size_t i = 0; i < attrib_count; i++)
 	{
 		// If there only is one stride, sets same for all
-		int32_t stride{ (m_vertex_info.strides.size() > 1) ? m_vertex_info.strides[i] : m_vertex_info.strides[0] };
+		int32_t stride{ (m_vertex_info.strides.size() > 1) ? m_vertex_info.strides[i] 
+			: m_vertex_info.strides[0] };
 
-		const void* offset{ reinterpret_cast<const void*>(static_cast<int64_t>(m_vertex_info.offsets[i] * sizeof(float))) };
+		const void* offset{ reinterpret_cast<const void*>(static_cast<int64_t>(
+			m_vertex_info.offsets[i] * sizeof(float))) };
 		
 		// Sets attributes
 		GL_CALL(glEnableVertexAttribArray(static_cast<int32_t>(i)));
-		GL_CALL(glVertexAttribPointer(static_cast<int32_t>(i), m_vertex_info.sizes[i], GL_FLOAT, GL_FALSE, stride * sizeof(float),
+		GL_CALL(glVertexAttribPointer(static_cast<int32_t>(i), m_vertex_info.sizes[i], GL_FLOAT, 
+			GL_FALSE, stride * sizeof(float),
 			offset));
 	}
 
@@ -503,10 +521,11 @@ bool tilia::gfx::Batch::Check_Mesh(std::weak_ptr<Mesh_Data> mesh_data) const
 {
 	std::shared_ptr<Mesh_Data> temp{ mesh_data };
 	// Checks if vertex count is too big
-	if ((m_vertex_count / m_vertex_size) + (temp->vertex_data->size() / temp->vertex_size) > *enums::Misc::Max_Vertices)
+	if ((m_vertex_count / m_vertex_size) + (temp->vertex_data->size() / temp->vertex_size) > 
+		*enums::Batch_Limits::Max_Vertices)
 		return false;
 	// Checks if index count is too big
-	if (m_index_count + temp->indices->size()    > *enums::Misc::Max_Indices)
+	if (m_index_count + temp->indices->size()    > *enums::Batch_Limits::Max_Indices)
 		return false;
 	// Checks if texture count is too big
 	if (m_texture_count + temp->textures->size() > utils::Get_Max_Textures())

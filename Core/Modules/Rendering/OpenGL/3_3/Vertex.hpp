@@ -1,6 +1,7 @@
 /*****************************************************************//**
  * @file   Vertex.h
- * @brief  Declares and defines a @Vertex struct that will hold the basic information of a vertex used to draw meshes.
+ * @brief  Declares and defines a @Vertex struct that will hold the basic information of a vertex
+ * used to draw meshes.
  * 
  * @define TILIA_VERTEX_H
  * 
@@ -14,8 +15,8 @@
  * @date   15/05/2022
  *********************************************************************/
 
-#ifndef TILIA_VERTEX_H
-#define TILIA_VERTEX_H
+#ifndef TILIA_OPENGL_3_3_VERTEX_HPP
+#define TILIA_OPENGL_3_3_VERTEX_HPP
 
 // Standard
 #include <array>
@@ -62,4 +63,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_VERTEX_HPP

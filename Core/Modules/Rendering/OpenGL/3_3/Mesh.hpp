@@ -1,6 +1,7 @@
 /*****************************************************************//**
  * @file   Mesh.h
- * @brief  A mesh which will be given to the @Renderer. It will hold information like the vertices and indices.
+ * @brief  A mesh which will be given to the @Renderer. It will hold information like the vertices
+ * and indices.
  * 
  * Standard:
  * @include <vector>
@@ -18,20 +19,20 @@
  * @date   28/05/2022
  *********************************************************************/
 
-#ifndef TILIA_MESH_H
-#define TILIA_MESH_H
+#ifndef TILIA_OPENGL_3_3_MESH_HPP
+#define TILIA_OPENGL_3_3_MESH_HPP
 
 // Standard
 #include <vector>
 
 // Headers
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_VERTEX_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_2D_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_SHADER_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_VERTEX_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_INCLUDE
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
+#include TILIA_LOGGING_INCLUDE
 
 namespace tilia {
 
@@ -86,9 +87,10 @@ namespace tilia {
 		};
 
 		/**
-		 * @brief A mesh class which can be given to the Renderer. Takes in a vertex size as a template 
-		 * argument. This decides the amount of floats in each vertex. It holds information about 
-		 * vertices, vertex layout, indices, textures, a shader, the primitve, and the polygon mode.
+		 * @brief A mesh class which can be given to the Renderer. Takes in a vertex size as a
+		 * template argument. This decides the amount of floats in each vertex. It holds
+		 * information about vertices, vertex layout, indices, textures, a shader, the primitve,
+		 * and the polygon mode.
 		 */
 		template<size_t vert_size>
 		class Mesh {
@@ -103,7 +105,8 @@ namespace tilia {
 			 * 
 			 * @param texture - The texture to be added.
 			 */
-			inline void Add_Texture(std::weak_ptr<Texture> texture) { m_textures.push_back(texture); }
+			inline void Add_Texture(std::weak_ptr<Texture> texture) {
+				m_textures.push_back(texture); }
 			/**
 			 * @brief Removes the texture from the m_textures vector.
 			 * 
@@ -153,7 +156,8 @@ namespace tilia {
 			 * @param shader_data - The new shader data which m_shader_data is set to.
 			 */
 			inline auto Set_Shader_Data() {
-				//return [this](std::weak_ptr<Shader_Data> shader_data) { m_shader_data = shader_data; };
+				//return [this](std::weak_ptr<Shader_Data> shader_data) { m_shader_data =
+				//shader_data; };
 			}
 			/**
 			 * @brief Gets the shader data.
@@ -165,7 +169,8 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Set m_transparent. It will tell the renderer to render this mesh with transparency.
+			 * @brief Set m_transparent. It will tell the renderer to render this mesh with
+			 * transparency.
 			 *
 			 * @param transparent - Set m_transparent to this.
 			 */
@@ -280,13 +285,15 @@ namespace tilia {
 			/**
 			 * @brief Sets the values used in the stencil func function.
 			 * 
-			 * @param face - The face to affect with the stencil func, the comparison value and the mask.
+			 * @param face - The face to affect with the stencil func, the comparison value and
+			 * the mask.
 			 * @param stencil_func - The stencil func to be used.
 			 * @param compare_stencil_value - The comparison value to be used.
 			 * @param compare_stencil_mask - The comparison mask to be used.
 			 */
 			inline auto Set_Stencil_Func() {
-				return [this](const enums::Face& face, const enums::Test_Func& stencil_func, const uint8_t& compare_stencil_value, const uint8_t& compare_stencil_mask)
+				return [this](const enums::Face& face, const enums::Test_Func& stencil_func, 
+					const uint8_t& compare_stencil_value, const uint8_t& compare_stencil_mask)
 				{ 
 					if (face == enums::Face::Front)
 					{
@@ -329,11 +336,13 @@ namespace tilia {
 			 * 
 			 * @param face     - The face for the tests to affect
 			 * @param action_1 - The action to take if the stencil test fails.
-			 * @param action_2 - The action to take if the stencil test passes but the depth test fails.
+			 * @param action_2 - The action to take if the stencil test passes but the depth test
+			 * fails.
 			 * @param action_3 - The action to take if both the stencil- and depth test passes.
 			 */
 			inline auto Set_Stencil_Op() {
-				return [this](const enums::Face& face, const enums::Test_Action& action_1, const enums::Test_Action& action_2, const enums::Test_Action& action_3)
+				return [this](const enums::Face& face, const enums::Test_Action& action_1, 
+					const enums::Test_Action& action_2, const enums::Test_Action& action_3)
 				{
 					if (face == enums::Face::Front)
 					{
@@ -450,7 +459,8 @@ namespace tilia {
 				{
 					m_mesh_data = std::make_shared<Mesh_Data>();
 					m_mesh_data->vertex_size = vert_size;
-					m_mesh_data->vertex_data = static_cast<std::vector<float>*>(static_cast<void*>(&vertices));
+					m_mesh_data->vertex_data = 
+						static_cast<std::vector<float>*>(static_cast<void*>(&vertices));
 					m_mesh_data->indices = &indices;
 					// Todo: Fix
 					m_mesh_data->shader = &m_shader;
@@ -479,7 +489,8 @@ namespace tilia {
 
 			bool m_transparent{ false }; // Wheter or not the mesh is transparent.
 
-			std::vector<std::weak_ptr<Texture>> m_textures{}; // A vector of all of the textures used in the mesh. 
+			std::vector<std::weak_ptr<Texture>> m_textures{}; // A vector of all of the textures
+			// used in the mesh. 
 
 			int32_t m_texture_index_offset{ -1 }; // The offset to the texture index.
 
@@ -490,13 +501,16 @@ namespace tilia {
 
 			//std::weak_ptr<Shader_Data> m_shader_data{}; // The shader data of the mesh.
 
-			enums::Primitive m_primitive{ enums::Primitive::Points }; // The primitve this mesh should be drawn with
+			enums::Primitive m_primitive{ enums::Primitive::Points }; // The primitve this mesh
+			// should be drawn with
 
-			enums::Polymode m_polymode{ enums::Polymode::Fill }; // The polymode this mesh should be drawn with
+			enums::Polymode m_polymode{ enums::Polymode::Fill }; // The polymode this mesh should
+			// be drawn with
 
 			enums::Face m_cull_face{ enums::Face::None }; // The face to be culled
 
-			enums::Test_Func m_depth_func{ enums::Test_Func::Less }; // The depth func this mesh should be drawn with
+			enums::Test_Func m_depth_func{ enums::Test_Func::Less }; // The depth func this mesh
+			// should be drawn with
 
 			std::shared_ptr<Mesh_Data> m_mesh_data{}; // The Mesh_Data of the mesh
 
@@ -504,14 +518,18 @@ namespace tilia {
 
 			// Stencil test values
 
-			std::pair<uint8_t, uint8_t> m_stencil_masks{ 0xFF, 0xFF }; // The mask values used when applying new stencil buffer value
+			std::pair<uint8_t, uint8_t> m_stencil_masks{ 0xFF, 0xFF }; // The mask values used
+			// when applying new stencil buffer value
 
 			// The function which will be used to compare the stencil values
-			std::pair<enums::Test_Func, enums::Test_Func> m_stencil_funcs{ enums::Test_Func::None, enums::Test_Func::None };
+			std::pair<enums::Test_Func, enums::Test_Func> m_stencil_funcs{ enums::Test_Func::None, 
+				enums::Test_Func::None };
 
-			std::pair<uint8_t, uint8_t> m_compare_s_values{ 0x00, 0x00 }; // The value to compare against in the stencil test
+			std::pair<uint8_t, uint8_t> m_compare_s_values{ 0x00, 0x00 }; // The value to compare
+			// against in the stencil test
 
-			// The mask value used when comparing between the previous stencil value and the comparison value
+			// The mask value used when comparing between the previous stencil value and the
+			// comparison value
 			std::pair<uint8_t, uint8_t> m_compare_s_masks{ 0xFF, 0xFF };
 
 			// The actions to take wheter or not different tests passes or fails. The Tests are: 
@@ -530,4 +548,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_MESH_HPP

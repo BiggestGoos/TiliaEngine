@@ -15,15 +15,16 @@
  * @date   12/07/2022
  *************************************************************************************************/
 
-#ifndef TILIA_FILE_SYSTEM_HPP
-#define TILIA_FILE_SYSTEM_HPP
+#ifndef TILIA_WINDOWS_FILE_SYSTEM_HPP
+#define TILIA_WINDOWS_FILE_SYSTEM_HPP
 
 // Standard
 #include <cstdint>
 #include <string>
 
 // Tilia
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -52,8 +53,9 @@ namespace tilia {
              * @exception                      Loaded width, height, or number of color channels is
              *                                 equel to zero.
              */
-            std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
-                                const std::int32_t& desired_color_channels, const bool& flip_image_y);
+            std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, 
+                std::int32_t& height, std::int32_t& color_channels, 
+                const std::int32_t& desired_color_channels, const bool& flip_image_y);
             /**
              * @brief Loads in the file from the given file path.
              * 
@@ -73,4 +75,4 @@ namespace tilia {
 
 } // tilia
 
-#endif // TILIA_FILE_SYSTEM_HPP
+#endif // TILIA_WINDOWS_FILE_SYSTEM_HPP

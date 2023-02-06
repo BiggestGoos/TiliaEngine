@@ -4,31 +4,33 @@
 #include <iostream>
 
 // Headers
+#include "Cube_Map_Data.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP_INCLUDE
-#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
 
-tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(const Cube_Map_Data& other) noexcept
+tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(const Cube_Map_Data& other) 
+noexcept
 {
     // Self check
     if (&other == this)
         return *this;
 
     // Copies the data for each side.
-    constexpr std::size_t side_count{ *enums::Misc::Cube_Sides };
+    constexpr std::size_t side_count{ *enums::Geometry_Features::Cube_Faces };
     for (std::size_t i = 0; i < side_count; i++)
     {
         this->sides[i].file_path = other.sides[i].file_path;
         // If there is any, copies the data of that side
         if (other.sides[i].texture_data) {
-            uint32_t byte_count{ static_cast<uint32_t>((powf(static_cast<float>(this->size), 2.0f) *
-            utils::Get_Color_Format_Count(static_cast<uint32_t>(*other.sides[i].data_color_format)))) };
+            uint32_t byte_count{ static_cast<uint32_t>((powf(static_cast<float>(this->size), 2.0f) 
+                * utils::Get_Color_Format_Count(
+                static_cast<uint32_t>(*other.sides[i].data_color_format)))) };
             this->Copy_Data(i, other.sides[i].texture_data.get(), byte_count);
         }
         this->sides[i].color_format = other.sides[i].color_format;
@@ -52,7 +54,7 @@ tilia::gfx::Cube_Map_Data& tilia::gfx::Cube_Map_Data::operator=(Cube_Map_Data&& 
         return *this;
 
     // Moves the data for each side.
-    constexpr std::size_t side_count{ *enums::Misc::Cube_Sides };
+    constexpr std::size_t side_count{ *enums::Geometry_Features::Cube_Faces };
     for (std::size_t i = 0; i < side_count; i++)
     {
         this->sides[i].file_path = std::move(other.sides[i].file_path);
@@ -91,7 +93,8 @@ void tilia::gfx::Cube_Map_Data::Reload(const std::size_t& index)
     // Loads in the data from the stored path with the given index
     if (this->sides[index].file_path != "") {
         std::int32_t temp{}, format{};
-        this->sides[index].texture_data.reset(file_system.Load_Image(this->sides[index].file_path.c_str(),
+        this->sides[index].texture_data.reset(file_system.Load_Image(
+            this->sides[index].file_path.c_str(),
             temp, temp, format, 0, true));
         this->sides[index].data_color_format = utils::Get_Data_Color_Format(format);
     }
@@ -103,7 +106,8 @@ void tilia::gfx::Cube_Map_Data::Reload(const std::size_t& index)
         e.Add_Message(
             "Failed to reload data"
             "\n>>> Side: %v"
-        )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(index)));
+        )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
+            static_cast<uint32_t>(index)));
 
         throw e;
 
@@ -115,12 +119,13 @@ void tilia::gfx::Cube_Map_Data::Reload()
 {
 
     // Loads in the data from the stored paths
-    for (std::size_t i = 0; i < *enums::Misc::Cube_Sides; i++)
+    for (std::size_t i = 0; i < *enums::Geometry_Features::Cube_Faces; i++)
     {
 
         if (this->sides[i].file_path != "") {
             int32_t format{};
-            this->sides[i].texture_data.reset(file_system.Load_Image(this->sides[i].file_path.c_str(),
+            this->sides[i].texture_data.reset(file_system.Load_Image(
+                this->sides[i].file_path.c_str(),
                 this->size, this->size, format, 0, true));
             this->sides[i].data_color_format = utils::Get_Data_Color_Format(format);
         }
@@ -132,7 +137,8 @@ void tilia::gfx::Cube_Map_Data::Reload()
             e.Add_Message(
                 "Failed to reload data"
                 "\n>>> Side: %v"
-            )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<uint32_t>(i)));
+            )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
+                static_cast<uint32_t>(i)));
 
             throw e;
 
@@ -142,12 +148,15 @@ void tilia::gfx::Cube_Map_Data::Reload()
 
 }
 
-void tilia::gfx::Cube_Map_Data::Copy_Data(const std::size_t& index, uint8_t* texture_data, uint32_t byte_count)
+void tilia::gfx::Cube_Map_Data::Copy_Data(const std::size_t& index, uint8_t* texture_data, 
+    uint32_t byte_count)
 {
     if (!byte_count) {
-        // Calculates the byte count by taking the square of the size and multiplying by the number of color channels.
+        // Calculates the byte count by taking the square of the size and multiplying by the number
+        // of color channels.
         byte_count = static_cast<uint32_t>((powf(static_cast<float>(this->size), 2.0f) *
-            utils::Get_Color_Format_Count(static_cast<uint32_t>(*this->sides[index].color_format))));
+            utils::Get_Color_Format_Count(
+                static_cast<uint32_t>(*this->sides[index].color_format))));
     }
 
     // Allocates memory of size byte count and then copies the given data to that memory location.

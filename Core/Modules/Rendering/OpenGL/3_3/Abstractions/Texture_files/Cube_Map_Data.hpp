@@ -7,8 +7,8 @@
  * @date   06/09/2022
  *************************************************************************************************/
 
-#ifndef TILIA_CUBE_MAP_DATA_HPP
-#define TILIA_CUBE_MAP_DATA_HPP
+#ifndef TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP
+#define TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP
 
  // Standard
 #include <array>
@@ -16,7 +16,9 @@
 #include <string>
 
 // Tilia
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#define TILIA_INCLUDE_OPENGL_3_3_CONSTANTS
+#include TILIA_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -38,19 +40,23 @@ namespace tilia {
                 // The texture data.
                 std::unique_ptr<uint8_t[]>                  texture_data{};
                 // The color format.
-                enums::Color_Format	                        color_format{ enums::Color_Format::RGBA8 };
+                enums::Color_Format	                        color_format{ 
+                    enums::Color_Format::RGBA8 };
                 // The color format of the data.
-                enums::Data_Color_Format	                data_color_format{ enums::Data_Color_Format::None };
+                enums::Data_Color_Format	                data_color_format{ 
+                    enums::Data_Color_Format::None };
                 
             };
             // The data for all of the sides of a cube map.
-            std::array<Cube_Side, *enums::Misc::Cube_Sides> sides;
+            std::array<Cube_Side, *enums::Geometry_Features::Cube_Faces> sides;
             // The size in texels of each side.
             std::int32_t							        size{};
             // The filtering mode for minification.
-            enums::Filter_Mode				                filter_min{ enums::Filter_Mode::Point };
+            enums::Filter_Mode				                filter_min{ 
+                enums::Filter_Mode::Point };
             // The filtering mode for magnification.
-            enums::Filter_Mode				                filter_mag{ enums::Filter_Mode::Point };
+            enums::Filter_Mode				                filter_mag{ 
+                enums::Filter_Mode::Point };
             // The wrapping mode for the horizontal/x axis.
             enums::Wrap_Mode				                wrap_s{ enums::Wrap_Mode::Repeat };
             // The wrapping mode for the vertical/y axis.
@@ -59,14 +65,16 @@ namespace tilia {
             enums::Wrap_Mode				                wrap_r{ enums::Wrap_Mode::Repeat };
 
             /**
-             * @brief Copy-assignment. Shallow copies everything except for the data of all the sides. It will instead be reset to a new pointer and then have the data copied over.
+             * @brief Copy-assignment. Shallow copies everything except for the data of all the
+             * sides. It will instead be reset to a new pointer and then have the data copied over.
              *
              * @param other - The Cube_Map_Data for which to copy from.
              */
             Cube_Map_Data& operator=(const Cube_Map_Data& other) noexcept;
 
             /**
-             * @brief Move-assignment. Copies everything except for the data of all the sides. It will instead be reset to the pointer of the other data.
+             * @brief Move-assignment. Copies everything except for the data of all the sides. It
+             * will instead be reset to the pointer of the other data.
              *
              * @param other - The Cube_Map_Data for which to move from.
              */
@@ -89,7 +97,8 @@ namespace tilia {
             Cube_Map_Data(Cube_Map_Data&& other) noexcept;
 
             /**
-             * @brief Reloads the texture data of the side with the given index with the path of the index.
+             * @brief Reloads the texture data of the side with the given index with the path of
+             * the index.
              *
              * @param index - The index of the side to reload the data of.
              */
@@ -115,4 +124,4 @@ namespace tilia {
 
 } // tilia
 
-#endif // TILIA_CUBE_MAP_DATA_HPP
+#endif // TILIA_OPENGL_3_3_CUBE_MAP_DATA_HPP

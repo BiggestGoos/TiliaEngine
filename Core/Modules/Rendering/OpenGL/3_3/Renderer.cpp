@@ -16,8 +16,7 @@
 #include <map>
 
 // Headers
-#include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_RENDERER_HPP_INCLUDE
+#include "Renderer.hpp"
 
 #include <iostream>
 
@@ -44,7 +43,8 @@ void tilia::gfx::Renderer::Render()
 
 				for (size_t k = start; k <= end; k++)
 				{
-					total_length += fabs((*m_mesh_data[i].lock()->vertex_data)[j + k] - m_camera_pos[static_cast<glm::vec3::length_type>(k - start)]);
+					total_length += fabs((*m_mesh_data[i].lock()->vertex_data)[j + k] - 
+						m_camera_pos[static_cast<glm::vec3::length_type>(k - start)]);
 				}
 
 			}
@@ -110,7 +110,8 @@ void tilia::gfx::Renderer::Render()
 	for (size_t i = 0; i < batch_count; i++)
 	{
 		std::cout << "Mesh count: " << m_batches[i]->Get_Mesh_Count() 
-			<< " <<>> Vertex count: " << m_batches[i]->Get_Vertex_Count() / m_batches[i]->Get_Vertex_Size()
+			<< " <<>> Vertex count: " << m_batches[i]->Get_Vertex_Count() / 
+			m_batches[i]->Get_Vertex_Size()
 			<< " <<>> Index count: " << m_batches[i]->Get_Index_Count() << '\n';
 		m_batches[i]->m_camera_pos = m_camera_pos;
 		m_batches[i]->Render();

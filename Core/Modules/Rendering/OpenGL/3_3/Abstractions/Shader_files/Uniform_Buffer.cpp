@@ -5,11 +5,11 @@
 #include <iostream>
 
 // Tilia
+#include "Uniform_Buffer.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_UNIFORM_BUFFER_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
 
 // Defines static variables
 std::uint32_t tilia::gfx::Uniform_Buffer::s_bound_ID{};
@@ -36,7 +36,8 @@ static T align_to(const T& to_round, const U& multiple_of)
     return static_cast<T>(((to_round + multiple_of - 1) / multiple_of) * multiple_of);
 }
 
-tilia::gfx::Uniform_Buffer::Uniform_Buffer(const Uniform_Buffer& other, const std::int32_t& bind_point)
+tilia::gfx::Uniform_Buffer::Uniform_Buffer(const Uniform_Buffer& other, 
+    const std::int32_t& bind_point)
     : m_variables{ other.m_variables }
 {
     // We call the init function to generate openGL resources
@@ -46,7 +47,8 @@ tilia::gfx::Uniform_Buffer::Uniform_Buffer(const Uniform_Buffer& other, const st
     Allocate_Data(other.m_block_size);
 }
 
-tilia::gfx::Uniform_Buffer::Uniform_Buffer(Uniform_Buffer&& other, const std::int32_t& bind_point) noexcept
+tilia::gfx::Uniform_Buffer::Uniform_Buffer(Uniform_Buffer&& other, 
+    const std::int32_t& bind_point) noexcept
     : m_ID{ other.m_ID },
       m_bind_point{ other.m_bind_point },
       m_variables{ std::move(other.m_variables) },
@@ -67,7 +69,8 @@ tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(const Uniform_
     // Self check
     if (this == &other)
         return *this;
-    // We choose to just copy variables as the other data should not be copied for the fact that then we would share openGL resources with other
+    // We choose to just copy variables as the other data should not be copied for the fact that
+    // then we would share openGL resources with other
     m_variables = other.m_variables;
     // We allocate data and store the size
     Allocate_Data(other.m_block_size);
@@ -85,7 +88,8 @@ tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(Uniform_Buffer
     m_ID = other.m_ID;
     // We set the other id to 0 since we don't want shared openGL data between two uniform buffers
     other.m_ID = 0;
-    // We don't need to bind again since if the other one was bound then we would be bound now since we took it's openGL id.
+    // We don't need to bind again since if the other one was bound then we would be bound now
+    // since we took it's openGL id.
     m_bind_point = other.m_bind_point;
     // We move other variable data to ours
     m_variables = std::move(other.m_variables);
@@ -97,7 +101,9 @@ tilia::gfx::Uniform_Buffer& tilia::gfx::Uniform_Buffer::operator=(Uniform_Buffer
     return *this;
 }
 
-void tilia::gfx::Uniform_Buffer::Init(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing, const std::int32_t& bind_point)
+void tilia::gfx::Uniform_Buffer::Init(
+    std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, 
+    const bool& indexing, const std::int32_t& bind_point)
 {
     // The type of elements in the given ones
     using T = decltype(block_variables)::value_type;
@@ -122,7 +128,8 @@ void tilia::gfx::Uniform_Buffer::Terminate()
     if (m_ID <= 0)
     {
         utils::Tilia_Exception e{ LOCATION };
-        e.Add_Message("Failed to terminate uniform buffer due to the fact that it was never initialized or something went very wrong");
+        e.Add_Message("Failed to terminate uniform buffer due to the fact that it was never"
+            "initialized or something went very wrong");
         throw e;
     }
     // We delete the underlying ubo
@@ -131,7 +138,9 @@ void tilia::gfx::Uniform_Buffer::Terminate()
     Clear();
 }
 
-void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
+void tilia::gfx::Uniform_Buffer::Reset(
+    std::initializer_list<std::pair<std::string, GLSL_Variable>> block_variables, 
+    const bool& indexing)
 {
     // The type of elements in the given ones
     using T = decltype(block_variables)::value_type;
@@ -140,9 +149,11 @@ void tilia::gfx::Uniform_Buffer::Reset(std::initializer_list<std::pair<std::stri
 }
 
 // The size of a vector4 is used to align things to its size
-static const std::size_t VEC4_SIZE{ (*tilia::enums::GLSL_Container_Type::Vector4 * tilia::utils::Get_GLSL_Scalar_Size(tilia::enums::GLSL_Scalar_Type::Float)) };
+static const std::size_t VEC4_SIZE{ (*tilia::enums::GLSL_Container_Type::Vector4 * 
+    tilia::utils::Get_GLSL_Scalar_Size(tilia::enums::GLSL_Scalar_Type::Float)) };
 
-void tilia::gfx::Uniform_Buffer::Reset(std::vector<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
+void tilia::gfx::Uniform_Buffer::Reset(
+    std::vector<std::pair<std::string, GLSL_Variable>> block_variables, const bool& indexing)
 {
     // We clear the old variables
     Clear();
@@ -150,12 +161,15 @@ void tilia::gfx::Uniform_Buffer::Reset(std::vector<std::pair<std::string, GLSL_V
     const std::size_t var_count{ block_variables.size() };
     for (std::size_t i{ 0 }; i < var_count; ++i)
     {
-        // We push (add) variable to storage which then allows for the setting of uniform data using the name
-        block_size = Push_Variable(block_size, std::move(block_variables[i].first), std::move(block_variables[i].second), indexing);
+        // We push (add) variable to storage which then allows for the setting of uniform data
+        // using the name
+        block_size = Push_Variable(block_size, std::move(block_variables[i].first), 
+            std::move(block_variables[i].second), indexing);
     }
     // Block size has to end in a multiple of a vector4
     block_size = align_to(block_size, VEC4_SIZE);
-    // We allocate data for our local buffer to be able to hold all of the uniform data of all of the variables by using the block size.
+    // We allocate data for our local buffer to be able to hold all of the uniform data of all of
+    // the variables by using the block size.
     Allocate_Data(block_size);
 
 }
@@ -252,7 +266,8 @@ void tilia::gfx::Uniform_Buffer::Rebind() {
 	s_bound_ID = 0;
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, const void* vs, const bool& delay, Byte* buffer)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::size_t& size, 
+    const void* vs, const bool& delay, Byte* buffer)
 {
     
     // If we decide to delay the upload to openGL then we just don't make the calls
@@ -287,7 +302,8 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
 
 }
 
-void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size_t& var_size, const void* vs, const bool& delay)
+void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size_t& var_size, 
+    const void* vs, const bool& delay)
 {
     // The offset to the start of the variable in the uniform block
     const std::size_t& start_offset{ m_variables[loc].first };
@@ -295,8 +311,11 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
     const GLSL_Variable& variable{ m_variables[loc].second };
     const std::size_t array_count{ variable.Get_Array_Count() };
     // The total size of the variable.   
-    const std::size_t total_variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * *variable.Get_Container_Type() * ((array_count)? array_count : 1) };
-    // Local variable data buffer which will help if uploading array or matrix in that it will reduce calls to openGL. Only needed if we don't already buffer everything to a local buffer with delay.
+    const std::size_t total_variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) 
+        * *variable.Get_Container_Type() * ((array_count)? array_count : 1) };
+    // Local variable data buffer which will help if uploading array or matrix in that it will
+    // reduce calls to openGL. Only needed if we don't already buffer everything to a local buffer
+    // with delay.
     std::unique_ptr<Byte[]> variable_data{ nullptr };
     if (!delay)
         variable_data = std::make_unique<Byte[]>(total_variable_size);
@@ -322,7 +341,8 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
         // The size in bytes between each element (vector4)
         const std::size_t stride{ VEC4_SIZE };
         // However many elements (vector4) there are in the matrix
-        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / *enums::GLSL_Container_Type::Vector4) };
+        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / 
+            *enums::GLSL_Container_Type::Vector4) };
         for (std::size_t u{ 0 }; u < element_count; ++u)
         {
             // If variable data nullptr then we just set uniforms normally
@@ -330,12 +350,15 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
             {
                 // Sets the uniform data for the element of the given matrix
                 // Also unbinds if just bound the ubo
-                Uniform(start_offset + stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), delay);
+                Uniform(start_offset + stride * u, var_size, 
+                    static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), delay);
             }
             else
             {
-                // Sets the uniform data for the element of the given matrix to the local buffer variable data
-                Uniform(stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * u), true, variable_data.get());
+                // Sets the uniform data for the element of the given matrix to the local buffer
+                // variable data
+                Uniform(stride * u, var_size, static_cast<const void*>(static_cast<const char*>(vs) 
+                    + var_size * u), true, variable_data.get());
             }
         }
     }
@@ -352,12 +375,15 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
             {
                 // Sets the uniform data for the element of the given array
                 // Also unbinds if just bound the ubo
-                Uniform(start_offset + stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), delay);
+                Uniform(start_offset + stride * i, var_size, 
+                    static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), delay);
             }
             else
             {
-                // Sets the uniform data for the element of the given array to the local buffer variable data
-                Uniform(stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) + var_size * i), true, variable_data.get());
+                // Sets the uniform data for the element of the given array to the local buffer
+                // variable data
+                Uniform(stride * i, var_size, static_cast<const void*>(static_cast<const char*>(vs) 
+                    + var_size * i), true, variable_data.get());
             }
             
             // Early return
@@ -367,7 +393,8 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
             continue;
         }
         // The amount of elements in the matrix
-        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / *enums::GLSL_Container_Type::Vector4) };
+        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / 
+            *enums::GLSL_Container_Type::Vector4) };
         for (std::size_t u{ 0 }; u < element_count; ++u)
         {
             // If variable data nullptr then we just set uniforms normally
@@ -375,17 +402,23 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::string& loc, const std::size
             {
                 // Sets the uniform data of the matrix element of the array
                 // Also unbinds if just bound the ubo
-                Uniform(start_offset + (stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u)), delay);
+                Uniform(start_offset + (stride * element_count * i) + (stride * u), var_size, 
+                    static_cast<const void*>(static_cast<const char*>(vs) + (var_size * 
+                        element_count * i) + (var_size * u)), delay);
             }
             else
             {
-                // Sets the uniform data of the matrix element of the array to the local buffer variable data
-                Uniform((stride * element_count * i) + (stride * u), var_size, static_cast<const void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + (var_size * u)), true, variable_data.get());
+                // Sets the uniform data of the matrix element of the array to the local buffer
+                // variable data
+                Uniform((stride * element_count * i) + (stride * u), var_size, static_cast<const 
+                    void*>(static_cast<const char*>(vs) + (var_size * element_count * i) + 
+                        (var_size * u)), true, variable_data.get());
             }
 
         }
     }
-    // If delay was false and we buffered data to our local buffer then we need to finally upload it
+    // If delay was false and we buffered data to our local buffer then we need to finally upload
+    // it
     if (!delay)
     {
         Uniform(start_offset, total_variable_size, variable_data.get(), false);
@@ -417,11 +450,13 @@ void tilia::gfx::Uniform_Buffer::Allocate_Data(const std::size_t& block_size)
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 }
 
-std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, const std::string& name, const GLSL_Variable& variable, const bool& indexing)
+std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, 
+    const std::string& name, const GLSL_Variable& variable, const bool& indexing)
 {
 
     // Aligns the block size to the alignment of the given variable
-    block_size = align_to(block_size, utils::Get_GLSL_Container_Alignment(variable.Get_Container_Type()) * utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()));
+    block_size = align_to(block_size, utils::Get_GLSL_Container_Alignment(
+        variable.Get_Container_Type()) * utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()));
 
     const std::size_t array_count{ variable.Get_Array_Count() };
     // If variable is an array then aligns the block size to the alignment of a vector4
@@ -430,7 +465,8 @@ std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, co
     // Stores block size and variable with the name
     m_variables[name] = std::make_pair(block_size, variable);
     // The size of the variable or if array then size of each element
-    const std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * *variable.Get_Container_Type() };
+    const std::size_t variable_size{ utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * 
+        *variable.Get_Container_Type() };
 
     // If the given variable is an array
     if (array_count)
@@ -448,14 +484,17 @@ std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, co
         {
             // Indexing name
             std::string new_name{ (std::stringstream() << name << '[' << i << ']').str() };
-            // Recursively pushes each element of the array with the indexing added at the end of the name
+            // Recursively pushes each element of the array with the indexing added at the end of 
+            // the name.
             // Block size is also increased with each call.
-            block_size = Push_Variable(block_size, new_name, GLSL_Variable(variable.Get_Scalar_Type(), variable.Get_Container_Type()), indexing);
+            block_size = Push_Variable(block_size, new_name, GLSL_Variable(
+                variable.Get_Scalar_Type(), variable.Get_Container_Type()), indexing);
             block_size = align_to(block_size, VEC4_SIZE);
         }
     }
     // If container type is vector
-    else if (*variable.Get_Container_Type() >= *enums::GLSL_Container_Type::Vector2 && *variable.Get_Container_Type() <= *enums::GLSL_Container_Type::Vector4)
+    else if (*variable.Get_Container_Type() >= *enums::GLSL_Container_Type::Vector2 && 
+        *variable.Get_Container_Type() <= *enums::GLSL_Container_Type::Vector4)
     {
         // If indexing is false then just adds total size of vector
         if (!indexing)
@@ -467,17 +506,22 @@ std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, co
         }
         // If indexing is true then adds extra variables with indexing attached
         // The number of elements in the vector
-        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type()) };
+        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type()) 
+        };
         for (std::size_t i{ 0 }; i < element_count; ++i)
         {
             // Two types of indexing names
-            std::string new_name_1{ (std::stringstream() << name << '.' << ((i != 3)? static_cast<char>('x' + i) : 'w')).str() },
+            std::string new_name_1{ (std::stringstream() << name << '.' << ((i != 3)? 
+                static_cast<char>('x' + i) : 'w')).str() },
                         new_name_2{ (std::stringstream() << name << '[' << i << ']').str() };
             std::size_t temp{ block_size };
-            // Recursively pushes each element of the vector with the indexing added at the end of the name
+            // Recursively pushes each element of the vector with the indexing added at the end of
+            // the name.
             // Block size is also increased with each call.
-            block_size = Push_Variable(block_size, new_name_1, GLSL_Variable(variable.Get_Scalar_Type(), enums::GLSL_Container_Type::Scalar), indexing);
-            Push_Variable(temp, new_name_2, GLSL_Variable(variable.Get_Scalar_Type(), enums::GLSL_Container_Type::Scalar), indexing);
+            block_size = Push_Variable(block_size, new_name_1, GLSL_Variable(
+                variable.Get_Scalar_Type(), enums::GLSL_Container_Type::Scalar), indexing);
+            Push_Variable(temp, new_name_2, GLSL_Variable(variable.Get_Scalar_Type(), 
+                enums::GLSL_Container_Type::Scalar), indexing);
         }
     }
     // If container type is matrix
@@ -493,14 +537,17 @@ std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, co
         }
         // If indexing is true then adds extra variables with indexing attached
         // The number of elements (columns) in the matrix
-        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / *enums::GLSL_Container_Type::Vector4) };
+        const std::size_t element_count{ static_cast<std::size_t>(*variable.Get_Container_Type() / 
+            *enums::GLSL_Container_Type::Vector4) };
         for (std::size_t i{ 0 }; i < element_count; ++i)
         {
             // Indexing name
             std::string new_name{ (std::stringstream() << name << '[' << i << ']').str() };
-            // Recursively pushes each element as a vector4 of the matrix with the indexing added at the end of the name
+            // Recursively pushes each element as a vector4 of the matrix with the indexing added
+            // at the end of the name.
             // Block size is also increased with each call.
-            block_size = Push_Variable(block_size, new_name, GLSL_Variable(variable.Get_Scalar_Type(), enums::GLSL_Container_Type::Vector4), indexing);
+            block_size = Push_Variable(block_size, new_name, GLSL_Variable(
+                variable.Get_Scalar_Type(), enums::GLSL_Container_Type::Vector4), indexing);
             block_size = align_to(block_size, VEC4_SIZE);
         }
     }
@@ -508,7 +555,8 @@ std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, co
     else if (variable.Get_Container_Type() == enums::GLSL_Container_Type::Scalar)
     {
         // Adds size of variable to block size
-        block_size += utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * *variable.Get_Container_Type();
+        block_size += utils::Get_GLSL_Scalar_Size(variable.Get_Scalar_Type()) * 
+            *variable.Get_Container_Type();
     }
 
     // Returns the new block size

@@ -6,14 +6,16 @@
 #include <fstream>
 
 // Tilia
-#include "Core/Modules/File_System/Windows/File_System.hpp"
-#include "Core/Modules/Exceptions/Tilia_Exception.hpp"
+#include "File_System.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_TILIA_EXCEPTION_INCLUDE
 
 // Global File_System
 tilia::utils::File_System file_system{};
 
-std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path, std::int32_t& width, std::int32_t& height, std::int32_t& color_channels,
-											   const std::int32_t& desired_color_channels, const bool& flip_image_y)
+std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path, 
+	std::int32_t& width, std::int32_t& height, std::int32_t& color_channels, 
+	const std::int32_t& desired_color_channels, const bool& flip_image_y)
 {
 	// Stores the vertical flipping flag if it needs to be reset.
 	std::int32_t temp_flip_flag{ stbi__vertically_flip_on_load_global };

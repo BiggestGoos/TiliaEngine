@@ -8,8 +8,8 @@
  * @date   15/05/2022
  *************************************************************************************************/
 
-#ifndef TILIA_SHADER_HPP
-#define TILIA_SHADER_HPP
+#ifndef TILIA_OPENGL_3_3_SHADER_HPP
+#define TILIA_OPENGL_3_3_SHADER_HPP
 
 // Vendor
 #include "vendor/glm/include/glm/glm.hpp"
@@ -24,9 +24,9 @@
 #include <initializer_list>
 
 // Tilia
-#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_files/Shader_Part.hpp"
-#include "Core/Values/OpenGL/3_3/Utils.hpp"
-
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_SHADER_PART_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
 
 namespace tilia 
 {
@@ -43,7 +43,8 @@ namespace tilia
 			~Shader();
 
 			/**
-			 * @brief Copy-contructor which calls default construcotr and copies from given Shader_Data.
+			 * @brief Copy-contructor which calls default construcotr and copies from given
+			 * Shader_Data.
 			 *
 			 * @param other - The given Shader_Data
 			 */
@@ -52,7 +53,8 @@ namespace tilia
 				m_location_cache = other.m_location_cache;
 			}
 			/**
-			 * @brief Move-constructor which moves all resources from given Shader_Data and then leaves given Shader_Data useless.
+			 * @brief Move-constructor which moves all resources from given Shader_Data and then
+			 * leaves given Shader_Data useless.
 			 *
 			 * @param other
 			 */
@@ -85,7 +87,9 @@ namespace tilia
 				return *this;
 			}
 
-			void Init(std::initializer_list<std::weak_ptr<Shader_Part>> vertex_parts, std::initializer_list<std::weak_ptr<Shader_Part>> fragment_parts, std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts);
+			void Init(std::initializer_list<std::weak_ptr<Shader_Part>> vertex_parts, 
+				std::initializer_list<std::weak_ptr<Shader_Part>> fragment_parts, 
+				std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts);
 
 			void Add_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload = true);
 
@@ -95,7 +99,8 @@ namespace tilia
 
 			inline auto Get_ID() { return m_ID; }
 
-			void Bind_Uniform_Block(const std::string& block_name, const std::uint32_t& block_index);
+			void Bind_Uniform_Block(const std::string& block_name, 
+				const std::uint32_t& block_index);
 
 			/**
 			 * @brief Binds the shader.
@@ -122,14 +127,16 @@ namespace tilia
 			static void Rebind();
 
 			template<typename T,
-			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value 
+				|| std::is_same<std::uint32_t, T>::value>* = nullptr>
 			void Uniform(const std::string& loc, std::initializer_list<T> vs)
 			{
 				Uniform(loc, vs.begin(), vs.size());
 			}
 
 			template<typename T, glm::length_t size, glm::qualifier Q,
-			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value || std::is_same<std::uint32_t, T>::value>* = nullptr>
+			std::enable_if_t<std::is_same<float, T>::value || std::is_same<std::int32_t, T>::value 
+				|| std::is_same<std::uint32_t, T>::value>* = nullptr>
 			void Uniform(const std::string& loc, glm::vec<size, T, Q> v)
 			{
 				Uniform(loc, glm::value_ptr(v), size);
@@ -147,7 +154,8 @@ namespace tilia
 
 			void Uniform(const std::string& loc, const std::uint32_t* vs, const std::size_t& size);
 
-			void Uniform(const std::string& loc, const float* vs, const std::size_t& size_x, const std::size_t& size_y);
+			void Uniform(const std::string& loc, const float* vs, const std::size_t& size_x, 
+				const std::size_t& size_y);
 
 		private:
 
@@ -168,4 +176,4 @@ namespace tilia
 
 } // tilia
 
-#endif // TILIA_SHADER_HPP
+#endif // TILIA_OPENGL_3_3_SHADER_HPP

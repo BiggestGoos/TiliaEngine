@@ -1,5 +1,3 @@
-#define TILIA_UNIT_TEST 1
-
 #include "vendor/glad/include/glad/glad.h"
 #include "vendor/glfw/include/GLFW/glfw3.h"
 #undef APIENTRY
@@ -17,32 +15,26 @@
 
 #include "Values/Directories.hpp"
 
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_SHADER_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_SHADER_PART_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_2D_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_CUBE_MAP_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_BATCH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_RENDERER_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_MESH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_SHADER_DATA_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
-#include TILIA_TEMP_CAMERA_HPP_INCLUDE
-#include TILIA_TEMP_INPUT_HPP_INCLUDE
-#include TILIA_TEMP_LIMIT_FPS_HPP_INCLUDE
-#include TILIA_TEMP_STOPWATCH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UNIFORM_BUFFER_HPP_INCLUDE
-
-enum class test_enums {
-    elem_1,
-    elem_2,
-    elem_3
-};
-
-using type = __underlying_type(test_enums);
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_PART_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D_INCLUDE
+#include TILIA_OPENGL_3_3_CUBE_MAP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_OPENGL_3_3_BATCH_INCLUDE
+#include TILIA_OPENGL_3_3_RENDERER_INCLUDE
+#include TILIA_OPENGL_3_3_MESH_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_DATA_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
+#include TILIA_TEMP_CAMERA_INCLUDE
+#include TILIA_TEMP_INPUT_INCLUDE
+#include TILIA_TEMP_LIMIT_FPS_INCLUDE
+#include TILIA_TEMP_STOPWATCH_INCLUDE
+#include TILIA_OPENGL_3_3_UNIFORM_BUFFER_INCLUDE
+#include TILIA_CONSTANTS_INCLUDE
+#include TILIA_OPENGL_3_3_BUFFER_INCLUDE
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -98,41 +90,119 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 0
+#if 1
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
 
 int main(int argc, char* argv[])
 {
-    const int retval = Catch::Session().run(argc, argv);
-    std::cin.get();
+    
+    int retval{};
+
+    int w{};
+    std::cin >> w;
+
+    try
+    {
+
+        // glfw: initialize and configure
+            // ------------------------------
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // glfw window creation
+        // --------------------
+        GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (window == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        glfwMakeContextCurrent(window);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+        // tell GLFW to capture our mouse
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        input.Init(window);
+
+        glfwSwapInterval(0);
+
+        //glad: load all OpenGL function pointers
+        //---------------------------------------
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return -1;
+        }
+
+        retval = Catch::Session().run(argc, argv);
+
+        while (!glfwWindowShouldClose(window))
+        {
+            // input
+            // -----
+            processInput();
+
+
+
+            // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+            // -------------------------------------------------------------------------------
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+
+    }
+    catch (const utils::Tilia_Exception& e) {
+        std::cout << "\n<<<Tilia_Exception>>>\n";
+        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
+                     "File: " << e.Get_Origin_File() << '\n';
+        std::cout << e.what() << '\n';
+    }
+    catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
+    
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+
+    std::cin >> w;
+
     return retval;
 }
 
-void factorials_are_computed()
-{
-    REQUIRE(1 == 1);
-    REQUIRE(2 == 2);
-    REQUIRE(6 == 6);
-    REQUIRE(3628800 == 3628800);
+TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
+    tilia::gfx::OpenGL_3_3_Buffer_Test();
 }
 
-TEST_CASE("Factorials are computed", "[factorial]") {
-    factorials_are_computed();
-}
-
-void factorials_are_not_computed()
-{
-    REQUIRE_FALSE(2 == 1);
-    REQUIRE_FALSE(3 == 2);
-    REQUIRE_FALSE(7 == 6);
-    REQUIRE_FALSE(3628801 == 3628800);
-}
-
-TEST_CASE("Factorials are not computed", "[not_factorial]") {
-    factorials_are_not_computed();
-}
+//void factorials_are_computed()
+//{
+//    REQUIRE(1 == 1);
+//    REQUIRE(2 == 2);
+//    REQUIRE(6 == 6);
+//    REQUIRE(3628800 == 3628800);
+//}
+//
+//TEST_CASE("Factorials are computed", "[factorial]") {
+//    factorials_are_computed();
+//}
+//
+//void factorials_are_not_computed()
+//{
+//    REQUIRE_FALSE(2 == 1);
+//    REQUIRE_FALSE(3 == 2);
+//    REQUIRE_FALSE(7 == 6);
+//    REQUIRE_FALSE(3628801 == 3628800);
+//}
+//
+//TEST_CASE("Factorials are not computed", "[not_factorial]") {
+//    factorials_are_not_computed();
+//}
 
 #endif
 
@@ -519,7 +589,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
 
 int main()
 {

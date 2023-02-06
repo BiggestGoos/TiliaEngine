@@ -14,14 +14,16 @@
  * @date   15/05/2022
  *********************************************************************/
 
-#ifndef TILIA_UTILS_H
-#define TILIA_UTILS_H
+#ifndef TILIA_OPENGL_3_3_UTILS_HPP
+#define TILIA_OPENGL_3_3_UTILS_HPP
 
 // Standard
 #include <cstdint>
 
 // Headers
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#define TILIA_INCLUDE_OPENGL_3_3_CONSTANTS
+#include TILIA_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -60,4 +62,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_UTILS_HPP

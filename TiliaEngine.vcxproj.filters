@@ -942,13 +942,13 @@
     <ClInclude Include="vendor\Catch2\Catch2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Values\Enums.hpp">
+    <ClInclude Include="Core\Values\Constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Values\OpenGL\3_3\Utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Values\OpenGL\3_3\Enums.hpp">
+    <ClInclude Include="Core\Values\OpenGL\3_3\Constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Values\Directories.hpp">

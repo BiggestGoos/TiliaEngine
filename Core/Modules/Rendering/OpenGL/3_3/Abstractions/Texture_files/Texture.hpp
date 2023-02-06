@@ -17,8 +17,8 @@
  * @date   02/06/2022
  *********************************************************************/
 
-#ifndef TILIA_TEXTURE_H
-#define TILIA_TEXTURE_H
+#ifndef TILIA_OPENGL_3_3_TEXTURE_HPP
+#define TILIA_OPENGL_3_3_TEXTURE_HPP
 
 // Standard
 #include <stdint.h>
@@ -26,7 +26,8 @@
 #include <unordered_map>
 
 // Headers
-#include "Core/Values/OpenGL/3_3/Enums.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -78,7 +79,8 @@ namespace tilia {
 			 * 
 			 * @param texture_type - The type of texture to unbind.
 			 */
-			static void Unbind(const enums::Texture_Type& texture_type, const bool& save_id = false);
+			static void Unbind(const enums::Texture_Type& texture_type, 
+				const bool& save_id = false);
 
 			/**
 			 * @brief Binds the stored previously bound texture id.
@@ -106,7 +108,8 @@ namespace tilia {
 			 * @param filter_size - The size of filtering for which to set the mode of
 			 * @param filter_mode - The mode of filtreing for which to use for the size
 			 */
-			virtual void Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode) = 0;
+			virtual void Set_Filter(const enums::Filter_Size& filter_size, 
+				const enums::Filter_Mode& filter_mode) = 0;
 
 			/**
 			 * @brief Set wrapping for the given side
@@ -114,7 +117,8 @@ namespace tilia {
 			 * @param wrap_side - The side of which to set wrapping for
 			 * @param wrap_mode - The wrapping mode to set for the given side
 			 */
-			virtual void Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode) = 0;
+			virtual void Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
+				const enums::Wrap_Mode& wrap_mode) = 0;
 
 		protected:
 
@@ -129,9 +133,11 @@ namespace tilia {
 
 		private:
 
-			static std::unordered_map<enums::Texture_Type, uint32_t> s_bound_ID; // The stored perviously bound ids
+			static std::unordered_map<enums::Texture_Type, uint32_t> s_bound_ID; // The stored
+			// perviously bound ids
 
-			static std::unordered_map<enums::Texture_Type, uint32_t> s_previous_ID; // The previously bound ids
+			static std::unordered_map<enums::Texture_Type, uint32_t> s_previous_ID; // The
+			// previously bound ids
 
 			/**
 			 * @brief Gets the type of the texture as a string to be used for printing information.
@@ -146,4 +152,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_TEXTURE_HPP

@@ -7,13 +7,13 @@
 #include <iostream>
 
 // Headers
+#include "Cube_Map.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_CUBE_MAP_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
 
 tilia::gfx::Cube_Map::Cube_Map()
 {
@@ -49,7 +49,7 @@ void tilia::gfx::Cube_Map::Reload()
 
     Bind();
 
-    constexpr size_t cube_sides{ *enums::Misc::Cube_Sides };
+    constexpr size_t cube_sides{ *enums::Geometry_Features::Cube_Faces };
     for (size_t i = 0; i < cube_sides; i++)
     {
 
@@ -72,7 +72,8 @@ void tilia::gfx::Cube_Map::Reload()
                 )(m_ID)(m_cube_map_data.size)
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format))
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format))
-                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
+                    static_cast<int32_t>(i)))
                 (static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()));
 
             Rebind();
@@ -92,8 +93,10 @@ void tilia::gfx::Cube_Map::Reload()
         }
 
         // Sets filtering and wrapping modes
-        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, *m_cube_map_data.filter_min));
-        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, *m_cube_map_data.filter_mag));
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, 
+            *m_cube_map_data.filter_min));
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, 
+            *m_cube_map_data.filter_mag));
         GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, *m_cube_map_data.wrap_s));
         GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, *m_cube_map_data.wrap_t));
         GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, *m_cube_map_data.wrap_r));
@@ -122,7 +125,8 @@ void tilia::gfx::Cube_Map::Reload()
                 )(m_ID)
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format))
                 (utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format))
-                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)))
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
+                    static_cast<int32_t>(i)))
                 (m_cube_map_data.size)
                 (static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()))
                 (m_cube_map_data.sides[i].file_path);
@@ -141,7 +145,7 @@ void tilia::gfx::Cube_Map::Reload()
 
 void tilia::gfx::Cube_Map::Generate_Mipmaps()
 {
-    constexpr size_t cube_sides{ *enums::Misc::Cube_Sides };
+    constexpr size_t cube_sides{ *enums::Geometry_Features::Cube_Faces };
     for (size_t i = 0; i < cube_sides; i++)
     {
         if (!m_cube_map_data.sides[i].texture_data)
@@ -153,7 +157,8 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
                 "Cube map { ID: %v } could not generate mipmaps because of faulty data"
                 "\n>>> Side: %v"
                 )(m_ID)
-                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)));
+                (utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
+                    static_cast<int32_t>(i)));
 
             throw e;
 
@@ -176,7 +181,8 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
     Rebind();
 }
 
-void tilia::gfx::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
+void tilia::gfx::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size, 
+    const enums::Filter_Mode& filter_mode)
 {
     Unbind(true);
     try
@@ -212,7 +218,8 @@ void tilia::gfx::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size, con
     }
 }
 
-void tilia::gfx::Cube_Map::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
+void tilia::gfx::Cube_Map::Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
+    const enums::Wrap_Mode& wrap_mode)
 {
     Unbind(true);
     try

@@ -1,6 +1,7 @@
-/*****************************************************************//**
+/**************************************************************************************************
  * @file   Texture.cpp
- * @brief  Defines all non-inline member functions and constructors/destructors of the @Texture class
+ * @brief  Defines all non-inline member functions and constructors/destructors of the @Texture
+ * class
  * 
  * Dependencies:
  * @include "dependencies/glad/include/glad/glad.h"
@@ -16,7 +17,7 @@
  * 
  * @author Gustav Fagerlind
  * @date   02/06/2022
- *********************************************************************/
+ *************************************************************************************************/
 
 // Dependencies
 #include "vendor/glad/include/glad/glad.h"
@@ -25,12 +26,12 @@
 #include <string.h>
 
 // Headers
+#include "Texture.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_TEXTURE_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
 
 // Initialize static member which holds the bound textures ids
 std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::gfx::Texture::s_bound_ID{};
@@ -88,7 +89,8 @@ void tilia::gfx::Texture::Generate_Texture()
 		// Possibly forward e to someplace else and then throw
 
 	}
-	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly created", m_ID);
+	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly
+	//created", m_ID);
 }
 
 /**

@@ -24,10 +24,10 @@
 #include <iostream>
 
 // Headers
+#include "Error_Handling.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
 
 /**
  * Checks what error string pertains to error_code. If there is no
@@ -59,7 +59,8 @@ static constexpr const char* Get_Error_String(const uint32_t& error_code) {
     }
 }
 
-void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function)
+void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, const char* file, 
+    const char* function)
 {
     // Checks errors
     while (GLenum error = glGetError()) {

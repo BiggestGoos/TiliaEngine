@@ -9,8 +9,8 @@
  * @date   15/05/2022
  *********************************************************************/
 
-#ifndef TILIA_ERROR_HANDLING_H
-#define TILIA_ERROR_HANDLING_H
+#ifndef TILIA_OPENGL_3_3_ERROR_HANDLING_HPP
+#define TILIA_OPENGL_3_3_ERROR_HANDLING_HPP
 
 #if !defined(NDEBUG) && defined(_DEBUG)
 #include <cstdlib>
@@ -30,7 +30,7 @@
                               x;\
                               tilia::utils::Handle_GL_Error("", __LINE__, __FILE__, #x);
 
-#define GL_CALL_MESSAGE(y, x) tilia::utils::GL_Clear_Error();\
+#define GL_CALL_MESSAGE(x, y) tilia::utils::GL_Clear_Error();\
                               x;\
                               tilia::utils::Handle_GL_Error(y, __LINE__, __FILE__, #x);
 
@@ -38,7 +38,8 @@ namespace tilia {
 
     namespace utils {
 
-        void Handle_GL_Error(const char* message, const size_t& line, const char* file, const char* function);
+        void Handle_GL_Error(const char* message, const size_t& line, const char* file, 
+            const char* function);
 
         bool GL_Check_Error();
 
@@ -48,4 +49,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_ERROR_HANDLING_HPP

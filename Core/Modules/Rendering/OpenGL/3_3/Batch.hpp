@@ -18,8 +18,8 @@
  * @date   28/05/2022
  *********************************************************************/
 
-#ifndef TILIA_BATCH_H
-#define TILIA_BATCH_H
+#ifndef TILIA_OPENGL_3_3_BATCH_HPP
+#define TILIA_OPENGL_3_3_BATCH_HPP
 
 // Standard
 #include <vector>
@@ -28,8 +28,9 @@
 
 // Headers
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_MESH_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_MESH_INCLUDE
+#define TILIA_INCLUDE_OPENGL_3_3_CONSTANTS
+#include TILIA_CONSTANTS_INCLUDE
 
 namespace tilia {
 
@@ -45,7 +46,8 @@ namespace tilia {
 		public:
 
 			/**
-			 * @brief Sets all information specific to the given mesh_data to all such memebers in this Batch
+			 * @brief Sets all information specific to the given mesh_data to all such memebers in
+			 * this Batch
 			 * 
 			 * @param mesh_data - The mesh_data to set members to its data
 			 */
@@ -57,7 +59,8 @@ namespace tilia {
 			~Batch();
 
 			/**
-			 * @brief Sets all information specific to the given mesh_data to all such memebers in this Batch
+			 * @brief Sets all information specific to the given mesh_data to all such memebers in
+			 * this Batch
 			 * and also calls Clear.
 			 *
 			 * @param mesh_data - The mesh_data to set members to its data
@@ -65,8 +68,9 @@ namespace tilia {
 			void Reset(std::weak_ptr<Mesh_Data> mesh_data);
 
 			/**
-			 * @brief Checks if mesh_data fits in batch. If so then it adds the textures(If any) to the textures 
-			 * vector and adds the vertices and indices to the respective openGL buffer of the batch.
+			 * @brief Checks if mesh_data fits in batch. If so then it adds the textures(If any) to
+			 * the textures vector and adds the vertices and indices to the respective openGL
+			 * buffer of the batch.
 			 * 
 			 * @param mesh_data - The mesh_data to check and push
 			 * 
@@ -106,8 +110,8 @@ namespace tilia {
 			void Clear();
 
 			/**
-			 * @brief Binds all buffers, then textures, the polygonmode, and then draws the data to the
-			 * bound framebuffer using glDrawElements.
+			 * @brief Binds all buffers, then textures, the polygonmode, and then draws the data to
+			 * the bound framebuffer using glDrawElements.
 			 */
 			void Render();
 
@@ -122,7 +126,8 @@ namespace tilia {
 				m_vbo{}, // The id to the openGL vertex buffer object
 				m_ebo{}; // The id to the openGL element buffer object
 
-			std::vector<std::weak_ptr<Texture>> m_textures{}; // The texture to be bound and used to draw with
+			std::vector<std::weak_ptr<Texture>> m_textures{}; // The texture to be bound and used
+			// to draw with
 
 			// Misc
 
@@ -131,8 +136,10 @@ namespace tilia {
 			// the size of the data.
 			std::map<float, std::pair<uint32_t, uint32_t>> m_vertex_data_offsets{}; 
 
-			std::vector<float> m_vertex_data{}; // The vertex data to be mapped to the buffers and then rendered.
-			std::vector<uint32_t> m_index_data{}; // The index data to be mapped to the buffers and then rendered.
+			std::vector<float> m_vertex_data{}; // The vertex data to be mapped to the buffers and
+			// then rendered.
+			std::vector<uint32_t> m_index_data{}; // The index data to be mapped to the buffers and
+			// then rendered.
 
 			size_t m_mesh_count{}; // The amount of meshes stored in the buffers
 
@@ -146,7 +153,8 @@ namespace tilia {
 
 			Vertex_Info m_vertex_info{}; // The info for each vertex in the vertex buffer
 
-			size_t m_vertex_count{}, // The amount of vertices * m_vertex_size currently in the vertex buffer(m_vbo)
+			size_t m_vertex_count{}, // The amount of vertices * m_vertex_size currently in the
+				//vertex buffer(m_vbo)
 				m_index_count{};  // The amount of indices currently in the element buffer(m_ebo)
 
 			// Rendering settings
@@ -160,10 +168,14 @@ namespace tilia {
 
 			// Stencil test values
 
-			std::pair<uint8_t, uint8_t> m_stencil_masks{}; // The mask value used when applying new stencil buffer value
-			std::pair<enums::Test_Func, enums::Test_Func> m_stencil_funcs{}; // The function which will be used to compare the stencil values
-			std::pair<uint8_t, uint8_t> m_compare_s_values{}; // The value to compare against in the stencil test
-			std::pair<uint8_t, uint8_t> m_compare_s_masks{}; // The mask value used when comparing between the previous stencil value and the comparison value
+			std::pair<uint8_t, uint8_t> m_stencil_masks{}; // The mask value used when applying new
+			// stencil buffer value
+			std::pair<enums::Test_Func, enums::Test_Func> m_stencil_funcs{}; // The function which
+			// will be used to compare the stencil values
+			std::pair<uint8_t, uint8_t> m_compare_s_values{}; // The value to compare against in
+			// the stencil test
+			std::pair<uint8_t, uint8_t> m_compare_s_masks{}; // The mask value used when comparing
+			// between the previous stencil value and the comparison value
 
 			// The actions to take wheter or not different tests passes or fails. The Tests are: 
 			// Stencil test fails,
@@ -171,14 +183,17 @@ namespace tilia {
 			// Both stencil- and depthtest pass.
 			std::pair<enums::Test_Action, enums::Test_Action> m_stencil_actions[3]{};
 
-			void Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, std::unordered_map<uint32_t, uint32_t>& offsets);
+			void Generate_Texture_Offsets(std::weak_ptr<tilia::gfx::Mesh_Data> mesh_data, 
+				std::unordered_map<uint32_t, uint32_t>& offsets);
 
 			void Map_Data() const;
 
-			void Sort_Mesh_Data(const std::vector<float>& vertex_data, std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end);
+			void Sort_Mesh_Data(const std::vector<float>& vertex_data, 
+				std::vector<uint32_t>& index_data, const uint32_t& start, const uint32_t& end);
 
 			 /**
-			  * @brief Sets the vertex attributes for the vertex array using the information in m_vertex_info
+			  * @brief Sets the vertex attributes for the vertex array using the information in
+			  * m_vertex_info
 			  */
 			void Set_Vertex_Attribs() const;
 
@@ -197,4 +212,4 @@ namespace tilia {
 
 }
 
-#endif
+#endif // TILIA_OPENGL_3_3_BATCH_HPP

@@ -1,7 +1,7 @@
 /*****************************************************************//**
  * @file   Texture.cpp
- * @brief  Defines all non-inline member functions and constructors/destructors of the @see @Texture_2D_Def struct 
- *		   and @see @Texture_2D class.
+ * @brief  Defines all non-inline member functions and constructors/destructors of the @see
+ * @Texture_2D_Def struct and @see @Texture_2D class.
  * 
  * Dependencies:
  * @include "dependencies/glad/include/glad/glad.h"
@@ -28,13 +28,13 @@
 #include <cstring>
 
 // Headers
+#include "Texture_2D.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_2D_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_LOGGING_HPP_INCLUDE
-#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_LOGGING_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
 
 extern tilia::utils::File_System file_system;
 
@@ -118,7 +118,8 @@ void tilia::gfx::Texture_2D::Print_Information() const
 	// Prints to console indented
 	//log::Log_Indent("Dimensions", "%dx%d", m_texture_def.width, m_texture_def.height);
 	//log::Log_Indent("Format", "%s", format_text);
-	//log::Log_Indent("Filter", "Min Filter: %s, Mag Filter: %s", filter_min_text, filter_max_text);
+	//log::Log_Indent("Filter", "Min Filter: %s, Mag Filter: %s", filter_min_text, 
+	// filter_max_text);
 	//log::Log_Indent("Wrapping", "Wrap S: %s, Wrap T: %s", wrap_s_text, wrap_t_text);
 
 }
@@ -135,11 +136,16 @@ tilia::gfx::Texture_2D::Texture_2D()
 #include <iostream>
 
 /**
- * Firstly it copies the data from the given Texture_Def to the member Texture_Def. It also uses std::make_unique to create a new pointer for 
- * texture_data of the member Texture_Def. If the passed Texture_Def does not hold any texture data then the texture_data 
- * of the memeber Texture_Def is loaded in using stbi_load using the passed Texture_Def's member file_path. After that is sets the load_color_format 
- * according to the amount of loaded channels Then it sets the unpack alignment according to the color format. Then it binds the texture and sets 
- * the filtering and wrapping options. After that it finally sets the pixel data of the openGL texture and then unbinds the texture. It also prints 
+ * Firstly it copies the data from the given Texture_Def to the member Texture_Def. It also uses
+ * std::make_unique to create a new pointer for 
+ * texture_data of the member Texture_Def. If the passed Texture_Def does not hold any texture data
+ * then the texture_data 
+ * of the memeber Texture_Def is loaded in using stbi_load using the passed Texture_Def's member
+ * file_path. After that is sets the load_color_format 
+ * according to the amount of loaded channels Then it sets the unpack alignment according to the
+ * color format. Then it binds the texture and sets 
+ * the filtering and wrapping options. After that it finally sets the pixel data of the openGL
+ * texture and then unbinds the texture. It also prints 
  * information about the texture
  */
 void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
@@ -173,7 +179,8 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 			throw e;
 		}
 
-		uint32_t byte_count{ static_cast<uint32_t>((m_texture_def.width * m_texture_def.height * nr_channels)) };
+		uint32_t byte_count{ static_cast<uint32_t>((m_texture_def.width * m_texture_def.height * 
+			nr_channels)) };
 
 		if (!byte_count) {
 			utils::Tilia_Exception e{ LOCATION };
@@ -183,7 +190,8 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 
 		m_texture_def.texture_data = std::make_unique<uint8_t[]>(static_cast<size_t>(byte_count));
 		// Copies data
-		std::copy(texture_def.texture_data.get(), texture_def.texture_data.get() + byte_count, m_texture_def.texture_data.get());
+		std::copy(texture_def.texture_data.get(), texture_def.texture_data.get() + byte_count, 
+			m_texture_def.texture_data.get());
 		if (!m_texture_def.texture_data)
 		{
 			utils::Tilia_Exception e{ LOCATION };
@@ -196,7 +204,8 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 		try
 		{
 			m_texture_def.texture_data.reset(file_system.Load_Image
-			(texture_def.file_path.c_str(), m_texture_def.width, m_texture_def.height, nr_load_channels, 0, true));
+			(texture_def.file_path.c_str(), m_texture_def.width, m_texture_def.height, 
+				nr_load_channels, 0, true));
 		}
 		catch (utils::Tilia_Exception& e)
 		{
@@ -303,19 +312,22 @@ void tilia::gfx::Texture_2D::Generate_Mipmaps()
 	if (!m_texture_def.texture_data)
 	{
 		utils::Tilia_Exception e{ LOCATION };
-		e.Add_Message("Texture_2D { ID: %v } failed to generate mipmaps because there is no data")(m_ID);
+		e.Add_Message("Texture_2D { ID: %v } failed to generate mipmaps because there is no data")
+			(m_ID);
 		throw e;
 		Rebind();
 	}
 	GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
-	//log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", m_ID);
+	//log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", 
+	//m_ID);
 	Rebind();
 }
 
 /**
  * Sets the filtering mode for the given size
  */
-void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, const enums::Filter_Mode& filter_mode)
+void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, 
+	const enums::Filter_Mode& filter_mode)
 {
 	switch (filter_size)
 	{
@@ -334,7 +346,8 @@ void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, c
 /**
  * Sets the wrapping mode for the given side
  */
-void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, const enums::Wrap_Mode& wrap_mode)
+void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
+	const enums::Wrap_Mode& wrap_mode)
 {
 	switch (wrap_side)
 	{

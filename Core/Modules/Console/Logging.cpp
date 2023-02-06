@@ -3,7 +3,7 @@
 #include <cstdarg>
 
 // Tilia
-#include "Core/Modules/Console/Logging.hpp"
+#include "Logging.hpp"
 
 static void Print_Log_Type(const tilia::log::Type& log_type) {
 

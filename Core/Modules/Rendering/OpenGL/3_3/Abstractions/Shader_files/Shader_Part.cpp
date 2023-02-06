@@ -5,14 +5,13 @@
 #include <vector>
 
 // Tilia
+#include "Shader_Part.hpp"
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_SHADER_PART_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ERROR_HANDLING_HPP_INCLUDE
-#include TILIA_TILIA_EXCEPTION_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_UTILS_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_ENUMS_HPP_INCLUDE
-#include TILIA_WINDOWS_FILE_SYSTEM_HPP_INCLUDE
-#include TILIA_OPENGL_3_3_SHADER_HPP_INCLUDE
+#include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
+#include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_OPENGL_3_3_UTILS_INCLUDE
+#include TILIA_WINDOWS_FILE_SYSTEM_INCLUDE
+#include TILIA_OPENGL_3_3_SHADER_INCLUDE
 
 // The file system defined in another file
 extern tilia::utils::File_System file_system;
