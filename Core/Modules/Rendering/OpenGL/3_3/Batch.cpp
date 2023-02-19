@@ -21,7 +21,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Standard
 #include <unordered_map>

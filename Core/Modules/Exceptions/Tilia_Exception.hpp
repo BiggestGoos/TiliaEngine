@@ -16,123 +16,131 @@
 #include <vector>
 #include <sstream>
 
+// Tilia
+#include "Core/Values/Directories.hpp"
+#include TILIA_CONSTANTS_INCLUDE
+
 /**
  * @brief Small macro which can be used in the construcor of the Tilia_Exception class
  */
-#define LOCATION static_cast<std::size_t>(__LINE__), __FILE__
+#define TILIA_LOCATION __FILE__, static_cast<std::size_t>(__LINE__)
 
 namespace tilia {
 
 	namespace utils {
 
 		/**
+		 * @brief Helper class for Tilia_Exception. Holds data for exceptions.
+		 */
+		struct Exception_Data
+		{
+			friend class Tilia_Exception;
+
+			Exception_Data(const Exception_Data& other)
+				: m_message{ other.m_message.str() }, m_file{ other.m_file }, 
+				m_line{ other.m_line } { }
+
+			Exception_Data(Exception_Data&& other) noexcept
+				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) }, 
+				m_line{ other.m_line } { }
+
+			explicit Exception_Data(const std::string& file, const std::size_t& line)
+				: m_file{ file }, m_line{ line } { }
+
+			friend bool operator==(const Exception_Data& lhs, const Exception_Data& rhs)
+			{
+				if (&lhs == &rhs)
+					return true;
+				if (lhs.m_message.str() != lhs.m_message.str() || lhs.m_file != rhs.m_file
+					|| lhs.m_line != rhs.m_line)
+					return false;
+				return true;
+			}
+
+			friend bool operator!=(const Exception_Data& lhs, const Exception_Data& rhs)
+			{
+				if (&lhs == &rhs)
+					return false;
+				return !(lhs == rhs);
+			}
+
+			template<typename T>
+			Exception_Data& operator<<(const T& value)
+			{
+				m_message << value;
+				return *this;
+			}
+
+			template<typename T>
+			Exception_Data& operator<<(T&& value)
+			{
+				m_message << std::move(value);
+				return *this;
+			}
+
+			/**
+			 * @brief Gets the exception message.
+			 * 
+			 * @return The message of the exception.
+			 */
+			inline auto Get_Message() const { return m_message.str(); }
+			/**
+			 * @brief Gets the file which the exception message was created at.
+			 *
+			 * @return The file of the exception message's creation.
+			 */
+			inline auto Get_File() const { return m_file; }
+			/**
+			 * @brief Gets the line at which the exception message was created.
+			 * 
+			 * @return The line of the exception message's creation.
+			 */
+			inline auto Get_Line() const { return m_line; }
+
+		private:
+			// The message stream
+			std::stringstream m_message{};
+			// The file of which the exception message was created
+			std::string m_file{};
+			// The line at which the exception message was created
+			std::size_t m_line{};
+		}; // Exception_Data
+
+		/**
 		 * @brief Custom exception class deriving from the <stdexcept> exception class. Holds a
 		 * vector of messages which can be added to while the exception is being passed along. Also
-		 * holds the origin line and file which will point to the place where the exception was
-		 * first thrown.
+		 * holds all the lines and files which the exception was passed through.
 		 */
-		class Tilia_Exception 
-			: public std::exception 
+		class Tilia_Exception : public std::exception
 		{
-		private:
-
-			/**
-			 * @brief Checks wheter the message holds a message code at the given index.
-			 */
-			inline bool Is_Value_Code(const std::size_t& index, const std::string& message) 
-				noexcept {
-				return (index < message.size() - 1 && message[index] == '%' && 
-					message[index + 1] == 'v');
-			}
-
-			/**
-			 * @brief Recursively adds values to a stored message. It gets the value by a returned
-			 * lambda function which adds the value and then calls this function again.
-			 * 
-			 * @param message - The message which will be checked for a place to add the value
-			 * given in the lambda function.
-			 * 
-			 * @return A lambda function which takes in a value, adds the value to the string at
-			 * the captured index in the message with the captured message index. After this it
-			 * just calls the function again and it does the same thing again until you stop
-			 * calling the returned lambda function.
-			 */
-			auto Print_To_String(const std::string& message) noexcept
-			{
-
-				static constexpr std::size_t value_string_size{ 2 };
-
-				const std::size_t message_id{ m_messages.size() - 1 };
-
-				const std::size_t message_len{ message.size() };
-
-				std::size_t index{};
-				for (index = 0; index < message_len; ++index)
-				{
-
-					if (Is_Value_Code(index, message)) {
-
-						m_messages[message_id].erase(index, value_string_size);
-						break;
-
-					}
-
-				}
-
-				return [message_id, index, this](const auto& value) {
-					std::stringstream ss{};
-					ss << value;
-					m_messages[message_id].insert(index, ss.str());
-					return Print_To_String(m_messages[message_id]);
-				};
-
-			}
-
 		public:
 
-			/**
-			 * @brief Default copy constructor.
-			 * 
-			 * @param other - The Tilia_Exception to copy.
-			 */
-			Tilia_Exception(const Tilia_Exception& other) = default;
+			Tilia_Exception(const Tilia_Exception& other)
+				: m_messages{ other.m_messages } { }
 
-			/**
-			 * @brief Sets the line and file that the Tilia_Exception originates from.
-			 * 
-			 * @param line - The line where exception was thrown.
-			 * @param file - The file where exception was thrown.
-			 */
-			explicit Tilia_Exception(const std::size_t& line, const std::string& file) noexcept;
+			Tilia_Exception(Tilia_Exception&& other) noexcept
+				: m_messages{ std::move(other.m_messages) } { }
 
-			/**
-			 * @brief Adds the message to the message vector and sets the origin line and file.
-			 * 
-			 * @param message - The message to add.
-			 * @param line - The line where exception was thrown.
-			 * @param file - The file where exception was thrown.
-			 */
-			explicit Tilia_Exception(const std::string& message, const std::size_t& line, 
-				const std::string& file) noexcept;
+			explicit Tilia_Exception(const Exception_Data& message)
+				: m_messages{ message } { }
 
-			/**
-			 * @brief Adds a message to the Tilia_Exception. If the message contains message
-			 * commands and the returned lambda is called with a value then that value will be
-			 * inserted in the string at the first message command. That lambda function will
-			 * return a lambda itself and will recursivley replace message commands with the given
-			 * values.
-			 * 
-			 * @param message - The message to add. Message command: %v
-			 * 
-			 * @return A lambda function which can be called to insert values into the string at a
-			 * specified place.
-			 */
-			auto Add_Message(const std::string& message) noexcept {
+			explicit Tilia_Exception(Exception_Data&& message) noexcept
+				: m_messages{ std::move(message) } { }
 
-				m_messages.push_back({ message });
+			friend bool operator==(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
+			{
+				if (&lhs == &rhs)
+					return true;
+				if (lhs.m_messages != rhs.m_messages)
+					return false;
+				return true;
+			}
 
-				return Print_To_String(message);
-
+			friend bool operator!=(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
+			{
+				if (&lhs == &rhs)
+					return false;
+				return !(lhs == rhs);
 			}
 
 			/**
@@ -141,41 +149,84 @@ namespace tilia {
 			 * @return All of the messages in one string.
 			 */
 			virtual const char* what() const noexcept override {
-				static std::string ret{ "" };
-				for (const auto& w : m_messages)
+				std::stringstream ret{ };
+				auto potential_message{ [](const auto& message) -> 
+					std::string
 				{
-					ret += w + '\n';
+					const auto buffer_count{ message.rdbuf()->in_avail() };
+					if (buffer_count > 0)
+						return message.str();
+					return { "Message is empty" };
+				} };
+				for (const auto& message : m_messages)
+				{
+					ret << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
+						potential_message(message.m_message) << "\n\n";
 				}
-				return ret.c_str();
+				static auto ret_str{ ret.str() };
+				return ret_str.c_str();
 			}
 
 			/**
-			 * @brief Gets the vector of all the messages.
+			 * @brief Adds a message to the exception.
 			 * 
-			 * @return All of the messages added to the exception.
+			 * @param message - The message to add.
 			 */
-			std::vector<std::string> Get_Messages() const noexcept { return m_messages; }
+			inline void Add_Message(const Exception_Data& message) 
+			{ m_messages.push_back(message); }
 
 			/**
-			 * @brief Gets the line the exception originates from.
-			 * 
-			 * @return The origin line.
-			 */
-			std::size_t Get_Origin_Line() const noexcept { return m_origin_line; }
-
-			/**
-			 * @brief Gets the file the exception originates from.
+			 * @brief Adds a message to the exception.
 			 *
-			 * @return The origin file.
+			 * @param message - The message to add.
 			 */
-			std::string Get_Origin_File() const noexcept { return m_origin_file; }
+			inline void Add_Message(Exception_Data&& message) 
+			{ m_messages.push_back(std::move(message)); }
+
+			/**
+			 * @brief Adds a message to the exception.
+			 * 
+			 * @param file - The file at which the exception was thrown.
+			 * @param line - The line at which the exception was thrown.
+			 * 
+			 * @return A reference to the message. Should not be stored as it is not guaranteed to
+			 * always point to a message in the exception. A message should be directly added after
+			 * calling this function.
+			 */
+			inline auto Add_Message(const std::string& file, const std::size_t& line) -> 
+				Exception_Data& { 
+				m_messages.push_back(Exception_Data{ file, line });
+				const std::size_t last_index{ m_messages.size() - 1 };
+				return m_messages.at(last_index);
+			}
+
+			/**
+			 * @brief Gets the message of the exception at the index.
+			 * 
+			 * @return The message at the index.
+			 */
+			inline auto Get_Message(const std::size_t& index) const { return m_messages[index]; }
+
+			/**
+			 * @brief The number of messages in the exception.
+			 * 
+			 * @return The number of messages.
+			 */
+			inline auto Get_Count() const { return m_messages.size(); }
+
+#if TILIA_UNIT_TESTS == 1
+
+			/**
+			 * @brief Unit test for Tilia_Exception.
+			 */
+			static void Test();
+
+#endif // TILIA_UNIT_TESTS == 1
 
 		private:
 
-			std::vector<std::string> m_messages{};
-
-			std::size_t m_origin_line{};
-			std::string m_origin_file{};
+			// A list of all of the messages added to the exception
+			std::vector<Exception_Data> m_messages{};
 
 		}; // Tilia_Exception
 

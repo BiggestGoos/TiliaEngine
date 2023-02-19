@@ -284,6 +284,8 @@ namespace tilia {
 
 		// OpenGL buffer types. Underlying value is the value defined by openGL.
 		enum class Buffer_Type {
+			// The buffer has no type.
+			None		   = 0x0000,
 			// Vertex buffer object, vbo.
 			Vertex_Buffer  = 0x8892, 
 			// Element buffer object, ebo.
@@ -296,6 +298,8 @@ namespace tilia {
 		// an openGL enum value for that type of writing. Eg. Static + Draw = GL_STATIC_DRAW
 		// (0x88E4).
 		enum class Buffer_Access_Type {
+			// The buffer can't be accessed.
+			None = 0x0000,
 			// The user will be writing data to the buffer, but the user will not read it.
 			Draw = 0x0000, 
 			// The user will not be writing data, but the user will be reading it back.
@@ -307,6 +311,8 @@ namespace tilia {
 		// Different frequencies to access openGL buffers. Underlying value is the value defined by
 		// openGL.
 		enum class Buffer_Access_Frequency {
+			// The buffer can't be accessed.
+			None    = 0x0000,
 			// The user will set the data once.
 			Static  = 0x88E4, 
 			// The user will set the data occasionally.

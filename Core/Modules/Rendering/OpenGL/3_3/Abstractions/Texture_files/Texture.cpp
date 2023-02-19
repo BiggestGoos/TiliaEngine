@@ -60,11 +60,9 @@ std::string tilia::gfx::Texture::Get_Type_String() const
 		strcat_s(texture_type_string, 19, "CUBE_MAP");
 		break;
 	default:
-		utils::Tilia_Exception e{ LOCATION };
-		e.Add_Message("Texture { ID: %v } type is undefined"
-			"\n>>> Type: %v")
-			(m_ID)(*m_texture_type);
-		throw e;
+		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+			<< "Texture { ID: " << m_ID << " } type is undefined"
+			<< "\n>>> Type: " << *m_texture_type };
 	}
 
 	return texture_type_string;
@@ -80,11 +78,11 @@ void tilia::gfx::Texture::Generate_Texture()
 	{
 		GL_CALL(glGenTextures(1, &m_ID));
 	}
-	catch (utils::Tilia_Exception& e)
+	catch (utils::Tilia_Exception& t_e)
 	{
 
-		e.Add_Message("%v { ID: %v } failed to be generated")
-			(Get_Type_String())(m_ID);
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< Get_Type_String() << " { ID: " << m_ID << " } failed to be generated";
 
 		// Possibly forward e to someplace else and then throw
 
@@ -102,11 +100,11 @@ tilia::gfx::Texture::~Texture()
 	{
 		GL_CALL(glDeleteTextures(1, &m_ID));
 	}
-	catch (utils::Tilia_Exception& e)
+	catch (utils::Tilia_Exception& t_e)
 	{
 
-		e.Add_Message("%v { ID: %v } failed to be destroyed")
-			(Get_Type_String())(m_ID);
+		t_e.Add_Message(TILIA_LOCATION)
+			<< Get_Type_String() << " { ID: " << m_ID << " } failed to be destroyed";
 
 		// Possibly forward e to someplace else and then throw
 
@@ -122,10 +120,9 @@ void tilia::gfx::Texture::Bind(const uint32_t& slot) const
 
 	// Checks if slot is in range and prints errors if not
 	if (slot > utils::Get_Max_Textures() - 1) {
-		utils::Tilia_Exception e{ LOCATION };
-		e.Add_Message("Texture { Slot: %v } is out of the texture slot range { Min: 0, Max: %v }")
-			(slot)(utils::Get_Max_Textures() - 1);
-		throw e;
+		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+			<< "Texture { Slot: " << slot << " } is out of the texture slot range { Min: 0, Max: " 
+			<< utils::Get_Max_Textures() - 1 << " }" };
 	}
 
 	// Sets slot and binds texture

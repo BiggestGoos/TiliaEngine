@@ -18,7 +18,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Standard
 #include <iostream>
@@ -64,14 +64,14 @@ void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, cons
 {
     // Checks errors
     while (GLenum error = glGetError()) {
-        utils::Tilia_Exception e{ line, file };
-        auto x{ e.Add_Message("OpenGL [ Error was thrown ]"
-            "\n>>> Code: %v"
-            "\n>>> Name: %v"
-            "\n>>> Func: %v")
-        (error)(Get_Error_String(error))(function) };
-        if (message != "") x("\n>>> Message: ")(message);
-        throw e;
+        utils::Exception_Data e_d{ file, line };
+
+        e_d << "OpenGL [ Error was thrown ]"
+            << "\n>>> Code: " << error
+            << "\n>>> Name: " << Get_Error_String(error)
+            << "\n>>> Func: " << function;
+        if (message != "") e_d << "\n>>> Message: " << message;
+        throw utils::Tilia_Exception{ e_d };
     }
 }
 

@@ -100,17 +100,11 @@ void tilia::gfx::Cube_Map_Data::Reload(const std::size_t& index)
     }
     else
     {
-
-        utils::Tilia_Exception e{ LOCATION };
-
-        e.Add_Message(
-            "Failed to reload data"
-            "\n>>> Side: %v"
-        )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
-            static_cast<uint32_t>(index)));
-
-        throw e;
-
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+            << "Failed to reload data"
+            << "\n>>> Side: " 
+            << utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
+            static_cast<uint32_t>(index)) };
     }
 
 }
@@ -131,17 +125,11 @@ void tilia::gfx::Cube_Map_Data::Reload()
         }
         else
         {
-
-            utils::Tilia_Exception e{ LOCATION };
-
-            e.Add_Message(
-                "Failed to reload data"
-                "\n>>> Side: %v"
-            )(utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X + 
-                static_cast<uint32_t>(i)));
-
-            throw e;
-
+            throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+                << "Failed to reload data"
+                << "\n>>> Side: " 
+                << utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
+                static_cast<uint32_t>(i)) };
         }
 
     }

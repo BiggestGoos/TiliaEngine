@@ -33,18 +33,18 @@ namespace tilia
 
 		// Limiting constants of Tilia batch.
 		enum class Batch_Limits {
-			Max_Triangles = 16384,		      // The max amount of triangles per batch.
-			Max_Vertices = Max_Triangles * 3, // The max amount of vertices per batch.
-			Max_Indices = Max_Vertices * 2    // The max amount of indices per batch.
+			Max_Triangles = 16384,		        // The max amount of triangles per batch.
+			Max_Vertices  = Max_Triangles * 3,  // The max amount of vertices per batch.
+			Max_Indices   = Max_Vertices * 2    // The max amount of indices per batch.
 		}; // Batch_Limits
 
 		// Different constants for features of different geometrical shapes.
 		enum class Geometry_Features {
-			Cube_Faces = 6, // The amount of faces a cube has.
-			Point_Points = 1, // The amount of points in a point.
-			Line_Points = 2, // The amount of points in a line.
+			Cube_Faces      = 6, // The amount of faces a cube has.
+			Point_Points    = 1, // The amount of points in a point.
+			Line_Points     = 2, // The amount of points in a line.
 			Triangle_Points = 3, // The amount of points in a triangle.
-			Quad_Points = 4  // The amount of points in a quad.
+			Quad_Points     = 4  // The amount of points in a quad.
 		}; // Geometry_Features
 
 #ifndef TILIA_GET_ENUM_VALUE
@@ -85,10 +85,6 @@ namespace tilia
 /**
  * @brief Whether or not to include unit tests
  */
-#define TILIA_UNIT_TESTS 1
-
-#if TILIA_UNIT_TESTS == 1
-
-#endif
+#define TILIA_UNIT_TESTS 0
 
 #endif // TILIA_CONSTANTS_HPP

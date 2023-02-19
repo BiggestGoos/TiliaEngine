@@ -1,4 +1,4 @@
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 #include "vendor/glfw/include/GLFW/glfw3.h"
 #undef APIENTRY
 
@@ -39,9 +39,21 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
 
+void error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+
+    std::cout << "OpenGL error"
+        << "\nSource: " << source
+        << "\nType: " << type
+        << "\nId: " << id
+        << "\nSeverity: " << severity
+        << "\nMessage: " << message << '\n';
+
+}
+
 // settings
-unsigned int SCR_WIDTH = 1920;
-unsigned int SCR_HEIGHT = 1080;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -90,7 +102,115 @@ void create_cube(Mesh<size>& mesh, glm::mat4 model, bool complex = false);
 template<size_t size>
 void create_sphere(Mesh<size>& mesh, glm::mat4 model, uint32_t tex_index = 0);
 
-#if 1
+#if 0
+
+int main()
+{
+
+    Exception_Message m{ TILIA_LOCATION };
+
+    m << "Hello world!\n";
+    
+    int w{};
+    std::cin >> w;
+
+    try
+    {
+
+        // glfw: initialize and configure
+            // ------------------------------
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // glfw window creation
+        // --------------------
+        GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (window == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        glfwMakeContextCurrent(window);
+        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+        input.Init(window);
+
+        glfwSwapInterval(0);
+
+        GLFWwindow* window_2 = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        if (window_2 == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        glfwMakeContextCurrent(window_2);
+        glfwSetFramebufferSizeCallback(window_2, framebuffer_size_callback);
+
+        input.Init(window_2);
+
+        // tell GLFW to capture our mouse
+        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        glfwSwapInterval(0);
+
+        glfwMakeContextCurrent(window);
+
+        //glad: load all OpenGL function pointers
+        //---------------------------------------
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return -1;
+        }
+
+        while (!glfwWindowShouldClose(window) && !glfwWindowShouldClose(window_2))
+        {
+            glfwMakeContextCurrent(window);
+
+            processInput();
+
+            if (input.Get_Key_Down(KEY_ESCAPE))
+                glfwSetWindowShouldClose(window, true);
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+
+            glfwMakeContextCurrent(window_2);
+
+            if (input.Get_Key_Down(KEY_ESCAPE))
+                glfwSetWindowShouldClose(window, true);
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+
+        }
+
+    }
+    catch (const utils::Tilia_Exception & e) {
+        std::cout << "\n<<<Tilia_Exception>>>\n";
+        std::cout << e.what() << '\n';
+    }
+    catch (const std::exception & e) {
+        std::cout << e.what() << '\n';
+    }
+
+    // glfw: terminate, clearing all previously allocated GLFW resources.
+    // ------------------------------------------------------------------
+    glfwTerminate();
+
+    std::cin >> w;
+
+    return 0;
+
+}
+
+#endif
+
+#if 0
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
@@ -112,6 +232,7 @@ int main(int argc, char* argv[])
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
         // glfw window creation
         // --------------------
@@ -140,6 +261,10 @@ int main(int argc, char* argv[])
             return -1;
         }
 
+        //const GLubyte* extensions = glGetString(GL_EXTENSIONS);
+
+        //std::cout << extensions << '\n';
+
         retval = Catch::Session().run(argc, argv);
 
         while (!glfwWindowShouldClose(window))
@@ -159,8 +284,6 @@ int main(int argc, char* argv[])
     }
     catch (const utils::Tilia_Exception& e) {
         std::cout << "\n<<<Tilia_Exception>>>\n";
-        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
-                     "File: " << e.Get_Origin_File() << '\n';
         std::cout << e.what() << '\n';
     }
     catch (const std::exception& e) {
@@ -176,8 +299,12 @@ int main(int argc, char* argv[])
     return retval;
 }
 
+TEST_CASE("Tilia_Exception", "[Tilia_Exception]") {
+    tilia::gfx::Buffer::Test();
+}
+
 TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
-    tilia::gfx::OpenGL_3_3_Buffer_Test();
+    tilia::gfx::Buffer::Test();
 }
 
 //void factorials_are_computed()
@@ -206,7 +333,7 @@ TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 
 #endif
 
-#if 0
+#if 1
 
 int main()
 {
@@ -244,7 +371,11 @@ int main()
             std::cout << "Failed to initialize GLAD" << std::endl;
             return -1;
         }
-        
+
+        glEnable(GL_DEBUG_OUTPUT);
+
+        glDebugMessageCallback(error_callback, nullptr);
+
         input.Init(window);
 
         glEnable(GL_BLEND);
@@ -293,8 +424,6 @@ int main()
         ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
         ub.debug_print();
-
-        std::cout << typeid(test_enums).name() << " : " << typeid(type).name() << '\n';
 
         ub.Bind();
 
@@ -410,9 +539,8 @@ int main()
     }
     catch (const utils::Tilia_Exception& e) {
         std::cout << "\n<<<Tilia_Exception>>>\n";
-        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
-                     "File: " << e.Get_Origin_File() << '\n';
-        std::cout << e.what() << '\n';
+        auto temp{ e.what() };
+        std::cout << temp << '\n';
     }
     catch (const std::exception& e) {
         std::cout << e.what() << '\n';
@@ -466,6 +594,10 @@ int main()
             std::cout << "Failed to initialize GLAD" << std::endl;
             return -1;
         }
+
+        const GLubyte* extensions = glGetString(GL_EXTENSIONS);
+
+        //std::cout << extensions << '\n';
 
         input.Init(window);
 
@@ -569,13 +701,11 @@ int main()
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
     }
-    catch (const utils::Tilia_Exception& e) {
+    catch (const utils::Tilia_Exception & e) {
         std::cout << "\n<<<Tilia_Exception>>>\n";
-        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
-            "File: " << e.Get_Origin_File() << '\n';
         std::cout << e.what() << '\n';
     }
-    catch (const std::exception& e) {
+    catch (const std::exception & e) {
         std::cout << e.what() << '\n';
     }
 
@@ -1102,6 +1232,7 @@ void processInput()
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    glfwMakeContextCurrent(window);
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);

@@ -1,5 +1,5 @@
 // Vendor
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Standard
 #include <iostream>
@@ -127,10 +127,9 @@ void tilia::gfx::Uniform_Buffer::Terminate()
     // If an openGL ubo id was never generated then we throw an exception
     if (m_ID <= 0)
     {
-        utils::Tilia_Exception e{ LOCATION };
-        e.Add_Message("Failed to terminate uniform buffer due to the fact that it was never"
-            "initialized or something went very wrong");
-        throw e;
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+            << "Failed to terminate uniform buffer due to the fact that it was never"
+            "initialized or something went very wrong" };
     }
     // We delete the underlying ubo
     glDeleteBuffers(1, &m_ID);
@@ -198,10 +197,8 @@ void tilia::gfx::Uniform_Buffer::Set_Bind_Point(const std::uint32_t& bind_point)
     // If id is zero then we throw exception
     if (!m_ID)
 	{
-		utils::Tilia_Exception e{ LOCATION };
-		e.Add_Message("Failed to set binding point for uniform buffer { ID: %v }"
-		)(m_ID);
-		throw e;
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+        << "Failed to set binding point for uniform buffer { ID: " << m_ID << " }" };
 	}
     // We store given binding point
     m_bind_point = bind_point;
@@ -213,13 +210,8 @@ void tilia::gfx::Uniform_Buffer::Bind() const {
     // If id is zero then throws exception
     if (!m_ID)
 	{
-		utils::Tilia_Exception e{ LOCATION };
-
-		e.Add_Message("Failed to bind uniform buffer { ID: %v }"
-		)(m_ID);
-
-		throw e;
-
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+        << "Failed to bind uniform buffer { ID: " << m_ID << " }" };
 	}
     // Binds ubo with id
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
@@ -231,13 +223,8 @@ void tilia::gfx::Uniform_Buffer::Bind(const std::uint32_t& id) {
     // If id is zero then throws exception
     if (!id)
 	{
-		utils::Tilia_Exception e{ LOCATION };
-
-		e.Add_Message("Failed to bind uniform buffer { ID: %v }"
-		)(id);
-
-		throw e;
-
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+        << "Failed to bind uniform buffer { ID: " << id << " }" };
 	}
     // Binds ubo with id
     GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, id));

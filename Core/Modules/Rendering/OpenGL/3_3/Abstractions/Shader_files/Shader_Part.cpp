@@ -23,11 +23,11 @@ tilia::gfx::Shader_Part::~Shader_Part()
 	{
 		GL_CALL(glDeleteShader(m_ID));
 	}
-	catch (utils::Tilia_Exception& e)
+	catch (utils::Tilia_Exception& t_e)
 	{
 
-		e.Add_Message("Shader part { ID: %v } failed to be destroyed")
-			(m_ID);
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< "Shader part { ID: " << m_ID << " } failed to be destroyed";
 
 		// Possibly forward e to someplace else and then throw
 
@@ -46,10 +46,10 @@ void tilia::gfx::Shader_Part::Init(const bool& reload)
 			Compile(true);
 
 	}
-	catch(utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to init Shader_Part { ID: %v }")(m_ID);
-
-		throw e;
+	catch(utils::Tilia_Exception& t_e) {
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< "Failed to init Shader_Part { ID: " << m_ID << " }";
+		throw t_e;
 	}
 
 }
@@ -60,11 +60,11 @@ void tilia::gfx::Shader_Part::Source()
 	try {
 		m_source = file_system.Load_File(m_path);
 	}
-	catch(utils::Tilia_Exception& e)
+	catch(utils::Tilia_Exception& t_e)
 	{
-		e.Add_Message("Failed to load shader source for Shader_Part { ID: %v }")(m_ID);
-
-		throw e;
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< "Failed to load shader source for Shader_Part { ID: " << m_ID << " }";
+		throw t_e;
 	}
 
 }
@@ -99,16 +99,10 @@ void tilia::gfx::Shader_Part::Compile(const bool& source)
 
 			GL_CALL(glDeleteShader(m_ID));
 
-			utils::Tilia_Exception e{ LOCATION };
-
-			e.Add_Message("Shader part { ID: %v } failed to be created"
-				"\n>>> Part type: %v"
-				"\n>>> Message: %v"
-				)(m_ID)
-				(utils::Get_Shader_Type_String(m_type))
-				(&message.front());
-
-			throw e;
+			throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+				<< "Shader part { ID: " << m_ID << " } failed to be created"
+				<< "\n>>> Part type: " << utils::Get_Shader_Type_String(m_type)
+				<< "\n>>> Message: " << &message.front() };
 
 		}
 	
@@ -119,10 +113,10 @@ void tilia::gfx::Shader_Part::Compile(const bool& source)
 		}
 
 	}
-	catch(utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to compile Shader_Part { ID: %v }")(m_ID);
-
-		throw e;
+	catch(utils::Tilia_Exception& t_e) {
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< "Failed to compile Shader_Part { ID: " << m_ID << " }";
+		throw t_e;
 	}
 
 }

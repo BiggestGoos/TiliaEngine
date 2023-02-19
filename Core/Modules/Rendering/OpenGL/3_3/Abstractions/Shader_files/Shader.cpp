@@ -19,11 +19,10 @@ tilia::gfx::Shader::~Shader()
 	{
 		GL_CALL(glDeleteProgram(m_ID));
 	}
-	catch (utils::Tilia_Exception& e)
+	catch (utils::Tilia_Exception& t_e)
 	{
 
-		e.Add_Message("Shader { ID: %v } failed to be destroyed")
-			(m_ID);
+		t_e.Add_Message(TILIA_LOCATION) << "Shader { ID: " << m_ID << " } failed to be destroyed";
 
 		// Possibly forward e to someplace else and then throw
 
@@ -38,14 +37,9 @@ void tilia::gfx::Shader::Init(std::initializer_list<std::weak_ptr<Shader_Part>> 
 
     GL_CALL(m_ID = glCreateProgram());
 
-    if (!vertex_parts.size() || !fragment_parts.size()) {
-
-        utils::Tilia_Exception e{ LOCATION };
-
-        e.Add_Message("Shader { ID: %v } was not given enough vertex or fragment parts");
-
-        throw e;
-
+    if (!vertex_parts.size() || !fragment_parts.size()) {  
+		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+		<< "Shader { ID: " << m_ID << " } was not given enough vertex or fragment parts" };
     }
 
     for (auto& v_part : vertex_parts) {
@@ -113,14 +107,9 @@ void tilia::gfx::Shader::Reload()
 		GL_CALL(glGetProgramInfoLog(m_ID, length, &length, &message.front()));
 		message[static_cast<size_t>(length) - 1] = '\0';
 
-		utils::Tilia_Exception e{ LOCATION };
-
-		e.Add_Message("Shader { ID: %v } failed to reload"
-			"\n>>> Message: %v"
-		)(m_ID)
-		(&message.front());
-
-		throw e;
+		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+			<< "Shader { ID: " << m_ID << " } failed to reload"
+			<< "\n>>> Message: " << &message.front() };
 
 	}
 
@@ -135,13 +124,9 @@ void tilia::gfx::Shader::Bind_Uniform_Block(const std::string& block_name,
 void tilia::gfx::Shader::Bind() const {
     if (!m_ID)
 	{
-		utils::Tilia_Exception e{ LOCATION };
-
-		e.Add_Message("Failed to bind shader { ID: %v }"
-		)(m_ID);
-
-		throw e;
-
+		throw utils::Tilia_Exception{ 
+			utils::Exception_Data{ TILIA_LOCATION } 
+		<< "Failed to bind shader { ID: " << m_ID << " }" };
 	}
     GL_CALL(glUseProgram(m_ID));
     s_bound_ID = m_ID;
@@ -150,13 +135,8 @@ void tilia::gfx::Shader::Bind() const {
 void tilia::gfx::Shader::Bind(const std::uint32_t& id) {
     if (!id)
 	{
-		utils::Tilia_Exception e{ LOCATION };
-
-		e.Add_Message("Failed to bind shader { ID: %v }"
-		)(id);
-
-		throw e;
-
+		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION }
+		<< "Failed to bind shader { ID: " << id << " }" };
 	}
     GL_CALL(glUseProgram(id));
     s_bound_ID = id;
@@ -210,10 +190,9 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const 
 				return;
 		}
 	}
-	catch (utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
-
-		throw e;
+	catch (utils::Tilia_Exception & t_e) {
+		throw t_e.Add_Message(TILIA_LOCATION)
+			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
 	}
 }
 
@@ -242,10 +221,10 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::int32_t* vs,
 				return;
 		}
 	}
-	catch (utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
-
-		throw e;
+	catch (utils::Tilia_Exception& t_e) {
+		t_e.Add_Message(TILIA_LOCATION) 
+			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
+		throw t_e;
 	}
 }
 
@@ -274,10 +253,9 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::uint32_t* vs
 				return;
 		}
 	}
-	catch (utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
-
-		throw e;
+	catch (utils::Tilia_Exception & t_e) {
+		throw t_e.Add_Message(TILIA_LOCATION)
+			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
 	}
 }
 
@@ -341,10 +319,9 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs,
 			return;
 		}
 	}
-	catch (utils::Tilia_Exception& e) {
-		e.Add_Message("Failed to set uniform for shader { ID: %v }")(m_ID);
-
-		throw e;
+	catch (utils::Tilia_Exception & t_e) {
+		throw t_e.Add_Message(TILIA_LOCATION)
+			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
 	}
 
 }

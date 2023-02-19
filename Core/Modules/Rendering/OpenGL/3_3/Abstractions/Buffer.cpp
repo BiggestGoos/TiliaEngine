@@ -1,5 +1,5 @@
 // Vendor
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Tilia
 #include "Buffer.hpp"
@@ -86,13 +86,14 @@ void tilia::gfx::Buffer::Init(const enums::Buffer_Type& type, const std::size_t&
 
 void tilia::gfx::Buffer::Terminate()
 {
-    // We deallocate the buffers
-    GL_CALL(glDeleteBuffers(0, &m_ID));
-    m_local_data.reset();
-    // Show that we can't use this buffer after terminating
+    // Shows that buffer is terminated
     m_ID = 0;
-    m_memory_size = 0;
-    m_map_type = enums::Buffer_Map_Type::None;
+
+    m_type = enums::Buffer_Type::None;
+    
+    Deallocate();
+    
+    GL_CALL(glDeleteBuffers(1, &m_ID));
 }
 
 void tilia::gfx::Buffer::Allocate(const std::size_t& size, 
@@ -121,6 +122,19 @@ void tilia::gfx::Buffer::Allocate(const std::size_t& size,
     const bool is_bound{ m_ID == s_bound_IDs[*m_type] };
     if (is_bound && !was_bound)
         Rebind();
+}
+
+void tilia::gfx::Buffer::Deallocate()
+{
+    // We can deallocate the local buffer but can't actually deallocate the openGL one. We will
+    // still set size to 0 and other things which will make the buffer unusable until a new one
+    // is allocated.
+    m_local_data.reset();
+    // Show that the buffers are non-existant after deallocating
+    m_memory_size = 0;
+    m_access_type = enums::Buffer_Access_Type::None;
+    m_access_frequency = enums::Buffer_Access_Frequency::None;
+    m_map_type = enums::Buffer_Map_Type::None;
 }
 
 void tilia::gfx::Buffer::Allocate_Local(const std::size_t& size, const void* data)
@@ -175,15 +189,17 @@ void tilia::gfx::Buffer::Get_Data(const std::size_t& offset, const std::size_t& 
         Rebind();
 }
 
-void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& mapping_type, void*& data, 
-    const bool& map_local)
+void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& mapping_type, void*& data)
 {
-    if (map_local)
+    if (mapping_type == enums::Buffer_Map_Type::None || m_map_type != enums::Buffer_Map_Type::None)
+        return;
+
+    if (mapping_type == enums::Buffer_Map_Type::Local)
     {
         if (m_local_data == nullptr)
             Allocate_Local(m_memory_size);
         data = m_local_data.get();
-        m_map_type = enums::Buffer_Map_Type::Local;
+        m_map_type = mapping_type;
         return;
     }
     const bool was_bound{ m_ID == s_bound_IDs[*m_type] };
@@ -199,8 +215,31 @@ void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& mapping_type, vo
         Rebind();
 }
 
+std::optional<tilia::gfx::Buffer::Map_Value> tilia::gfx::Buffer::Map_Data_Auto(
+    const enums::Buffer_Map_Type& mapping_type)
+{
+    const std::uint32_t none_or_local{ *enums::Buffer_Map_Type::None |
+    *enums::Buffer_Map_Type::Local };
+    
+    if (*mapping_type == none_or_local)
+        return std::nullopt;
+
+    void* mapped_ptr{};
+    Map_Data(mapping_type, mapped_ptr);
+    return Map_Value{ static_cast<Byte*>(mapped_ptr), std::bind(&Buffer::Unmap_Data, this) };
+}
+
 void tilia::gfx::Buffer::Unmap_Data()
 {
+    const std::uint32_t none_or_local{ *enums::Buffer_Map_Type::None |
+        *enums::Buffer_Map_Type::Local };
+
+    if (*m_map_type == none_or_local)
+    {
+        m_map_type = enums::Buffer_Map_Type::None;
+        return;
+    }
+
     const bool was_bound{ m_ID == s_bound_IDs[*m_type] };
     if (!was_bound)
         Bind(true);
@@ -217,10 +256,10 @@ void tilia::gfx::Buffer::Upload_Data() const
 {
     if (m_local_data == nullptr)
     {
-        utils::Tilia_Exception e{ LOCATION };
-        e.Add_Message("Failed to upload local buffer to openGL due to it being nullptr "
-            "{ Type: %v : ID: %v }")(*m_type)(m_ID);
-        throw e;
+        throw utils::Tilia_Exception{ 
+            utils::Exception_Data{ TILIA_LOCATION } 
+            << "Failed to upload local buffer to openGL due to it being nullptr "
+            << "{ Type: " << *m_type << " : ID: " << m_ID << " }" };
     }
     const bool was_bound{ m_ID == s_bound_IDs[*m_type] };
     if (!was_bound)
@@ -239,10 +278,8 @@ void tilia::gfx::Buffer::Bind(const enums::Buffer_Type& type, const std::uint32_
 {
     if (id == 0)
     {
-        utils::Tilia_Exception e{ LOCATION };
-        e.Add_Message("Failed to bind buffer { Type: %v : ID: %v }"
-        )(*type)(id);
-        throw e;
+        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
+            << "Failed to bind buffer { Type: " << *type << " : ID: " << id << " }" };
     }
     GL_CALL(glBindBuffer(*type, id));
     if (save_id)
@@ -278,32 +315,79 @@ void tilia::gfx::Buffer::Rebind(const enums::Buffer_Type& type)
 
 #if TILIA_UNIT_TESTS == 1
 
+// Vendor
 #include "vendor/Catch2/Catch2.hpp"
 
+// Standard
 #include <iostream>
+#include <functional>
 
-void tilia::gfx::OpenGL_3_3_Buffer_Test()
+void tilia::gfx::Buffer::Test()
 {
 
     Buffer buffer{};
 
-    buffer.Init(enums::Buffer_Type::Element_Buffer, 8, enums::Buffer_Access_Type::Draw, 
-        enums::Buffer_Access_Frequency::Dynamic, nullptr, true);
+    {
 
-    std::int64_t int_64{ 10 };
+        const std::size_t test_size{ 8 };
 
-    buffer.Set_Data(&int_64, true);
-    buffer.Upload_Data();
+        std::unique_ptr<Byte[]> test_ptr{};
 
-    void* int_64_ret_ptr{ new std::int64_t{} };
+        buffer.Init(enums::Buffer_Type::Element_Buffer, test_size, enums::Buffer_Access_Type::Draw,
+            enums::Buffer_Access_Frequency::Dynamic, nullptr, true);
 
-    buffer.Get_Data(int_64_ret_ptr, false);
-    REQUIRE(*static_cast<int64_t*>(int_64_ret_ptr) == int_64);
+        REQUIRE(buffer.Get_Type() == enums::Buffer_Type::Element_Buffer);
 
-    buffer.Get_Data(int_64_ret_ptr, true);
-    REQUIRE(*static_cast<int64_t*>(int_64_ret_ptr) == int_64);
+        REQUIRE(buffer.Get_ID() != 0);
 
+        REQUIRE(buffer.Get_Size() == test_size);
 
+        REQUIRE(buffer.Get_Access_Type() == enums::Buffer_Access_Type::Draw);
+
+        REQUIRE(buffer.Get_Access_Frequency() == enums::Buffer_Access_Frequency::Dynamic);
+
+        buffer.Terminate();
+
+        REQUIRE(buffer.Get_Type() == enums::Buffer_Type::None);
+
+        REQUIRE(buffer.Get_ID() == 0);
+
+        REQUIRE(buffer.Get_Size() == 0);
+
+        REQUIRE(buffer.Get_Access_Type() == enums::Buffer_Access_Type::None);
+
+        REQUIRE(buffer.Get_Access_Frequency() == enums::Buffer_Access_Frequency::None);
+
+        buffer.Init(enums::Buffer_Type::Element_Buffer, test_size, enums::Buffer_Access_Type::Draw,
+            enums::Buffer_Access_Frequency::Dynamic, nullptr, true);
+        REQUIRE(buffer.Get_Type() == enums::Buffer_Type::Element_Buffer);
+
+        REQUIRE(buffer.Get_ID() != 0);
+
+        REQUIRE(buffer.Get_Size() == test_size);
+
+        REQUIRE(buffer.Get_Access_Type() == enums::Buffer_Access_Type::Draw);
+
+        REQUIRE(buffer.Get_Access_Frequency() == enums::Buffer_Access_Frequency::Dynamic);
+
+        test_ptr = std::make_unique<Byte[]>(buffer.Get_Size());
+
+        std::int64_t int_64{ 10 };
+
+        buffer.Set_Data(&int_64, true);
+        buffer.Upload_Data();
+
+        buffer.Get_Data(test_ptr.get(), false);
+        REQUIRE(*static_cast<int64_t*>(static_cast<void*>(test_ptr.get())) == int_64);
+
+        buffer.Get_Data(test_ptr.get(), true);
+        REQUIRE(*static_cast<int64_t*>(static_cast<void*>(test_ptr.get())) == int_64);
+
+        Map_Value test_map_ptr{ buffer.Map_Data_Auto(enums::Buffer_Map_Type::Read_Write).value() };
+
+        std::cout << std::hex << test_map_ptr.get() << '\n';
+
+    }
 
     buffer.Terminate();
 

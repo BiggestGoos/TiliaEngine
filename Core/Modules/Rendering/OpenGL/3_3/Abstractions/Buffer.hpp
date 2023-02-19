@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <memory>
 #include <optional>
+#include <functional>
 
 // Tilia
 #include "Core/Values/Directories.hpp"
@@ -118,6 +119,11 @@ namespace tilia
 				const bool& allocate_local = false);
 
 			/**
+			 * @brief Deallocates all buffers.
+			 */
+			void Deallocate();
+
+			/**
 			 * @brief Allocates a local buffer which we can write to instead of the openGL side
 			 * buffer. We can then upload the local buffer to said openGL buffer at once. If we set
 			 * data in the local buffer then we need to also upload the data to openGL in order for
@@ -180,23 +186,33 @@ namespace tilia
 				Get_Data(0, m_memory_size, data, get_local);
 			}
 
+			// Return value from Map_Data which will call Unmap_Data upon destruction or if 
+			// re-assigned/reset is called.
+			using Map_Value = std::unique_ptr<Byte, std::function<void(Byte*)>>;
+
 			/**
 			 * @brief Sets a given pointer to point towards either the openGL or the local buffer. 
-			 * If we want to point to the openGL buffer then we also need to specify a mapping
-			 * type. This mapping type decides what you will be able to do with the mapped buffer.
-			 * If we want to map to the local buffer we don't need to specify a mapping type. If we
-			 * map to the openGL buffer we will also have to unmap the buffer. We don't have to
-			 * unmap the buffer if we map to the local buffer but we do have to upload the data to
-			 * openGL for the changes to take effect.
-			 *
-			 * @param mapping_type - The way we want to map to the openGL buffer.
-			 * @param data - The return parameter which will be set to a pointer to the desired 
+			 * The openGL buffer can be mapped to with different mapping types. This decides in
+			 * what ways the openGL buffer mapped data can be used.
+			 * 
+			 * The buffer has to be unmapped for this function to work. Therefore you should call
+			 * Unmap_Data after you're fisihed with the mapped data.
+			 * 
+			 * @param mapping_type - The way we want to map to the openGL buffer or if we want to
+			 * map to local.
+			 * @param data - The return parameter which will be set to a pointer to the chosen 
 			 * buffer.
-			 * @param map_local - Whether or not we want to map to the openGL or the local buffer. 
-			 * If no local buffer already exists then one is created.
 			 */
-			void Map_Data(const enums::Buffer_Map_Type& mapping_type, void*& data, 
-				const bool& map_local = false);
+			void Map_Data(const enums::Buffer_Map_Type& mapping_type, void*& data);
+
+			/**
+			 * @brief 
+			 * 
+			 * @param mapping_type
+			 * 
+			 * @return 
+			 */
+			std::optional<Map_Value> Map_Data_Auto(const enums::Buffer_Map_Type& mapping_type);
 
 			/**
 			 * @brief Unmaps the mapped pointer which invalidates it and uploads the data.
@@ -226,7 +242,8 @@ namespace tilia
 			 * @param save_id - Whether or not to save the previously bound id for possible 
 			 * rebinding.
 			 */
-			static void Bind(const enums::Buffer_Type& type, const std::uint32_t& id, const bool& save_id = false);
+			static void Bind(const enums::Buffer_Type& type, const std::uint32_t& id, 
+				const bool& save_id = false);
 
 			/**
 			 * @brief Unbinds the buffer.
@@ -291,6 +308,16 @@ namespace tilia
 			 */
 			inline auto Get_Map_Type() const { return m_map_type; }
 
+#if TILIA_UNIT_TESTS == 1
+
+			/**
+			 * @brief Unit test for openGL 3.3 Buffer. Has to be called after creation of an openGL
+			 * context.
+			 */
+			static void Test();
+
+#endif // TILIA_UNIT_TESTS == 1
+
 		private:
 
 			// The id of the underlying openGL object.
@@ -321,16 +348,6 @@ namespace tilia
 			static std::unordered_map<std::uint32_t, std::uint32_t> s_saved_IDs;
 
 		}; // Buffer
-
-#if TILIA_UNIT_TESTS == 1
-
-		/**
-		 * @brief Unit test for openGL 3.3 Buffer. Has to be called after creation of an openGL
-		 * context.
-		 */
-		void OpenGL_3_3_Buffer_Test();
-
-#endif // TILIA_UNIT_TESTS == 1
 
 	} // gfx
 
