@@ -376,6 +376,12 @@ int main()
 
         glDebugMessageCallback(error_callback, nullptr);
 
+        int num{};
+
+        glGetIntegerv(GL_MAX_DEBUG_LOGGED_MESSAGES, &num);
+        
+        std::cout << "Max debug logged messages " << num << '\n';
+
         input.Init(window);
 
         glEnable(GL_BLEND);
