@@ -1,5 +1,5 @@
 /*****************************************************************//**
- * @file   Error_Handling.h
+ * @file   Error_Handling.hpp
  * @brief  A header containing the declarations of functions used for handling errors as 
  *         well as declarations and definitions of macros for handling errors.
  * 
@@ -44,6 +44,8 @@ namespace tilia {
         bool GL_Check_Error();
 
         void GL_Clear_Error();
+
+        
 
     }
 

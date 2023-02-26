@@ -377,10 +377,19 @@ int main()
         glDebugMessageCallback(error_callback, nullptr);
 
         int num{};
-
+        
         glGetIntegerv(GL_MAX_DEBUG_LOGGED_MESSAGES, &num);
         
         std::cout << "Max debug logged messages " << num << '\n';
+        
+        std::int32_t extension_count{};
+        glGetIntegerv(GL_NUM_EXTENSIONS, &extension_count);
+
+        for (std::int32_t i{ 0 }; i < extension_count; ++i)
+        {
+            const char* extension{ reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i)) };
+            std::cout << i << " : " << extension << '\n';
+        }
 
         input.Init(window);
 
