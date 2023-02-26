@@ -110,13 +110,13 @@ void tilia::gfx::Uniform_Buffer::Init(
     // We store the block variables in temporary vector for further moving
     std::vector<T> temp{ std::move(block_variables) };
     // We generate a new id for an openGL ubo
-    GL_CALL(glGenBuffers(1, &m_ID));
+    GL_CALL_(glGenBuffers(1, &m_ID));
     // If any variables is given then we store them 
     if (block_variables.begin() != block_variables.end())
         Reset(temp, indexing);
     // We make sure the buffer is a uniform buffer by binding to it
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, 0));
     // If given then we set the binding point to the given one
     if (bind_point >= 0)
         Set_Bind_Point(static_cast<std::uint32_t>(bind_point));
@@ -203,7 +203,7 @@ void tilia::gfx::Uniform_Buffer::Set_Bind_Point(const std::uint32_t& bind_point)
     // We store given binding point
     m_bind_point = bind_point;
     // We Bind the ubo to the given binding point
-    GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, bind_point, m_ID));
+    GL_CALL_(glBindBufferBase(GL_UNIFORM_BUFFER, bind_point, m_ID));
 }
 
 void tilia::gfx::Uniform_Buffer::Bind() const {
@@ -214,7 +214,7 @@ void tilia::gfx::Uniform_Buffer::Bind() const {
         << "Failed to bind uniform buffer { ID: " << m_ID << " }" };
 	}
     // Binds ubo with id
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
     // Stores the id as the new bound id
     s_bound_ID = m_ID;
 }
@@ -227,14 +227,14 @@ void tilia::gfx::Uniform_Buffer::Bind(const std::uint32_t& id) {
         << "Failed to bind uniform buffer { ID: " << id << " }" };
 	}
     // Binds ubo with id
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, id));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, id));
     // Stores the id as the new bound id
     s_bound_ID = id;
 }
 
 void tilia::gfx::Uniform_Buffer::Unbind(const bool& save_id) {
     // Binds the openGL ubo to zero
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 
     // If true then saves the old bound id
     if (save_id)
@@ -247,7 +247,7 @@ void tilia::gfx::Uniform_Buffer::Unbind(const bool& save_id) {
 
 void tilia::gfx::Uniform_Buffer::Rebind() {
     // Binds the previously bound id
-	GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, s_previous_ID));
+	GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, s_previous_ID));
     // Sets the current bound id to the previous bound id
 	s_bound_ID = s_previous_ID;
 	s_bound_ID = 0;
@@ -268,7 +268,7 @@ void tilia::gfx::Uniform_Buffer::Uniform(const std::size_t& offset, const std::s
         }
 
         // Sets the data of the offset and size with the given data
-        GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, vs));
+        GL_CALL_(glBufferSubData(GL_UNIFORM_BUFFER, offset, size, vs));
 
         // If just bound the ubo then rebinds the old one
         if (m_ID == s_bound_ID && m_ID != s_previous_ID)
@@ -421,7 +421,7 @@ void tilia::gfx::Uniform_Buffer::Map_Data()
         Bind();
     }
     // Sets the data of the offset and size with the given data
-    GL_CALL(glBufferSubData(GL_UNIFORM_BUFFER, 0, m_block_size, m_block_data.get()));
+    GL_CALL_(glBufferSubData(GL_UNIFORM_BUFFER, 0, m_block_size, m_block_data.get()));
     // If just bound the ubo then rebinds the old one
     if (m_ID == s_bound_ID && m_ID != s_previous_ID)
         Rebind();
@@ -431,10 +431,10 @@ void tilia::gfx::Uniform_Buffer::Allocate_Data(const std::size_t& block_size)
 {
     m_block_size = block_size;
     m_block_data = std::make_unique<Byte[]>(block_size);
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
     // Allocates memory for the total size of the uniform block
     glBufferData(GL_UNIFORM_BUFFER, block_size, NULL, GL_DYNAMIC_DRAW);
-    GL_CALL(glBindBuffer(GL_UNIFORM_BUFFER, 0));
+    GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, 0));
 }
 
 std::size_t tilia::gfx::Uniform_Buffer::Push_Variable(std::size_t block_size, 

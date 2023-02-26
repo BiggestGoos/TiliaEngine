@@ -84,6 +84,22 @@ namespace tilia {
 			 * @return The message of the exception.
 			 */
 			inline auto Get_Message() const { return m_message.str(); }
+
+			/**
+			 * @brief Sets the file and line at which the exception message was created.
+			 * 
+			 * @param file - The file at which the exception message was created.
+			 * @param line - The line at which the exception message was created.
+			 */
+			inline void Set_Location(const std::string& file, const std::size_t& line) 
+			{ m_file = file; m_line = line; }
+			/**
+			 * @brief Gets the file and line of which the exception message was created at.
+			 * 
+			 * @return The location of the exception message's creation.
+			 */
+			inline auto Get_Location() const { return std::pair{ m_file, m_line }; }
+
 			/**
 			 * @brief Gets the file which the exception message was created at.
 			 *

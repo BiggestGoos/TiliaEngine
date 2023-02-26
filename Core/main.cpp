@@ -443,10 +443,10 @@ int main()
         ub.Bind();
 
         std::uint32_t uniform_buffer{ };
-        GL_CALL(glGenBuffers(1, &uniform_buffer));
+        GL_CALL_(glGenBuffers(1, &uniform_buffer));
 
-        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.Get_ID()));
-        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer));
+        GL_CALL_(glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.Get_ID()));
+        GL_CALL_(glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer));
 
         ub.Set_Bind_Point(0);
 

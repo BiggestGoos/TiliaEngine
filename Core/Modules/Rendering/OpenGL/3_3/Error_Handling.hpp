@@ -3,8 +3,6 @@
  * @brief  A header containing the declarations of functions used for handling errors as 
  *         well as declarations and definitions of macros for handling errors.
  * 
- * @define TILIA_ERROR_HANDLING_H
- * 
  * @author Gustav Fagerlind
  * @date   15/05/2022
  *********************************************************************/
@@ -26,7 +24,7 @@
                               x;\
                               ASSERT(tilia::utils::GL_Check_Error())
 
-#define GL_CALL(x)            tilia::utils::GL_Clear_Error();\
+#define GL_CALL_(x)            tilia::utils::GL_Clear_Error();\
                               x;\
                               tilia::utils::Handle_GL_Error("", __LINE__, __FILE__, #x);
 

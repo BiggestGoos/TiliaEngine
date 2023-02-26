@@ -21,7 +21,7 @@
  *********************************************************************/
 
 // Dependencies
-#include "vendor/glad/include/glad/glad.h"
+#include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Standard
 #include <stdexcept>
@@ -239,11 +239,11 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	// Set unpack alignment
 	if (m_texture_def.load_color_format == enums::Data_Color_Format::RGBA)
 	{
-		GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
+		GL_CALL_(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
 	}
 	else
 	{
-		GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+		GL_CALL_(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
 	}
 
 	Unbind(true);
@@ -252,13 +252,13 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	Bind();
 
 	// Sets filtering and wrapping modes
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, *m_texture_def.filter_min));
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, *m_texture_def.filter_mag));
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, *m_texture_def.wrap_s));
-	GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, *m_texture_def.wrap_t));
+	GL_CALL_(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, *m_texture_def.filter_min));
+	GL_CALL_(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, *m_texture_def.filter_mag));
+	GL_CALL_(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, *m_texture_def.wrap_s));
+	GL_CALL_(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, *m_texture_def.wrap_t));
 
 	// Sets pixel data
-	GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, 
+	GL_CALL_(glTexImage2D(GL_TEXTURE_2D, 0, 
 		*m_texture_def.color_format, 
 		m_texture_def.width, m_texture_def.height, 0, 
 		*m_texture_def.load_color_format, 
@@ -309,7 +309,7 @@ void tilia::gfx::Texture_2D::Generate_Mipmaps()
 			<< "Texture_2D { ID: " << m_ID 
 			<< " } failed to generate mipmaps because there is no data" };
 	}
-	GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
+	GL_CALL_(glGenerateMipmap(GL_TEXTURE_2D));
 	//log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", 
 	//m_ID);
 	Rebind();
@@ -331,7 +331,7 @@ void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size,
 		break;
 	}
 	Unbind(true);
-	GL_CALL(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
+	GL_CALL_(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
 	Rebind();
 }
 
@@ -354,6 +354,6 @@ void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side,
 			<< "Wrap side: " << *wrap_side << " is not allowed for Texture_2D" };
 	}
 	Unbind(true);
-	GL_CALL(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
+	GL_CALL_(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
 	Rebind();
 }
