@@ -16,6 +16,8 @@
 
 #define TILIA_WINDOWS_FILE_SYSTEM_INCLUDE "Core/Modules/File_System/Windows/File_System.hpp"
 
+#define TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE "Core/Modules/Error_Handling/OpenGL/3_3/Error_Handling.hpp"
+
 #define TILIA_OPENGL_3_3_SHADER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader.hpp"
 #define TILIA_OPENGL_3_3_SHADER_DATA_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader_Data.hpp"
 #define TILIA_OPENGL_3_3_SHADER_PART_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader_Part.hpp"
@@ -29,7 +31,6 @@
 #define TILIA_OPENGL_3_3_BUFFER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Buffer.hpp"
 
 #define TILIA_OPENGL_3_3_BATCH_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Batch.hpp"
-#define TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Error_Handling.hpp"
 #define TILIA_OPENGL_3_3_MESH_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Mesh.hpp"
 #define TILIA_OPENGL_3_3_RENDERER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #define TILIA_OPENGL_3_3_VERTEX_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"

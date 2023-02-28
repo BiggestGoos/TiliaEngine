@@ -10,35 +10,34 @@
 #ifndef TILIA_LOGGING_HPP
 #define TILIA_LOGGING_HPP
 
+// Standard
+#include <cstdint>
+
 namespace tilia {
 
 	namespace log {
 
-		// Log types:
-		enum class Type {
-			INFO    = 0,
-			DEBUG   = 1,
-			SUCCESS = 2,
-			ERROR   = 3
-		};
+		class Logger
+		{
+		public:
 
-		/**
-		 * @brief A log function which prints the type, tag and text that is given.
-		 * 
-		 * @param log_type - The type to print to the console
-		 * @param log_tag  - The tag to print to the console
-		 * @param text     - The text to print to the console
-		 */
-		void Log(const Type& log_type, const char* log_tag, const char* text...);
+			static Logger& Instance()
+			{
+				static Logger logger{};
+				return logger;
+			}
 
-		/**
-		 * @brief A log function which can be used as an add-on for the regular Log function. It
-		 * prints a tag and a text with an indentation.
-		 * 
-		 * @param log_tag - The tag to print to the console
-		 * @param text    - The text to print to the console
-		 */
-		void Log_Indent(const char* log_tag, const char* text...);
+			static void OpenGL_Error_Callback(std::uint32_t source, std::uint32_t type, 
+				std::uint32_t id, std::int32_t length, 
+				const char* message, const void* user_param);
+
+			static void GLFW_Error_Callback(std::int32_t error_code, const char* description);
+
+		private:
+
+			Logger();
+
+		}; // Logger
 
 	} // log
 

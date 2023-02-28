@@ -20,7 +20,7 @@
 #define ASSERT
 #endif
 
-#define GL_ASSERT(x)          tilia::utils::GL_Clear_Error();\
+#define GL_ASSERT_(x)          tilia::utils::GL_Clear_Error();\
                               x;\
                               ASSERT(tilia::utils::GL_Check_Error())
 
@@ -28,9 +28,11 @@
                               x;\
                               tilia::utils::Handle_GL_Error("", __LINE__, __FILE__, #x);
 
-#define GL_CALL_MESSAGE(x, y) tilia::utils::GL_Clear_Error();\
+#define GL_CALL_MESSAGE_(x, y) tilia::utils::GL_Clear_Error();\
                               x;\
                               tilia::utils::Handle_GL_Error(y, __LINE__, __FILE__, #x);
+
+#define GL_CALL(x) 
 
 namespace tilia {
 

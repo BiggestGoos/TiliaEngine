@@ -190,7 +190,7 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Batch.hpp" />
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Error_Handling.hpp" />
+    <ClInclude Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Mesh.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Vertex.hpp" />
@@ -506,7 +506,7 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Batch.cpp" />
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Error_Handling.cpp" />
+    <ClCompile Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.cpp" />
     <ClCompile Include="Core\Temp\Input.cpp" />
     <ClCompile Include="Core\Temp\Limit_Fps.cpp" />

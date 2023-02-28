@@ -978,7 +978,7 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Batch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Error_Handling.hpp">
+    <ClInclude Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Mesh.hpp">
@@ -1037,7 +1037,7 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Batch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Error_Handling.cpp">
+    <ClCompile Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.cpp">

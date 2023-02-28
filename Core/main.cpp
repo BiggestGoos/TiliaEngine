@@ -42,18 +42,18 @@ void processInput();
 void error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 
-    std::cout << "OpenGL error"
-        << "\nSource: " << source
-        << "\nType: " << type
-        << "\nId: " << id
-        << "\nSeverity: " << severity
-        << "\nMessage: " << message << '\n';
+    //std::cout << "OpenGL error"
+    //    << "\nSource: " << source
+    //    << "\nType: " << type
+    //    << "\nId: " << id
+    //    << "\nSeverity: " << severity
+    //    << "\nMessage: " << message << '\n';
 
 }
 
 // settings
-unsigned int SCR_WIDTH = 800;
-unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 1600;
+unsigned int SCR_HEIGHT = 1200;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -64,6 +64,7 @@ bool firstMouse = true;
 using namespace tilia;
 using namespace tilia::utils;
 using namespace tilia::gfx;
+using namespace tilia::log;
 
 enums::Polymode polymode{ enums::Polymode::Fill };
 
