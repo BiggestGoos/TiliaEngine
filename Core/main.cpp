@@ -334,7 +334,7 @@ TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 
 #endif
 
-#if 1
+#if 0
 
 int main()
 {
@@ -359,7 +359,7 @@ int main()
         }
         glfwMakeContextCurrent(window);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-        
+
         // tell GLFW to capture our mouse
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -735,7 +735,7 @@ int main()
 
 #endif
 
-#if 0
+#if 1
 
 int main()
 {
@@ -1029,8 +1029,6 @@ int main()
     }
     catch (const utils::Tilia_Exception& e) {
         std::cout << "\n<<<Tilia_Exception>>>\n";
-        std::cout << "Line: " << e.Get_Origin_Line() << '\n' <<
-                     "File: " << e.Get_Origin_File() << '\n';
         std::cout << e.what() << '\n';
     }
     catch (const std::exception& e) {

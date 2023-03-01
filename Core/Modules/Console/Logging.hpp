@@ -12,6 +12,8 @@
 
 // Standard
 #include <cstdint>
+#include <memory>
+#include <iostream>
 
 namespace tilia {
 
@@ -36,6 +38,8 @@ namespace tilia {
 		private:
 
 			Logger();
+
+			std::weak_ptr<std::ostream> m_output{  };
 
 		}; // Logger
 
