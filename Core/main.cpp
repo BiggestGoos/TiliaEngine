@@ -334,10 +334,12 @@ TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 
 #endif
 
-#if 0
+#if 1
 
 int main()
 {
+
+    Logger& logger{ Logger::Instance() };
 
     try
     {
@@ -347,6 +349,8 @@ int main()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        glfwSetErrorCallback(Logger::GLFW_Error_Callback);
 
         // glfw window creation
         // --------------------
@@ -375,22 +379,22 @@ int main()
 
         glEnable(GL_DEBUG_OUTPUT);
 
-        glDebugMessageCallback(error_callback, nullptr);
+        glDebugMessageCallback(Logger::OpenGL_Error_Callback, window);
 
-        int num{};
-        
-        glGetIntegerv(GL_MAX_DEBUG_LOGGED_MESSAGES, &num);
-        
-        std::cout << "Max debug logged messages " << num << '\n';
-        
-        std::int32_t extension_count{};
-        glGetIntegerv(GL_NUM_EXTENSIONS, &extension_count);
+        //int num{};
+        //
+        //glGetIntegerv(GL_MAX_DEBUG_LOGGED_MESSAGES, &num);
+        //
+        //std::cout << "Max debug logged messages " << num << '\n';
+        //
+        //std::int32_t extension_count{};
+        //glGetIntegerv(GL_NUM_EXTENSIONS, &extension_count);
 
-        for (std::int32_t i{ 0 }; i < extension_count; ++i)
-        {
-            const char* extension{ reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i)) };
-            std::cout << i << " : " << extension << '\n';
-        }
+        //for (std::int32_t i{ 0 }; i < extension_count; ++i)
+        //{
+        //    const char* extension{ reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i)) };
+        //    std::cout << i << " : " << extension << '\n';
+        //}
 
         input.Init(window);
 
@@ -564,8 +568,7 @@ int main()
 
     glfwTerminate();
 
-    std::int32_t w{};
-    std::cin >> w;
+    std::cin.get();
 
     return 0;
 }
@@ -735,7 +738,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
 
 int main()
 {

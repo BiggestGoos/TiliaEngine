@@ -22,7 +22,7 @@ tilia::gfx::Shader::~Shader()
 	catch (utils::Tilia_Exception& t_e)
 	{
 
-		t_e.Add_Message(TILIA_LOCATION) << "Shader { ID: " << m_ID << " } failed to be destroyed";
+		t_e.Add_Message({ TILIA_LOCATION, "Shader { ID: ", m_ID, " } failed to be destroyed" });
 
 		// Possibly forward e to someplace else and then throw
 
@@ -38,8 +38,8 @@ void tilia::gfx::Shader::Init(std::initializer_list<std::weak_ptr<Shader_Part>> 
 	GL_CALL_(m_ID = glCreateProgram());
 
     if (!vertex_parts.size() || !fragment_parts.size()) {  
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-		<< "Shader { ID: " << m_ID << " } was not given enough vertex or fragment parts" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+		"Shader { ID: ", m_ID, " } was not given enough vertex or fragment parts" } };
     }
 
     for (auto& v_part : vertex_parts) {
@@ -107,9 +107,9 @@ void tilia::gfx::Shader::Reload()
 		GL_CALL_(glGetProgramInfoLog(m_ID, length, &length, &message.front()));
 		message[static_cast<size_t>(length) - 1] = '\0';
 
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Shader { ID: " << m_ID << " } failed to reload"
-			<< "\n>>> Message: " << &message.front() };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Shader { ID: ", m_ID, " } failed to reload"
+			"\n>>> Message: ", &message.front() } };
 
 	}
 
@@ -124,9 +124,8 @@ void tilia::gfx::Shader::Bind_Uniform_Block(const std::string& block_name,
 void tilia::gfx::Shader::Bind() const {
     if (!m_ID)
 	{
-		throw utils::Tilia_Exception{ 
-			utils::Exception_Data{ TILIA_LOCATION } 
-		<< "Failed to bind shader { ID: " << m_ID << " }" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+		"Failed to bind shader { ID: ", m_ID, " }" } };
 	}
     GL_CALL_(glUseProgram(m_ID));
     s_bound_ID = m_ID;
@@ -135,8 +134,8 @@ void tilia::gfx::Shader::Bind() const {
 void tilia::gfx::Shader::Bind(const std::uint32_t& id) {
     if (!id)
 	{
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION }
-		<< "Failed to bind shader { ID: " << id << " }" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+		"Failed to bind shader { ID: ", id, " }" } };
 	}
     GL_CALL_(glUseProgram(id));
     s_bound_ID = id;
@@ -191,8 +190,8 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const 
 		}
 	}
 	catch (utils::Tilia_Exception & t_e) {
-		throw t_e.Add_Message(TILIA_LOCATION)
-			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
+		throw t_e.Add_Message({ TILIA_LOCATION, 
+			"Failed to set uniform for shader { ID: ", m_ID, " }" });
 	}
 }
 
@@ -222,9 +221,8 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::int32_t* vs,
 		}
 	}
 	catch (utils::Tilia_Exception& t_e) {
-		t_e.Add_Message(TILIA_LOCATION) 
-			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
-		throw t_e;
+		throw t_e.Add_Message({ TILIA_LOCATION, 
+			"Failed to set uniform for shader { ID: ", m_ID, " }" });
 	}
 }
 
@@ -254,8 +252,8 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::uint32_t* vs
 		}
 	}
 	catch (utils::Tilia_Exception & t_e) {
-		throw t_e.Add_Message(TILIA_LOCATION)
-			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
+		throw t_e.Add_Message({ TILIA_LOCATION, 
+			"Failed to set uniform for shader { ID: ", m_ID, " }" });
 	}
 }
 
@@ -320,8 +318,8 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs,
 		}
 	}
 	catch (utils::Tilia_Exception & t_e) {
-		throw t_e.Add_Message(TILIA_LOCATION)
-			<< "Failed to set uniform for shader { ID: " << m_ID << " }";
+		throw t_e.Add_Message({ TILIA_LOCATION,
+			"Failed to set uniform for shader { ID: ", m_ID, " }" });
 	}
 
 }

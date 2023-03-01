@@ -256,10 +256,9 @@ void tilia::gfx::Buffer::Upload_Data() const
 {
     if (m_local_data == nullptr)
     {
-        throw utils::Tilia_Exception{ 
-            utils::Exception_Data{ TILIA_LOCATION } 
-            << "Failed to upload local buffer to openGL due to it being nullptr "
-            << "{ Type: " << *m_type << " : ID: " << m_ID << " }" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to upload local buffer to openGL due to it being nullptr ",
+            "{ Type: ", *m_type, " : ID: ", m_ID, " }" } };
     }
     const bool was_bound{ m_ID == s_bound_IDs[*m_type] };
     if (!was_bound)
@@ -278,8 +277,8 @@ void tilia::gfx::Buffer::Bind(const enums::Buffer_Type& type, const std::uint32_
 {
     if (id == 0)
     {
-        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-            << "Failed to bind buffer { Type: " << *type << " : ID: " << id << " }" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to bind buffer { Type: ", *type, " : ID: ", id, " }" } };
     }
     GL_CALL_(glBindBuffer(*type, id));
     if (save_id)

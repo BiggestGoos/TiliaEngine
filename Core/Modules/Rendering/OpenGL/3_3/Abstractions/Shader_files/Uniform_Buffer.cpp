@@ -127,9 +127,9 @@ void tilia::gfx::Uniform_Buffer::Terminate()
     // If an openGL ubo id was never generated then we throw an exception
     if (m_ID <= 0)
     {
-        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-            << "Failed to terminate uniform buffer due to the fact that it was never"
-            "initialized or something went very wrong" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to terminate uniform buffer due to the fact that it was never",
+            " initialized or something went very wrong" } };
     }
     // We delete the underlying ubo
     glDeleteBuffers(1, &m_ID);
@@ -197,8 +197,8 @@ void tilia::gfx::Uniform_Buffer::Set_Bind_Point(const std::uint32_t& bind_point)
     // If id is zero then we throw exception
     if (!m_ID)
 	{
-        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-        << "Failed to set binding point for uniform buffer { ID: " << m_ID << " }" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to set binding point for uniform buffer { ID: ", m_ID, " }" } };
 	}
     // We store given binding point
     m_bind_point = bind_point;
@@ -210,8 +210,8 @@ void tilia::gfx::Uniform_Buffer::Bind() const {
     // If id is zero then throws exception
     if (!m_ID)
 	{
-        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-        << "Failed to bind uniform buffer { ID: " << m_ID << " }" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to bind uniform buffer { ID: ", m_ID, " }" } };
 	}
     // Binds ubo with id
     GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, m_ID));
@@ -223,8 +223,8 @@ void tilia::gfx::Uniform_Buffer::Bind(const std::uint32_t& id) {
     // If id is zero then throws exception
     if (!id)
 	{
-        throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-        << "Failed to bind uniform buffer { ID: " << id << " }" };
+        throw utils::Tilia_Exception{ { TILIA_LOCATION,
+            "Failed to bind uniform buffer { ID: ", id, " }" } };
 	}
     // Binds ubo with id
     GL_CALL_(glBindBuffer(GL_UNIFORM_BUFFER, id));

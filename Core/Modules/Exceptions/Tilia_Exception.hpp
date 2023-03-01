@@ -37,21 +37,28 @@ namespace tilia {
 			friend class Tilia_Exception;
 
 			Exception_Data(const Exception_Data& other)
-				: m_message{ other.m_message.str() }, m_file{ other.m_file }, 
+				: m_message{ other.m_message }, m_file{ other.m_file },
 				m_line{ other.m_line } { }
 
 			Exception_Data(Exception_Data&& other) noexcept
-				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) }, 
+				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) },
 				m_line{ other.m_line } { }
 
-			explicit Exception_Data(const std::string& file, const std::size_t& line)
+			Exception_Data(const std::string& file, const std::size_t& line)
 				: m_file{ file }, m_line{ line } { }
+
+			template<typename... T>
+			Exception_Data(const std::string& file, const std::size_t& line, T... message)
+				: Exception_Data(file, line)
+			{
+				Set_Message(message...);
+			}
 
 			friend bool operator==(const Exception_Data& lhs, const Exception_Data& rhs)
 			{
 				if (&lhs == &rhs)
 					return true;
-				if (lhs.m_message.str() != lhs.m_message.str() || lhs.m_file != rhs.m_file
+				if (lhs.m_message != lhs.m_message || lhs.m_file != rhs.m_file
 					|| lhs.m_line != rhs.m_line)
 					return false;
 				return true;
@@ -64,38 +71,51 @@ namespace tilia {
 				return !(lhs == rhs);
 			}
 
-			template<typename T>
-			Exception_Data& operator<<(const T& value)
+			/**
+			 * @brief Sets the stored message to the one given.
+			 *
+			 * @param message - The message to store.
+			 */
+			template<typename... T>
+			inline void Set_Message(T... message)
 			{
-				m_message << value;
-				return *this;
+				m_message = {};
+				Append_Message(message...);
 			}
-
-			template<typename T>
-			Exception_Data& operator<<(T&& value)
+			/**
+			 * @brief Appends given message to previous one.
+			 *
+			 * @param message - The message to append.
+			 */
+			template<typename... T>
+			inline void Append_Message(T... message)
 			{
-				m_message << std::move(value);
-				return *this;
+				std::stringbuf str_buf{};
+				std::ostream buffer{ &str_buf };
+				((buffer << std::forward<T>(message)), ...);
+				m_message += str_buf.str();
 			}
 
 			/**
 			 * @brief Gets the exception message.
-			 * 
+			 *
 			 * @return The message of the exception.
 			 */
-			inline auto Get_Message() const { return m_message.str(); }
+			inline auto Get_Message() const { return m_message; }
 
 			/**
 			 * @brief Sets the file and line at which the exception message was created.
-			 * 
+			 *
 			 * @param file - The file at which the exception message was created.
 			 * @param line - The line at which the exception message was created.
 			 */
-			inline void Set_Location(const std::string& file, const std::size_t& line) 
-			{ m_file = file; m_line = line; }
+			inline void Set_Location(const std::string& file, const std::size_t& line)
+			{
+				m_file = file; m_line = line;
+			}
 			/**
 			 * @brief Gets the file and line of which the exception message was created at.
-			 * 
+			 *
 			 * @return The location of the exception message's creation.
 			 */
 			inline auto Get_Location() const { return std::pair{ m_file, m_line }; }
@@ -108,14 +128,14 @@ namespace tilia {
 			inline auto Get_File() const { return m_file; }
 			/**
 			 * @brief Gets the line at which the exception message was created.
-			 * 
+			 *
 			 * @return The line of the exception message's creation.
 			 */
 			inline auto Get_Line() const { return m_line; }
 
 		private:
 			// The message stream
-			std::stringstream m_message{};
+			std::string m_message{};
 			// The file of which the exception message was created
 			std::string m_file{};
 			// The line at which the exception message was created
@@ -169,9 +189,9 @@ namespace tilia {
 				auto potential_message{ [](const auto& message) -> 
 					std::string
 				{
-					const auto buffer_count{ message.rdbuf()->in_avail() };
-					if (buffer_count > 0)
-						return message.str();
+					const auto message_length{ message.size() };
+					if (message_length > 0)
+						return message;
 					return { "Message is empty" };
 				} };
 				for (const auto& message : m_messages)
@@ -188,32 +208,19 @@ namespace tilia {
 			 * 
 			 * @param message - The message to add.
 			 */
-			inline void Add_Message(const Exception_Data& message) 
-			{ m_messages.push_back(message); }
+			inline auto Add_Message(const Exception_Data& message) -> Tilia_Exception&
+			{
+				m_messages.push_back(message); return *this;
+			}
 
 			/**
 			 * @brief Adds a message to the exception.
 			 *
 			 * @param message - The message to add.
 			 */
-			inline void Add_Message(Exception_Data&& message) 
-			{ m_messages.push_back(std::move(message)); }
-
-			/**
-			 * @brief Adds a message to the exception.
-			 * 
-			 * @param file - The file at which the exception was thrown.
-			 * @param line - The line at which the exception was thrown.
-			 * 
-			 * @return A reference to the message. Should not be stored as it is not guaranteed to
-			 * always point to a message in the exception. A message should be directly added after
-			 * calling this function.
-			 */
-			inline auto Add_Message(const std::string& file, const std::size_t& line) -> 
-				Exception_Data& { 
-				m_messages.push_back(Exception_Data{ file, line });
-				const std::size_t last_index{ m_messages.size() - 1 };
-				return m_messages.at(last_index);
+			inline auto Add_Message(Exception_Data&& message) -> Tilia_Exception&
+			{ 
+				m_messages.push_back(std::move(message)); return *this;
 			}
 
 			/**

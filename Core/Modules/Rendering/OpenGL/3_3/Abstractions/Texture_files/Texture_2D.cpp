@@ -172,17 +172,17 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 			nr_channels = 4;
 			break;
 		default:
-			throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-				<< "Texture_2D { ID: " << m_ID << " } was given an invalid color format"
-			    << "\n>>> Format: " << *m_texture_def.color_format };
+			throw utils::Tilia_Exception{ { TILIA_LOCATION,
+				"Texture_2D { ID: ", m_ID, " } was given an invalid color format",
+				"\n>>> Format: ", *m_texture_def.color_format } };
 		}
 
 		uint32_t byte_count{ static_cast<uint32_t>((m_texture_def.width * m_texture_def.height * 
 			nr_channels)) };
 
 		if (!byte_count) {
-			throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Texture_2D { ID: " << m_ID << " } failed to copy texture data" };
+			throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D {ID: ", m_ID, "} failed to copy texture data" } };
 		}
 
 		m_texture_def.texture_data = std::make_unique<uint8_t[]>(static_cast<size_t>(byte_count));
@@ -191,8 +191,8 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 			m_texture_def.texture_data.get());
 		if (!m_texture_def.texture_data)
 		{
-			throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Texture_2D { ID: " << m_ID << " } failed to copy texture data" };
+			throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D { ID: ", m_ID, " } failed to copy texture data" } };
 		}
 	}
 	else if (!texture_def.texture_data) {
@@ -205,15 +205,14 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 		}
 		catch (utils::Tilia_Exception& t_e)
 		{
-			t_e.Add_Message(TILIA_LOCATION) 
-				<< "Texture_2D { ID: " << m_ID << " } data not loaded properly";
-			throw t_e;
+			throw t_e.Add_Message({ TILIA_LOCATION, 
+				"Texture_2D { ID: ", m_ID, " } data not loaded properly" });
 		}
 	}
 	
 	if (!m_texture_def.texture_data.get()) {
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-		<< "Texture_2D { ID: " << m_ID << " } data not set properly" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D { ID: ", m_ID, " } data not set properly" } };
 	}
 
 	// Sets load_color_format
@@ -281,9 +280,9 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 void tilia::gfx::Texture_2D::Set_Texture(const std::string& texture_path)
 {
 	if (texture_path == "") {
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Texture_2D { ID: " << m_ID << " } file path is invalid"
-			<< "\n>>> Path: " << texture_path };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D { ID: ", m_ID, " } file path is invalid",
+			"\n>>> Path: ", texture_path } };
 	}
 		
 	Texture_2D_Def def{};
@@ -299,15 +298,15 @@ void tilia::gfx::Texture_2D::Generate_Mipmaps()
 	Unbind(true);
 	if (m_ID == 0) {
 		Rebind();
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Texture_2D is not generated properly" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D is not generated properly" } };
 	}
 	if (!m_texture_def.texture_data)
 	{
 		Rebind();
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Texture_2D { ID: " << m_ID 
-			<< " } failed to generate mipmaps because there is no data" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Texture_2D { ID: ", m_ID,
+			" } failed to generate mipmaps because there is no data" } };
 	}
 	GL_CALL_(glGenerateMipmap(GL_TEXTURE_2D));
 	//log::Log(log::Type::INFO, "TEXTURE_2D", "Mipmaps for texture { ID: %u } has been generated", 
@@ -350,8 +349,8 @@ void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side,
 		m_texture_def.wrap_t = wrap_mode;
 		break;
 	default:
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Wrap side: " << *wrap_side << " is not allowed for Texture_2D" };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Wrap side: ", *wrap_side, " is not allowed for Texture_2D" } };
 	}
 	Unbind(true);
 	GL_CALL_(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));

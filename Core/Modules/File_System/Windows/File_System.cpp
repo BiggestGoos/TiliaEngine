@@ -36,12 +36,12 @@ std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path
 		if (data)
 			stbi_image_free(data);
 
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "Image file did not load properly"
-			<< "\n>>> Path: " << file_path
-			<< "\n>>> Witdh: " << width
-			<< "\n>>> Height: " << height
-			<< "\n>>> Color channels: " << color_channels };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Image file did not load properly",
+			"\n>>> Path: ", file_path,
+			"\n>>> Witdh: ", width,
+			"\n>>> Height: ", height,
+			"\n>>> Color channels: ", color_channels } };
 	}
 
 	return data;
@@ -70,10 +70,10 @@ std::string tilia::utils::File_System::Load_File(const std::string& file_path)
 	}
 	catch (std::exception& e)
 	{
-		throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-			<< "File did not load properly"
-			<< "\n>>> Path: " << file_path
-			<< "\n>>> Message: " << e.what() };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"File did not load properly",
+			"\n>>> Path: ", file_path,
+			"\n>>> Message: ", e.what() } };
 	}
 
 	return std::move(data);

@@ -66,11 +66,12 @@ void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, cons
     while (GLenum error = glGetError()) {
         utils::Exception_Data e_d{ file, line };
 
-        e_d << "OpenGL [ Error was thrown ]"
-            << "\n>>> Code: " << error
-            << "\n>>> Name: " << Get_Error_String(error)
-            << "\n>>> Func: " << function;
-        if (message != "") e_d << "\n>>> Message: " << message;
+        e_d.Set_Message("OpenGL [ Error was thrown ]",
+            "\n>>> Code: ", error,
+            "\n>>> Name: ", Get_Error_String(error),
+            "\n>>> Func: ", function);
+
+        if (message != "") e_d.Append_Message("\n>>> Message: ", message);
         throw utils::Tilia_Exception{ e_d };
     }
 }

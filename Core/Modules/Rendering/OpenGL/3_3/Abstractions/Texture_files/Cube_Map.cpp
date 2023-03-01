@@ -62,18 +62,18 @@ void tilia::gfx::Cube_Map::Reload()
 
             Rebind();
 
-            throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-                << "Reload of cube map { ID: " << m_ID << " } was stopped due to faulty data"
-                << "\n>>> Size: " << m_cube_map_data.size
-                << "\n>>> Format: " 
-                << utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format)
-                << "\n>>> Data Format: " 
-                << utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format)
-                << "\n>>> Side: " 
-                << utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
-                    static_cast<int32_t>(i))
-                << "\n>>> Data: 0x" 
-                << static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()) };
+            throw utils::Tilia_Exception{ { TILIA_LOCATION,
+                "Reload of cube map { ID: ", m_ID, " } was stopped due to faulty data",
+                "\n>>> Size: ", m_cube_map_data.size,
+                "\n>>> Format: ",
+                utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format),
+                "\n>>> Data Format: ",
+                utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format),
+                "\n>>> Side: ",
+                utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
+                    static_cast<int32_t>(i)),
+                "\n>>> Data: 0x",
+                static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()) } };
 
         }
 
@@ -111,21 +111,19 @@ void tilia::gfx::Cube_Map::Reload()
 
             Rebind();
 
-            t_e.Add_Message(TILIA_LOCATION) 
-                << "Cube map { ID: " << m_ID << " } failed to reload"
-                << "\n>>> Format: " 
-                << utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format)
-                << "\n>>> Data Format: " 
-                << utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format)
-                << "\n>>> Side: " 
-                << utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
-                    static_cast<int32_t>(i))
-                << "\n>>> Size: " << m_cube_map_data.size
-                << "\n>>> Data: 0x" 
-                << static_cast<void*>(m_cube_map_data.sides[i].texture_data.get())
-                << "\n>>> Path: " << m_cube_map_data.sides[i].file_path;
-
-            throw t_e;
+            throw t_e.Add_Message({ TILIA_LOCATION, 
+                "Cube map { ID: ", m_ID, " } failed to reload",
+                "\n>>> Format: ",
+                utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].color_format),
+                "\n>>> Data Format: ",
+                utils::Get_Color_Format_Count(*m_cube_map_data.sides[i].data_color_format),
+                "\n>>> Side: ",
+                utils::Get_Cube_Map_Side_String(*enums::Cube_Map_Sides::Positive_X +
+                    static_cast<int32_t>(i)),
+                "\n>>> Size: ", m_cube_map_data.size,
+                "\n>>> Data: 0x",
+                static_cast<void*>(m_cube_map_data.sides[i].texture_data.get()),
+                "\n>>> Path: ", m_cube_map_data.sides[i].file_path });
 
         }
 
@@ -142,11 +140,11 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
     {
         if (!m_cube_map_data.sides[i].texture_data)
         {
-            throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-                << "Cube map { ID: " << m_ID << " } could not generate mipmaps " 
-                << "because of faulty data"
-                << "\n>>> Side: " << utils::Get_Cube_Map_Side_String(
-                    *enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)) };
+            throw utils::Tilia_Exception{ { TILIA_LOCATION,
+                "Cube map { ID: ", m_ID, " } could not generate mipmaps ",
+                "because of faulty data",
+                "\n>>> Side: ", utils::Get_Cube_Map_Side_String(
+                    *enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i)) } };
         }
     }
     try
@@ -158,9 +156,8 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
     catch (utils::Tilia_Exception& t_e)
     {
         Rebind();
-        t_e.Add_Message(TILIA_LOCATION) 
-            << "Cube map { ID: " << m_ID << " } failed to generate mipmaps";
-        throw t_e;
+        throw t_e.Add_Message({ TILIA_LOCATION,
+            "Cube map { ID: ", m_ID, " } failed to generate mipmaps" });
     }
     Rebind();
 }
@@ -176,14 +173,11 @@ void tilia::gfx::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size,
     }
     catch (utils::Tilia_Exception& t_e)
     {
-
         Rebind();
-
-        t_e.Add_Message(TILIA_LOCATION)
-            << "Cube map { ID: " << m_ID << " } failed to set filtering"
-            << "\n>>> Filter size: " << *filter_size
-            << "\n>>> Filter mode: " << *filter_mode;;
-        throw t_e;
+        throw t_e.Add_Message({ TILIA_LOCATION, 
+            "Cube map { ID: ", m_ID, " } failed to set filtering",
+            "\n>>> Filter size: ", *filter_size,
+            "\n>>> Filter mode: ", *filter_mode });
     }
     Rebind();
     switch (filter_size)
@@ -208,14 +202,11 @@ void tilia::gfx::Cube_Map::Set_Wrapping(const enums::Wrap_Sides& wrap_side,
     }
     catch (utils::Tilia_Exception& t_e)
     {
-
         Rebind();
-
-        t_e.Add_Message(TILIA_LOCATION)
-            << "Cube map { ID: " << m_ID << " } failed to set wrapping"
-            << "\n>>> Wrapping side: " << *wrap_side
-            << "\n>>> Wrapping mode: " << *wrap_mode;
-        throw t_e;
+        throw t_e.Add_Message({ TILIA_LOCATION, 
+            "Cube map { ID: ", m_ID, " } failed to set wrapping",
+            "\n>>> Wrapping side: ", *wrap_side,
+            "\n>>> Wrapping mode: ", *wrap_mode });
     }
     Rebind();
     switch (wrap_side)

@@ -26,8 +26,8 @@ tilia::gfx::Shader_Part::~Shader_Part()
 	catch (utils::Tilia_Exception& t_e)
 	{
 
-		t_e.Add_Message(TILIA_LOCATION) 
-			<< "Shader part { ID: " << m_ID << " } failed to be destroyed";
+		t_e.Add_Message({ TILIA_LOCATION,
+			"Shader part { ID: ", m_ID, " } failed to be destroyed" });
 
 		// Possibly forward e to someplace else and then throw
 
@@ -47,9 +47,8 @@ void tilia::gfx::Shader_Part::Init(const bool& reload)
 
 	}
 	catch(utils::Tilia_Exception& t_e) {
-		t_e.Add_Message(TILIA_LOCATION) 
-			<< "Failed to init Shader_Part { ID: " << m_ID << " }";
-		throw t_e;
+		throw t_e.Add_Message({ TILIA_LOCATION,
+			"Failed to init Shader_Part { ID: ", m_ID, " }" });
 	}
 
 }
@@ -62,9 +61,8 @@ void tilia::gfx::Shader_Part::Source()
 	}
 	catch(utils::Tilia_Exception& t_e)
 	{
-		t_e.Add_Message(TILIA_LOCATION) 
-			<< "Failed to load shader source for Shader_Part { ID: " << m_ID << " }";
-		throw t_e;
+		throw t_e.Add_Message({ TILIA_LOCATION, 
+			"Failed to load shader source for Shader_Part { ID: ", m_ID, " }" });
 	}
 
 }
@@ -99,10 +97,10 @@ void tilia::gfx::Shader_Part::Compile(const bool& source)
 
 			GL_CALL_(glDeleteShader(m_ID));
 
-			throw utils::Tilia_Exception{ utils::Exception_Data{ TILIA_LOCATION } 
-				<< "Shader part { ID: " << m_ID << " } failed to be created"
-				<< "\n>>> Part type: " << utils::Get_Shader_Type_String(m_type)
-				<< "\n>>> Message: " << &message.front() };
+			throw utils::Tilia_Exception{ { TILIA_LOCATION,
+				"Shader part { ID: ", m_ID, " } failed to be created",
+				"\n>>> Part type: ", utils::Get_Shader_Type_String(m_type),
+				"\n>>> Message: ", &message.front() } };
 
 		}
 	
@@ -114,9 +112,8 @@ void tilia::gfx::Shader_Part::Compile(const bool& source)
 
 	}
 	catch(utils::Tilia_Exception& t_e) {
-		t_e.Add_Message(TILIA_LOCATION) 
-			<< "Failed to compile Shader_Part { ID: " << m_ID << " }";
-		throw t_e;
+		throw t_e.Add_Message({ TILIA_LOCATION, 
+			"Failed to compile Shader_Part { ID: ", m_ID, " }" });
 	}
 
 }
