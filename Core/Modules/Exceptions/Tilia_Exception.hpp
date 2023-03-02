@@ -193,11 +193,11 @@ namespace tilia {
 						return message.c_str();
 					return "Message is empty";
 				} };
-				const std::size_t message_count{ m_messages.size() };
+				const auto message_count{ m_messages.size() };
 				for (std::size_t i{ 0 }; i < message_count; ++i)
 				{
 					const auto& message{ m_messages[i] };
-					ret << "Message #" << i << ":\n" << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
+					ret << "Message #" << (i + 1) << ":\n" << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
 						potential_message(message.m_message) << "\n\n";
 				}
 				static auto ret_str{ ret.str() };
@@ -209,7 +209,7 @@ namespace tilia {
 			 * 
 			 * @param message - The message to add.
 			 */
-			auto Add_Message(const Exception_Data& message) -> Tilia_Exception&
+			auto& Add_Message(const Exception_Data& message)
 			{
 				m_messages.push_back(message); return *this;
 			}
@@ -219,7 +219,7 @@ namespace tilia {
 			 *
 			 * @param message - The message to add.
 			 */
-			auto Add_Message(Exception_Data&& message) -> Tilia_Exception&
+			auto& Add_Message(Exception_Data&& message)
 			{ 
 				m_messages.push_back(std::move(message)); return *this;
 			}

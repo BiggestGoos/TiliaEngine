@@ -1,94 +1,88 @@
-/*****************************************************************//**
- * @file   Error_Handling.cpp
- * @brief  A source file for @include "headers/Error_Handling.h", that defines all non inline 
- *         functions declared in @include "headers/Error_Handling.h".
- * 
- * Dependencies:
- * @include "dependencies/glad/include/glad/glad.h"
- * 
- * Standard:
- * @include <iostream>
- * 
- * Headers:
- * @include "headers/Error_Handling.h"
- * @include "headers/Logging.h"
- * 
- * @author Gustav Fagerlind
- * @date   15/05/2022
- *********************************************************************/
-
-// Dependencies
+// Vendor
 #include "vendor/glad/KHR_Debug_openGL_3_3/include/glad/glad.h"
 
 // Standard
 #include <iostream>
 
-// Headers
+// Tilia
 #include "Error_Handling.hpp"
 #include "Core/Values/Directories.hpp"
 #include TILIA_LOGGING_INCLUDE
-#include TILIA_TILIA_EXCEPTION_INCLUDE
 
-/**
- * Checks what error string pertains to error_code. If there is no
- * error string for error_code then it returns "Something went wrong".
- */
-static constexpr const char* Get_Error_String(const uint32_t& error_code) {
+static constexpr const char* Get_Error_String(const std::uint32_t& error_code) {
     switch (error_code)
     {
-    case 0x500:
+    case GL_INVALID_ENUM:
         return "GL_INVALID_ENUM";
-    case 0x501:
+    case GL_INVALID_VALUE:
         return "GL_INVALID_VALUE";
-    case 0x502:
+    case GL_INVALID_OPERATION:
         return "GL_INVALID_OPERATION";
-    case 0x503:
+    case GL_STACK_OVERFLOW:
         return "GL_STACK_OVERFLOW";
-    case 0x504:
+    case GL_STACK_UNDERFLOW:
         return "GL_STACK_UNDERFLOW";
-    case 0x505:
+    case GL_OUT_OF_MEMORY:
         return "GL_OUT_OF_MEMORY";
-    case 0x506:
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
         return "GL_INVALID_FRAMEBUFFER_OPERATION";
-    case 0x507:
-        return "GL_CONTEXT_LOST";
-    case 0x8031:
-        return "GL_TABLE_TOO_LARGE1";
     default:
         return "Unknown Error";
     }
 }
 
-void tilia::utils::Handle_GL_Error(const char* message, const size_t& line, const char* file, 
-    const char* function)
+void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, const char* function)
 {
-    // Checks errors
-    while (GLenum error = glGetError()) {
-        utils::Exception_Data e_d{ file, line };
+    GLenum error{ glGetError() };
+    if (error == GL_NO_ERROR)
+        return;
 
-        e_d.Set_Message("OpenGL [ Error was thrown ]",
+    Exception_Data e_d{ file, line, "There have been one or more openGL errors:\nFunction: ", 
+        function, "\n\n" };
+
+    std::size_t error_index{ 1 };
+    do
+    {
+        e_d.Append_Message("OpenGL error #", error_index, 
             "\n>>> Code: ", error,
-            "\n>>> Name: ", Get_Error_String(error),
-            "\n>>> Func: ", function);
+            "\n>>> Name: ", Get_Error_String(error), "\n\n");
+        ++error_index;
+    } 
+    while (error = glGetError());
 
-        if (message != "") e_d.Append_Message("\n>>> Message: ", message);
-        throw utils::Tilia_Exception{ e_d };
-    }
+    Tilia_Exception t_e{ e_d };
+
+    throw t_e;
 }
 
-bool tilia::utils::GL_Check_Error()
+void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, const char* function, 
+    Exception_Data& message)
 {
-    // Checks errors
-    while (glGetError()) {
-        return false;
-    }
-    return true;
+    GLenum error{ glGetError() };
+    if (error == GL_NO_ERROR)
+        return;
+
+    message.Set_Location(file, line);
+
+    message.Append_Message("There have been one or more openGL errors:\nFunction: ",
+        function, "\n\n");
+
+    std::size_t error_index{ 1 };
+    do
+    {
+        message.Append_Message("OpenGL error #", error_index,
+            "\n>>> Code: ", error,
+            "\n>>> Name: ", Get_Error_String(error), "\n\n");
+        ++error_index;
+    } 
+    while (error = glGetError());
+
+    Tilia_Exception t_e{ message };
+
+    throw t_e;
 }
 
-/**
-* Clears the openGL errors.
-*/
-void tilia::utils::GL_Clear_Error()
+void tilia::utils::Clear_openGL_Error()
 {
     while (glGetError() != GL_NO_ERROR);
 }

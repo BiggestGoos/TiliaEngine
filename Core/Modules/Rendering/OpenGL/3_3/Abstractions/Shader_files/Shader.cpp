@@ -17,7 +17,7 @@ tilia::gfx::Shader::~Shader()
     
 	try
 	{
-		GL_CALL_(glDeleteProgram(m_ID));
+		GL_CALL(glDeleteProgram(m_ID));
 	}
 	catch (utils::Tilia_Exception& t_e)
 	{
@@ -35,7 +35,7 @@ void tilia::gfx::Shader::Init(std::initializer_list<std::weak_ptr<Shader_Part>> 
 	std::initializer_list<std::weak_ptr<Shader_Part>> geometry_parts)
 {
 
-	GL_CALL_(m_ID = glCreateProgram());
+	GL_CALL(m_ID = glCreateProgram());
 
     if (!vertex_parts.size() || !fragment_parts.size()) {  
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
@@ -59,7 +59,7 @@ void tilia::gfx::Shader::Init(std::initializer_list<std::weak_ptr<Shader_Part>> 
 void tilia::gfx::Shader::Add_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload)
 {
 
-	GL_CALL_(glAttachShader(m_ID, shader_part.lock()->Get_ID()));
+	GL_CALL(glAttachShader(m_ID, shader_part.lock()->Get_ID()));
 
 	shader_part.lock()->m_attached_to.push_back(this);
 
@@ -71,7 +71,7 @@ void tilia::gfx::Shader::Add_Part(std::weak_ptr<Shader_Part> shader_part, const 
 void tilia::gfx::Shader::Remove_Part(std::weak_ptr<Shader_Part> shader_part, const bool& reload)
 {
 
-	GL_CALL_(glDetachShader(m_ID, shader_part.lock()->Get_ID()));
+	GL_CALL(glDetachShader(m_ID, shader_part.lock()->Get_ID()));
 
 	std::size_t count{ shader_part.lock()->m_attached_to.size() };
 	for (std::size_t i = 0; i < count; i++)
@@ -90,21 +90,21 @@ void tilia::gfx::Shader::Remove_Part(std::weak_ptr<Shader_Part> shader_part, con
 void tilia::gfx::Shader::Reload()
 {
 
-    GL_CALL_(glLinkProgram(m_ID));
-	GL_CALL_(glValidateProgram(m_ID));
+    GL_CALL(glLinkProgram(m_ID));
+	GL_CALL(glValidateProgram(m_ID));
 
     std::int32_t result;
 
-	GL_CALL_(glGetProgramiv(m_ID, GL_LINK_STATUS, &result));
+	GL_CALL(glGetProgramiv(m_ID, GL_LINK_STATUS, &result));
 
 	if (result == GL_FALSE) {
 		std::int32_t length;
 
-		GL_CALL_(glGetProgramiv(m_ID, GL_INFO_LOG_LENGTH, &length));
+		GL_CALL(glGetProgramiv(m_ID, GL_INFO_LOG_LENGTH, &length));
 
 		std::vector<char> message(static_cast<size_t>(length));
 
-		GL_CALL_(glGetProgramInfoLog(m_ID, length, &length, &message.front()));
+		GL_CALL(glGetProgramInfoLog(m_ID, length, &length, &message.front()));
 		message[static_cast<size_t>(length) - 1] = '\0';
 
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
@@ -118,7 +118,7 @@ void tilia::gfx::Shader::Reload()
 void tilia::gfx::Shader::Bind_Uniform_Block(const std::string& block_name, 
 	const std::uint32_t& block_index)
 {
-	GL_CALL_(glUniformBlockBinding(m_ID, Get_Uniform_Block_Index(block_name), block_index));
+	GL_CALL(glUniformBlockBinding(m_ID, Get_Uniform_Block_Index(block_name), block_index));
 }
 
 void tilia::gfx::Shader::Bind() const {
@@ -127,7 +127,7 @@ void tilia::gfx::Shader::Bind() const {
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
 		"Failed to bind shader { ID: ", m_ID, " }" } };
 	}
-    GL_CALL_(glUseProgram(m_ID));
+    GL_CALL(glUseProgram(m_ID));
     s_bound_ID = m_ID;
 }
 
@@ -137,12 +137,12 @@ void tilia::gfx::Shader::Bind(const std::uint32_t& id) {
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
 		"Failed to bind shader { ID: ", id, " }" } };
 	}
-    GL_CALL_(glUseProgram(id));
+    GL_CALL(glUseProgram(id));
     s_bound_ID = id;
 }
 
 void tilia::gfx::Shader::Unbind(const bool& save_id) {
-    GL_CALL_(glUseProgram(0));
+    GL_CALL(glUseProgram(0));
 
     if (save_id)
     {
@@ -153,7 +153,7 @@ void tilia::gfx::Shader::Unbind(const bool& save_id) {
 }
 
 void tilia::gfx::Shader::Rebind() {
-	GL_CALL_(glUseProgram(s_previous_ID));
+	GL_CALL(glUseProgram(s_previous_ID));
 	s_bound_ID = s_previous_ID;
 	s_bound_ID = 0;
 }
@@ -171,20 +171,20 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs, const 
 		switch (size)
 		{
 		case 1:
-			SET_UNIFORM(GL_CALL_(glUniform1f(Get_Uniform_Location(loc), vs[0])));
+			SET_UNIFORM(GL_CALL(glUniform1f(Get_Uniform_Location(loc), vs[0])));
 			return;
 		case 2:
-			SET_UNIFORM(GL_CALL_(glUniform2f(Get_Uniform_Location(loc), vs[0], vs[1])));
+			SET_UNIFORM(GL_CALL(glUniform2f(Get_Uniform_Location(loc), vs[0], vs[1])));
 			return;
 		case 3:
-			SET_UNIFORM(GL_CALL_(glUniform3f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			SET_UNIFORM(GL_CALL(glUniform3f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
 			return;
 		case 4:
-			SET_UNIFORM(GL_CALL_(glUniform4f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
+			SET_UNIFORM(GL_CALL(glUniform4f(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
 				vs[3])));
 			return;
 		default:
-			SET_UNIFORM(GL_CALL_(glUniform1fv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), 
+			SET_UNIFORM(GL_CALL(glUniform1fv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), 
 				vs)))
 				return;
 		}
@@ -202,20 +202,20 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::int32_t* vs,
 		switch (size)
 		{
 		case 1:
-			SET_UNIFORM(GL_CALL_(glUniform1i(Get_Uniform_Location(loc), vs[0])));
+			SET_UNIFORM(GL_CALL(glUniform1i(Get_Uniform_Location(loc), vs[0])));
 			return;
 		case 2:
-			SET_UNIFORM(GL_CALL_(glUniform2i(Get_Uniform_Location(loc), vs[0], vs[1])));
+			SET_UNIFORM(GL_CALL(glUniform2i(Get_Uniform_Location(loc), vs[0], vs[1])));
 			return;
 		case 3:
-			SET_UNIFORM(GL_CALL_(glUniform3i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			SET_UNIFORM(GL_CALL(glUniform3i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
 			return;
 		case 4:
-			SET_UNIFORM(GL_CALL_(glUniform4i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
+			SET_UNIFORM(GL_CALL(glUniform4i(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
 				vs[3])));
 			return;
 		default:
-			SET_UNIFORM(GL_CALL_(glUniform1iv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), 
+			SET_UNIFORM(GL_CALL(glUniform1iv(Get_Uniform_Location(loc), static_cast<GLsizei>(size), 
 				vs)))
 				return;
 		}
@@ -233,20 +233,20 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const std::uint32_t* vs
 		switch (size)
 		{
 		case 1:
-			SET_UNIFORM(GL_CALL_(glUniform1ui(Get_Uniform_Location(loc), vs[0])));
+			SET_UNIFORM(GL_CALL(glUniform1ui(Get_Uniform_Location(loc), vs[0])));
 			return;
 		case 2:
-			SET_UNIFORM(GL_CALL_(glUniform2ui(Get_Uniform_Location(loc), vs[0], vs[1])));
+			SET_UNIFORM(GL_CALL(glUniform2ui(Get_Uniform_Location(loc), vs[0], vs[1])));
 			return;
 		case 3:
-			SET_UNIFORM(GL_CALL_(glUniform3ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
+			SET_UNIFORM(GL_CALL(glUniform3ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2])));
 			return;
 		case 4:
-			SET_UNIFORM(GL_CALL_(glUniform4ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
+			SET_UNIFORM(GL_CALL(glUniform4ui(Get_Uniform_Location(loc), vs[0], vs[1], vs[2], 
 				vs[3])));
 			return;
 		default:
-			SET_UNIFORM(GL_CALL_(glUniform1uiv(Get_Uniform_Location(loc), 
+			SET_UNIFORM(GL_CALL(glUniform1uiv(Get_Uniform_Location(loc), 
 				static_cast<GLsizei>(size), vs)))
 				return;
 		}
@@ -268,15 +268,15 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs,
 			switch (size_y)
 			{
 			case 2:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 3:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix2x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix2x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 4:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix2x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix2x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			}
@@ -285,15 +285,15 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs,
 			switch (size_y)
 			{
 			case 2:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix3x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix3x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 3:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 4:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix3x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix3x4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			}
@@ -302,15 +302,15 @@ void tilia::gfx::Shader::Uniform(const std::string& loc, const float* vs,
 			switch (size_y)
 			{
 			case 2:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix4x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix4x2fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 3:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix4x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix4x3fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			case 4:
-				SET_UNIFORM(GL_CALL_(glUniformMatrix4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
+				SET_UNIFORM(GL_CALL(glUniformMatrix4fv(Get_Uniform_Location(loc), 1, GL_FALSE, 
 					vs)))
 				return;
 			}
@@ -329,7 +329,7 @@ std::int32_t tilia::gfx::Shader::Get_Uniform_Location(const std::string& name)
 	if (m_location_cache.find(name) != m_location_cache.end())
 		return m_location_cache[name];
 
-	GL_CALL_(std::int32_t location = glGetUniformLocation(m_ID, name.c_str()));
+	GL_CALL(std::int32_t location = glGetUniformLocation(m_ID, name.c_str()));
 
 	// Check is -1
 
@@ -343,7 +343,7 @@ std::int32_t tilia::gfx::Shader::Get_Uniform_Block_Index(const std::string& name
 	if (m_location_cache.find(name) != m_location_cache.end())
 		return m_location_cache[name];
 
-	GL_CALL_(std::int32_t location = glGetUniformBlockIndex(m_ID, name.c_str()));
+	GL_CALL(std::int32_t location = glGetUniformBlockIndex(m_ID, name.c_str()));
 
 	// Check is -1
 

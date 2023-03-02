@@ -67,6 +67,7 @@ using namespace tilia::gfx;
 using namespace tilia::log;
 
 Logger& logger{ Logger::Instance() };
+bool print_opengl_things{ false };
 
 enums::Polymode polymode{ enums::Polymode::Fill };
 
@@ -223,8 +224,7 @@ int main(int argc, char* argv[])
     
     int retval{};
 
-    int w{};
-    std::cin >> w;
+    std::cin.get();
 
     try
     {
@@ -297,13 +297,17 @@ int main(int argc, char* argv[])
     // ------------------------------------------------------------------
     glfwTerminate();
 
-    std::cin >> w;
+    std::cin.get();
 
     return retval;
 }
 
 TEST_CASE("Tilia_Exception", "[Tilia_Exception]") {
-    tilia::gfx::Buffer::Test();
+    tilia::utils::Tilia_Exception::Test();
+}
+
+TEST_CASE("Logger", "[Logger]") {
+    tilia::log::Logger::Test();
 }
 
 TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
@@ -341,7 +345,16 @@ TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 int main()
 {
 
-    Logger& logger{ Logger::Instance() };
+    // TODO: Make an exception handling class for among other things handling exceptions over threads
+
+    std::cin >> print_opengl_things;
+
+    logger.Set_OpenGL_Filters({ "debug severity message" });
+
+    if (print_opengl_things == true)
+    {
+        logger.Set_Output_Filters(&std::cout, { "debug severity message" });
+    }
 
     try
     {
@@ -351,6 +364,7 @@ int main()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
         glfwSetErrorCallback(Logger::GLFW_Error_Callback);
 
@@ -449,11 +463,13 @@ int main()
 
         ub.Bind();
 
-        std::uint32_t uniform_buffer{ };
-        GL_CALL_(glGenBuffers(1, &uniform_buffer));
+        GL_CALL(glEnable(GL_FALSE));
 
-        GL_CALL_(glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.Get_ID()));
-        GL_CALL_(glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer));
+        std::uint32_t uniform_buffer{ };
+        GL_CALL(glGenBuffers(1, &uniform_buffer));
+
+        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, ub.Get_ID()));
+        GL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform_buffer));
 
         ub.Set_Bind_Point(0);
 
@@ -588,6 +604,7 @@ int main()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
         // glfw window creation
         // --------------------
@@ -1179,6 +1196,20 @@ void processInput()
             polymode = enums::Polymode::Line;
         else if (polymode == enums::Polymode::Line)
             polymode = enums::Polymode::Fill;
+    }
+
+    if (input.Get_Key_Pressed(KEY_HOME))
+    {
+        if (print_opengl_things == true)
+        {
+            print_opengl_things = false;
+            logger.Set_Output_Filters(&std::cout);
+        }
+        else 
+        {
+            print_opengl_things = true;
+            logger.Set_Output_Filters(&std::cout, { "debug severity message" });
+        }
     }
 
     if (input.Get_Key_Pressed(KEY_BACKSPACE))

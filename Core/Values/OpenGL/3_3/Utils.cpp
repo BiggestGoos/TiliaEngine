@@ -27,7 +27,7 @@
 std::uint32_t tilia::utils::Get_Max_Textures()
 {
 	std::int32_t amount{};
-	GL_CALL_(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &amount));
+	GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &amount));
 	return static_cast<std::uint32_t>(amount);
 }
 

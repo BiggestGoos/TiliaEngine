@@ -76,7 +76,7 @@ void tilia::gfx::Texture::Generate_Texture()
 {
 	try
 	{
-		GL_CALL_(glGenTextures(1, &m_ID));
+		GL_CALL(glGenTextures(1, &m_ID));
 	}
 	catch (utils::Tilia_Exception& t_e)
 	{
@@ -98,7 +98,7 @@ tilia::gfx::Texture::~Texture()
 {
 	try
 	{
-		GL_CALL_(glDeleteTextures(1, &m_ID));
+		GL_CALL(glDeleteTextures(1, &m_ID));
 	}
 	catch (utils::Tilia_Exception& t_e)
 	{
@@ -126,8 +126,8 @@ void tilia::gfx::Texture::Bind(const uint32_t& slot) const
 	}
 
 	// Sets slot and binds texture
-	GL_CALL_(glActiveTexture(GL_TEXTURE0 + slot));
-	GL_CALL_(glBindTexture(*m_texture_type, m_ID));
+	GL_CALL(glActiveTexture(GL_TEXTURE0 + slot));
+	GL_CALL(glBindTexture(*m_texture_type, m_ID));
 
 	s_bound_ID[m_texture_type] = m_ID;
 
@@ -155,7 +155,7 @@ void tilia::gfx::Texture::Unbind(const bool& save_id) const
 	}
 
 	// Binds texture of type m_texture_type to 0
-	GL_CALL_(glBindTexture(*m_texture_type, 0));
+	GL_CALL(glBindTexture(*m_texture_type, 0));
 
 	s_bound_ID[m_texture_type] = 0;
 
@@ -179,7 +179,7 @@ void tilia::gfx::Texture::Unbind(const enums::Texture_Type& texture_type, const 
 	}
 
 	// Binds texture of type texture_type to 0
-	GL_CALL_(glBindTexture(*texture_type, 0));
+	GL_CALL(glBindTexture(*texture_type, 0));
 
 	s_bound_ID[texture_type] = 0;
 
@@ -191,7 +191,7 @@ void tilia::gfx::Texture::Unbind(const enums::Texture_Type& texture_type, const 
 void tilia::gfx::Texture::Rebind() const
 {
 
-	GL_CALL_(glBindTexture(*m_texture_type, s_previous_ID[m_texture_type]));
+	GL_CALL(glBindTexture(*m_texture_type, s_previous_ID[m_texture_type]));
 
 }
 
@@ -201,6 +201,6 @@ void tilia::gfx::Texture::Rebind() const
 void tilia::gfx::Texture::Rebind(const enums::Texture_Type& texture_type)
 {
 
-	GL_CALL_(glBindTexture(*texture_type, s_previous_ID[texture_type]));
+	GL_CALL(glBindTexture(*texture_type, s_previous_ID[texture_type]));
 
 }

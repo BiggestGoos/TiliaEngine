@@ -64,23 +64,23 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 	m_textures.resize(32);
 
 	// Generates buffers
-	GL_CALL_(glGenVertexArrays(1, &m_vao));
-	GL_CALL_(glGenBuffers(1, &m_vbo));
-	GL_CALL_(glGenBuffers(1, &m_ebo));
+	GL_CALL(glGenVertexArrays(1, &m_vao));
+	GL_CALL(glGenBuffers(1, &m_vbo));
+	GL_CALL(glGenBuffers(1, &m_ebo));
 
-	GL_CALL_(glBindVertexArray(m_vao));
+	GL_CALL(glBindVertexArray(m_vao));
 
 	// Allocates memory for vertex buffer
-	GL_CALL_(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
-	GL_CALL_(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * m_vertex_size * 
+	GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+	GL_CALL(glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * m_vertex_size * 
 		*enums::Batch_Limits::Max_Vertices), nullptr, GL_STATIC_DRAW));
 
 	// Calls Set_Vertex_Attribs to set vertex attributes
 	Set_Vertex_Attribs();
 
 	// Allocates memory for element buffer
-	GL_CALL_(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
-	GL_CALL_(glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast <GLsizeiptr>(sizeof(uint32_t) * 
+	GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
+	GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast <GLsizeiptr>(sizeof(uint32_t) * 
 		*enums::Batch_Limits::Max_Indices), nullptr, GL_STATIC_DRAW));
 
 }
@@ -91,9 +91,9 @@ tilia::gfx::Batch::Batch(std::weak_ptr<Mesh_Data> mesh_data)
 tilia::gfx::Batch::~Batch()
 {
 
-	GL_CALL_(glDeleteVertexArrays(1, &m_vao));
-	GL_CALL_(glDeleteBuffers(1, &m_vbo));
-	GL_CALL_(glDeleteBuffers(1, &m_ebo));
+	GL_CALL(glDeleteVertexArrays(1, &m_vao));
+	GL_CALL(glDeleteBuffers(1, &m_vbo));
+	GL_CALL(glDeleteBuffers(1, &m_ebo));
 
 }
 
@@ -123,9 +123,9 @@ void tilia::gfx::Batch::Reset(std::weak_ptr<Mesh_Data> mesh_data)
 	// Clears some data
 	Clear();
 
-	GL_CALL_(glBindVertexArray(m_vao));
+	GL_CALL(glBindVertexArray(m_vao));
 
-	GL_CALL_(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+	GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
 	
 	// Calls Set_Vertex_Attribs to set vertex attributes
 	Set_Vertex_Attribs();
@@ -212,18 +212,18 @@ bool tilia::gfx::Batch::Push_Mesh(std::weak_ptr<Mesh_Data> mesh_data, float dist
 	}
 
 	//// Buffers vertex-data
-	//GL_CALL_(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+	//GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
 
-	//BUFFER_VERTICES(*mesh_data.lock()->texture_offset, GL_CALL_
+	//BUFFER_VERTICES(*mesh_data.lock()->texture_offset, GL_CALL
 	//	(glBufferSubData(GL_ARRAY_BUFFER, 
 	//		m_vertex_count * sizeof(float), 
 	//		vertex_count * sizeof(float), 
 	//		mesh_data.lock()->vertex_data->begin()._Ptr)));
 
 	//// Buffers index-data
-	//GL_CALL_(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
+	//GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
 	//BUFFER_INDICES(
-	//	GL_CALL_(
+	//	GL_CALL(
 	//		glBufferSubData(
 	//			GL_ELEMENT_ARRAY_BUFFER, 
 	//			m_index_count * sizeof(uint32_t), 
@@ -274,24 +274,24 @@ void tilia::gfx::Batch::Render()
 
 	// Sets depth mask and functions
 	if (m_depth_func != enums::Test_Func::None) {
-		GL_CALL_(glDepthMask(true));
-		GL_CALL_(glDepthFunc(*m_depth_func));
+		GL_CALL(glDepthMask(true));
+		GL_CALL(glDepthFunc(*m_depth_func));
 	}
 	else
 	{
-		GL_CALL_(glDepthMask(false));
+		GL_CALL(glDepthMask(false));
 	}
 
 	// Sets stencil functions and actions
 	//if (m_stencil_func != enums::Test_Func::None) {
-	//	GL_CALL_(glStencilMask(m_stencil_mask));
-	//	GL_CALL_(glStencilFunc(*m_stencil_func, m_compare_s_value, m_compare_s_mask));
-	//	GL_CALL_(glStencilOp(*m_stencil_actions[0], *m_stencil_actions[1], *m_stencil_actions[2]));
+	//	GL_CALL(glStencilMask(m_stencil_mask));
+	//	GL_CALL(glStencilFunc(*m_stencil_func, m_compare_s_value, m_compare_s_mask));
+	//	GL_CALL(glStencilOp(*m_stencil_actions[0], *m_stencil_actions[1], *m_stencil_actions[2]));
 	//}
 	//else
 	//{
-	//	GL_CALL_(glStencilMask(0x00));
-	//	GL_CALL_(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
+	//	GL_CALL(glStencilMask(0x00));
+	//	GL_CALL(glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP));
 	//}
 
 	// Binds textures
@@ -300,7 +300,7 @@ void tilia::gfx::Batch::Render()
 	}
 
 	// Binds vertex array
-	GL_CALL_(glBindVertexArray(m_vao));
+	GL_CALL(glBindVertexArray(m_vao));
 
 	// if (m_shader_data.lock().get()) 
 	// 	m_shader.lock()->Uniform(*m_shader_data.lock());
@@ -309,44 +309,44 @@ void tilia::gfx::Batch::Render()
 	m_shader.lock()->Bind();
 
 	// Sets polygonmode
-	GL_CALL_(glPolygonMode(GL_FRONT_AND_BACK, *m_polymode));
+	GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, *m_polymode));
 
 	if (!m_transparent) 
 	{
 		// Sets face culling
 		if (m_cull_face != enums::Face::None) {
-			GL_CALL_(glEnable(GL_CULL_FACE));
-			GL_CALL_(glCullFace(*m_cull_face));
+			GL_CALL(glEnable(GL_CULL_FACE));
+			GL_CALL(glCullFace(*m_cull_face));
 		}
 		else {
-			GL_CALL_(glDisable(GL_CULL_FACE));
+			GL_CALL(glDisable(GL_CULL_FACE));
 		}
 
 		// Draws stuff
-		GL_CALL_(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
 			nullptr));
 	}
 	else
 	{
 		// Sets face culling
-		//GL_CALL_(glDepthMask(true));
-		GL_CALL_(glDepthMask(false));
-		GL_CALL_(glDisable(GL_CULL_FACE));
-		//GL_CALL_(glEnable(GL_CULL_FACE));
+		//GL_CALL(glDepthMask(true));
+		GL_CALL(glDepthMask(false));
+		GL_CALL(glDisable(GL_CULL_FACE));
+		//GL_CALL(glEnable(GL_CULL_FACE));
 
-		//GL_CALL_(glCullFace(GL_FRONT));
+		//GL_CALL(glCullFace(GL_FRONT));
 
 		// Draws stuff
-		GL_CALL_(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+		GL_CALL(glDrawElements(*m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
 			nullptr));
 
-		//GL_CALL_(glCullFace(GL_BACK));
+		//GL_CALL(glCullFace(GL_BACK));
 
 		//// Draws stuff
-		//GL_CALL_(glDrawElements(m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
+		//GL_CALL(glDrawElements(m_primitive, static_cast<GLsizei>(m_index_count), GL_UNSIGNED_INT, 
 		//nullptr));
 
-		GL_CALL_(glDepthMask(true));
+		GL_CALL(glDepthMask(true));
 
 	}
 
@@ -354,7 +354,7 @@ void tilia::gfx::Batch::Render()
 
 	//float* vertex_data{ new float[m_vertex_count] };
 
-	//GL_CALL_(glGetBufferSubData(GL_ARRAY_BUFFER, 0, m_vertex_count * sizeof(float), vertex_data));
+	//GL_CALL(glGetBufferSubData(GL_ARRAY_BUFFER, 0, m_vertex_count * sizeof(float), vertex_data));
 
 	//for (size_t i = 0; i < m_vertex_count; i++)
 	//{
@@ -369,7 +369,7 @@ void tilia::gfx::Batch::Render()
 
 	//uint32_t* index_data{ new uint32_t[m_index_count] };
 
-	//GL_CALL_(glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_index_count * sizeof(uint32_t), index_data));
+	//GL_CALL(glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_index_count * sizeof(uint32_t), index_data));
 
 	//for (size_t i = 0; i < m_index_count; i++)
 	//{
@@ -385,25 +385,25 @@ void tilia::gfx::Batch::Render()
 void tilia::gfx::Batch::Map_Data() const
 {
 
-	GL_CALL_(glBindVertexArray(m_vao));
+	GL_CALL(glBindVertexArray(m_vao));
 
-	GL_CALL_(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+	GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
 
-	GL_CALL_(void* vertex_buffer{ glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) });
+	GL_CALL(void* vertex_buffer{ glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t vertex_byte_count{ m_vertex_count * sizeof(float) };
 	std::copy(m_vertex_data.begin(), m_vertex_data.end(), static_cast<float*>(vertex_buffer));
 
-	GL_CALL_(glUnmapBuffer(GL_ARRAY_BUFFER));
+	GL_CALL(glUnmapBuffer(GL_ARRAY_BUFFER));
 
-	GL_CALL_(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
+	GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo));
 
-	GL_CALL_(void* index_buffer{ glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY) });
+	GL_CALL(void* index_buffer{ glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY) });
 
 	const size_t index_byte_count{ m_index_count * sizeof(uint32_t) };
 	std::copy(m_index_data.begin(), m_index_data.end(), static_cast<uint32_t*>(index_buffer));
 
-	GL_CALL_(glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER));
+	GL_CALL(glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER));
 
 }
 
@@ -506,8 +506,8 @@ void tilia::gfx::Batch::Set_Vertex_Attribs() const
 			m_vertex_info.offsets[i] * sizeof(float))) };
 		
 		// Sets attributes
-		GL_CALL_(glEnableVertexAttribArray(static_cast<int32_t>(i)));
-		GL_CALL_(glVertexAttribPointer(static_cast<int32_t>(i), m_vertex_info.sizes[i], GL_FLOAT, 
+		GL_CALL(glEnableVertexAttribArray(static_cast<int32_t>(i)));
+		GL_CALL(glVertexAttribPointer(static_cast<int32_t>(i), m_vertex_info.sizes[i], GL_FLOAT, 
 			GL_FALSE, stride * sizeof(float),
 			offset));
 	}

@@ -80,26 +80,26 @@ void tilia::gfx::Cube_Map::Reload()
         // Set unpack alignment
         if (m_cube_map_data.sides[i].data_color_format == enums::Data_Color_Format::RGBA)
         {
-            GL_CALL_(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
+            GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
         }
         else
         {
-            GL_CALL_(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+            GL_CALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
         }
 
         // Sets filtering and wrapping modes
-        GL_CALL_(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, 
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, 
             *m_cube_map_data.filter_min));
-        GL_CALL_(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, 
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, 
             *m_cube_map_data.filter_mag));
-        GL_CALL_(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, *m_cube_map_data.wrap_s));
-        GL_CALL_(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, *m_cube_map_data.wrap_t));
-        GL_CALL_(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, *m_cube_map_data.wrap_r));
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, *m_cube_map_data.wrap_s));
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, *m_cube_map_data.wrap_t));
+        GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, *m_cube_map_data.wrap_r));
 
         // Sets openGL data
         try
         {
-            GL_CALL_(glTexImage2D(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i), 0,
+            GL_CALL(glTexImage2D(*enums::Cube_Map_Sides::Positive_X + static_cast<int32_t>(i), 0,
                 *m_cube_map_data.sides[i].color_format,
                 m_cube_map_data.size, m_cube_map_data.size, 0,
                 *m_cube_map_data.sides[i].data_color_format,
@@ -151,7 +151,7 @@ void tilia::gfx::Cube_Map::Generate_Mipmaps()
     {
         Unbind(true);
         Bind();
-        GL_CALL_(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
+        GL_CALL(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
     }
     catch (utils::Tilia_Exception& t_e)
     {
@@ -169,7 +169,7 @@ void tilia::gfx::Cube_Map::Set_Filter(const enums::Filter_Size& filter_size,
     try
     {
         Bind();
-        GL_CALL_(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
+        GL_CALL(glTexParameteri(*m_texture_type, *filter_size, *filter_mode));
     }
     catch (utils::Tilia_Exception& t_e)
     {
@@ -198,7 +198,7 @@ void tilia::gfx::Cube_Map::Set_Wrapping(const enums::Wrap_Sides& wrap_side,
     try
     {
         Bind();
-        GL_CALL_(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
+        GL_CALL(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));
     }
     catch (utils::Tilia_Exception& t_e)
     {

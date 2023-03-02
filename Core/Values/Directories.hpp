@@ -56,6 +56,8 @@
 
 #include "Core/Modules/File_System/Windows/File_System.hpp"
 
+#include "Core/Modules/Rendering/OpenGL/3_3/Error_Handling.hpp"
+
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader_Data.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Shader_Files/Shader_Part.hpp"
@@ -69,7 +71,6 @@
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Buffer.hpp"
 
 #include "Core/Modules/Rendering/OpenGL/3_3/Batch.hpp"
-#include "Core/Modules/Rendering/OpenGL/3_3/Error_Handling.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Mesh.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
