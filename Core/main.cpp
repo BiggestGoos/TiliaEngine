@@ -66,6 +66,8 @@ using namespace tilia::utils;
 using namespace tilia::gfx;
 using namespace tilia::log;
 
+Logger& logger{ Logger::Instance() };
+
 enums::Polymode polymode{ enums::Polymode::Fill };
 
 bool pause{ true };
@@ -510,7 +512,7 @@ int main()
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
-            std::cout << fps << " : " << deltaTime << " : " << add_angle << " : "<< angle << " : " << axis.x << " , " << axis.y << " , " << axis.z << '\n';
+            logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -536,7 +538,7 @@ int main()
             }
             catch (const std::exception& e)
             {
-                std::cout << e.what() << '\n';
+                logger.Output(e.what(), '\n');
             }
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -558,12 +560,10 @@ int main()
         // ------------------------------------------------------------------
     }
     catch (const utils::Tilia_Exception& e) {
-        std::cout << "\n<<<Tilia_Exception>>>\n";
-        auto temp{ e.what() };
-        std::cout << temp << '\n';
+        logger.Output(e);
     }
     catch (const std::exception& e) {
-        std::cout << e.what() << '\n';
+        logger.Output(e.what(), '\n');
     }
 
     glfwTerminate();

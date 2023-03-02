@@ -77,7 +77,7 @@ namespace tilia {
 			 * @param message - The message to store.
 			 */
 			template<typename... T>
-			inline void Set_Message(T... message)
+			void Set_Message(T... message)
 			{
 				m_message = {};
 				Append_Message(message...);
@@ -88,7 +88,7 @@ namespace tilia {
 			 * @param message - The message to append.
 			 */
 			template<typename... T>
-			inline void Append_Message(T... message)
+			void Append_Message(T... message)
 			{
 				std::stringbuf str_buf{};
 				std::ostream buffer{ &str_buf };
@@ -101,7 +101,7 @@ namespace tilia {
 			 *
 			 * @return The message of the exception.
 			 */
-			inline auto Get_Message() const { return m_message; }
+			auto Get_Message() const { return m_message; }
 
 			/**
 			 * @brief Sets the file and line at which the exception message was created.
@@ -109,7 +109,7 @@ namespace tilia {
 			 * @param file - The file at which the exception message was created.
 			 * @param line - The line at which the exception message was created.
 			 */
-			inline void Set_Location(const std::string& file, const std::size_t& line)
+			void Set_Location(const std::string& file, const std::size_t& line)
 			{
 				m_file = file; m_line = line;
 			}
@@ -118,20 +118,20 @@ namespace tilia {
 			 *
 			 * @return The location of the exception message's creation.
 			 */
-			inline auto Get_Location() const { return std::pair{ m_file, m_line }; }
+			auto Get_Location() const { return std::pair{ m_file, m_line }; }
 
 			/**
 			 * @brief Gets the file which the exception message was created at.
 			 *
 			 * @return The file of the exception message's creation.
 			 */
-			inline auto Get_File() const { return m_file; }
+			auto Get_File() const { return m_file; }
 			/**
 			 * @brief Gets the line at which the exception message was created.
 			 *
 			 * @return The line of the exception message's creation.
 			 */
-			inline auto Get_Line() const { return m_line; }
+			auto Get_Line() const { return m_line; }
 
 		private:
 			// The message stream
@@ -186,17 +186,18 @@ namespace tilia {
 			 */
 			virtual const char* what() const noexcept override {
 				std::stringstream ret{ };
-				auto potential_message{ [](const auto& message) -> 
-					std::string
+				static auto potential_message{ [](const auto& message)
 				{
 					const auto message_length{ message.size() };
 					if (message_length > 0)
-						return message;
-					return { "Message is empty" };
+						return message.c_str();
+					return "Message is empty";
 				} };
-				for (const auto& message : m_messages)
+				const std::size_t message_count{ m_messages.size() };
+				for (std::size_t i{ 0 }; i < message_count; ++i)
 				{
-					ret << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
+					const auto& message{ m_messages[i] };
+					ret << "Message #" << i << ":\n" << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
 						potential_message(message.m_message) << "\n\n";
 				}
 				static auto ret_str{ ret.str() };
@@ -208,7 +209,7 @@ namespace tilia {
 			 * 
 			 * @param message - The message to add.
 			 */
-			inline auto Add_Message(const Exception_Data& message) -> Tilia_Exception&
+			auto Add_Message(const Exception_Data& message) -> Tilia_Exception&
 			{
 				m_messages.push_back(message); return *this;
 			}
@@ -218,7 +219,7 @@ namespace tilia {
 			 *
 			 * @param message - The message to add.
 			 */
-			inline auto Add_Message(Exception_Data&& message) -> Tilia_Exception&
+			auto Add_Message(Exception_Data&& message) -> Tilia_Exception&
 			{ 
 				m_messages.push_back(std::move(message)); return *this;
 			}
@@ -228,14 +229,14 @@ namespace tilia {
 			 * 
 			 * @return The message at the index.
 			 */
-			inline auto Get_Message(const std::size_t& index) const { return m_messages[index]; }
+			auto Get_Message(const std::size_t& index) const { return m_messages[index]; }
 
 			/**
 			 * @brief The number of messages in the exception.
 			 * 
 			 * @return The number of messages.
 			 */
-			inline auto Get_Count() const { return m_messages.size(); }
+			auto Get_Count() const { return m_messages.size(); }
 
 #if TILIA_UNIT_TESTS == 1
 
