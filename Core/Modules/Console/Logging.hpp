@@ -39,7 +39,8 @@ namespace tilia {
 
 			/**
 			 * @brief First time it is called it will construct an instance of Logger. A reference 
-			 * to this instance is returned to anywhere in the program.
+			 * to this instance is returned to anywhere in the program. Should only be called after 
+			 * main has started.
 			 * 
 			 * @return A reference to an instance of Logger.
 			 */
@@ -66,11 +67,13 @@ namespace tilia {
 			std::vector<std::string> Get_Filters() const;
 
 			/**
-			 * @brief Prints the given data to different outputs depending upon filters.
+			 * @brief Prints the given data to the given outputs.
 			 * 
 			 * @param data - The data to print.
+			 * @param outputs - The outputs to print to. If none are given then it prints to all 
+			 * stored ones.
 			 */
-			void Output(const std::string& data, std::vector<std::string> filters = {});
+			void Output(const std::string& data, std::vector<std::ostream*> outputs = {});
 
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.

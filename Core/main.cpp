@@ -66,7 +66,6 @@ using namespace tilia::utils;
 using namespace tilia::gfx;
 using namespace tilia::log;
 
-Logger& logger{ Logger::Instance() };
 bool print_opengl_things{ false };
 
 enums::Polymode polymode{ enums::Polymode::Fill };
@@ -344,6 +343,8 @@ TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 
 int main()
 {
+
+    Logger& logger{ Logger::Instance() };
 
     // TODO: Make an exception handling class for among other things handling exceptions over threads
 
@@ -1189,6 +1190,8 @@ int main() {
 // ---------------------------------------------------------------------------------------------------------
 void processInput()
 {
+
+    Logger& logger{ Logger::Instance() };
     
     if (input.Get_Key_Pressed(KEY_ENTER))
     {

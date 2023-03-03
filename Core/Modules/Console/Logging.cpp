@@ -133,7 +133,8 @@ void tilia::log::Logger::GLFW_Error_Callback(std::int32_t error_code, const char
     logger.Output(output.str(), logger.m_openGL_filters);
 }
 
-tilia::log::Logger::Logger() { }
+tilia::log::Logger::Logger()
+    : m_outputs{ { &std::cout, { } } } { }
 
 #if TILIA_UNIT_TESTS == 1
 
