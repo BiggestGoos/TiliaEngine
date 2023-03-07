@@ -20,7 +20,7 @@
 // Tilia
 #include "Core/Values/Directories.hpp"
 #include TILIA_CONSTANTS_INCLUDE
-#include TILIA_WINDOWING_CALLBACKS_INCLUDE
+#include TILIA_WINDOW_PROPERTIES_INCLUDE
 
 namespace tilia
 {
@@ -55,7 +55,7 @@ namespace tilia
 		void Destroy();
 
 		template<typename T,
-			std::enable_if_t<std::is_base_of_v<utils::Window_Func<T::Type, 
+			std::enable_if_t<std::is_base_of_v<callbacks::Window_Func<T::Type, 
 			typename T::Parameters>, T>>* = nullptr>
 		void Add_Callback(T callback)
 		{	
@@ -63,7 +63,7 @@ namespace tilia
 		}
 
 		template<typename T,
-			std::enable_if_t<std::is_base_of_v<utils::Window_Func<T::Type,
+			std::enable_if_t<std::is_base_of_v<callbacks::Window_Func<T::Type,
 			typename T::Parameters>, T>>* = nullptr>
 			void Remove_Callback(T callback)
 		{
@@ -139,15 +139,15 @@ namespace tilia
 		utils::GLFWwindow* m_window{};
 
 		std::tuple<
-			std::vector<utils::Position_Func::Signature>, 
-			std::vector<utils::Size_Func::Signature>,
-			std::vector<utils::Close_Func::Signature>,
-			std::vector<utils::Refresh_Func::Signature>,
-			std::vector<utils::Focus_Func::Signature>,
-			std::vector<utils::Inconify_Func::Signature>,
-			std::vector<utils::Maximize_Func::Signature>,
-			std::vector<utils::Framebuffer_Size_Func::Signature>,
-			std::vector<utils::Content_Scale_Func::Signature>
+			std::vector<callbacks::Position::Signature>, 
+			std::vector<callbacks::Size::Signature>,
+			std::vector<callbacks::Close::Signature>,
+			std::vector<callbacks::Refresh::Signature>,
+			std::vector<callbacks::Focus::Signature>,
+			std::vector<callbacks::Inconify::Signature>,
+			std::vector<callbacks::Maximize::Signature>,
+			std::vector<callbacks::Framebuffer_Size::Signature>,
+			std::vector<callbacks::Content_Scale::Signature>
 		> m_callbacks;
 
 		static std::unordered_map<utils::GLFWwindow*, Window&> s_windows;

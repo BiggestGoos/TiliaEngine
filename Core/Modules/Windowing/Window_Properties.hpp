@@ -7,12 +7,13 @@
  * @date   06/03/2023
  *************************************************************************************************/
 
-#ifndef TILIA_WINDOWING_CALLBACKS_HPP
-#define TILIA_WINDOWING_CALLBACKS_HPP
+#ifndef TILIA_WINDOW_PROPERTIES_HPP
+#define TILIA_WINDOW_PROPERTIES_HPP
 
 // Standard
 #include <cstdint>
 #include <functional>
+#include <tuple>
 
 // Tilia
 #include "Core/Values/Directories.hpp"
@@ -26,6 +27,11 @@ namespace tilia
 
 		typedef struct GLFWwindow GLFWwindow; // GLFWwindow
 
+	} // utils
+
+	namespace callbacks
+	{
+
 		template<enums::Window_Callbacks Func_Type, typename Func_Parameters>
 		struct Window_Func
 		{
@@ -36,35 +42,50 @@ namespace tilia
 			Window_Func(Signature func) : function{ func } { }
 		}; // Window_Func
 
-		using Position_Func = Window_Func<enums::Window_Callbacks::Position,
+		using Position = Window_Func<enums::Window_Callbacks::Position,
 			void(utils::GLFWwindow*, std::int32_t, std::int32_t)>;
 
-		using Size_Func = Window_Func<enums::Window_Callbacks::Size, 
+		using Size = Window_Func<enums::Window_Callbacks::Size, 
 			void(utils::GLFWwindow*, std::int32_t, std::int32_t)>;
 
-		using Close_Func = Window_Func<enums::Window_Callbacks::Close, 
+		using Close = Window_Func<enums::Window_Callbacks::Close, 
 			void(utils::GLFWwindow*)>;
 
-		using Refresh_Func = Window_Func<enums::Window_Callbacks::Refresh, 
+		using Refresh = Window_Func<enums::Window_Callbacks::Refresh, 
 			void(utils::GLFWwindow*)>;
 
-		using Focus_Func = Window_Func<enums::Window_Callbacks::Focus, 
+		using Focus = Window_Func<enums::Window_Callbacks::Focus, 
 			void(utils::GLFWwindow*, std::int32_t)>;
 
-		using Inconify_Func = Window_Func<enums::Window_Callbacks::Iconify, 
+		using Inconify = Window_Func<enums::Window_Callbacks::Iconify, 
 			void(utils::GLFWwindow*, std::int32_t)>;
 
-		using Maximize_Func = Window_Func<enums::Window_Callbacks::Maximize, 
+		using Maximize = Window_Func<enums::Window_Callbacks::Maximize, 
 			void(utils::GLFWwindow*, std::int32_t)>;
 
-		using Framebuffer_Size_Func = Window_Func<enums::Window_Callbacks::Framebuffer_Size, 
+		using Framebuffer_Size = Window_Func<enums::Window_Callbacks::Framebuffer_Size, 
 			void(utils::GLFWwindow*, std::int32_t, std::int32_t)>;
 
-		using Content_Scale_Func = Window_Func<enums::Window_Callbacks::Content_Scale, 
+		using Content_Scale = Window_Func<enums::Window_Callbacks::Content_Scale, 
 			void(utils::GLFWwindow*, float, float)>;
 
-	} // utils
+	} // callbacks
+
+	namespace properties
+	{
+
+		template<enums::Window_Properties Property_Type, typename... Property_Parameters>
+		struct Window_Property
+		{
+			using Parameters = std::tuple<Property_Parameters...>;
+			static constexpr auto Type{ Property_Type };
+			Parameters parameters{};
+			Window_Property(Property_Parameters&&... params)
+				: parameters{ (std::forward<Property_Parameters>(params))... } { }
+		};
+
+	} // properties
 
 } // tilia
 
-#endif // TILIA_WINDOWING_CALLBACKS_HPP
+#endif // TILIA_WINDOW_PROPERTIES_HPP

@@ -37,7 +37,7 @@
 #define TILIA_OPENGL_3_3_VERTEX_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
 #define TILIA_WINDOW_INCLUDE "Core/Modules/Windowing/Window.hpp"
-#define TILIA_WINDOWING_CALLBACKS_INCLUDE "Core/Modules/Windowing/Callbacks.hpp"
+#define TILIA_WINDOW_PROPERTIES_INCLUDE "Core/Modules/Windowing/Window_Properties.hpp"
 
 #define TILIA_TEMP_CAMERA_INCLUDE "Core/Temp/Camera.hpp"
 #define TILIA_TEMP_INPUT_INCLUDE "Core/Temp/Input.hpp"
@@ -81,7 +81,7 @@
 #include "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
 #include "Core/Modules/Windowing/Window.hpp"
-#include "Core/Modules/Windowing/Callbacks.hpp"
+#include "Core/Modules/Windowing/Window_Properties.hpp"
 
 #include "Core/Temp/Camera.hpp"
 #include "Core/Temp/Input.hpp"

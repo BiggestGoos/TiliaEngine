@@ -195,7 +195,7 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Mesh.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Vertex.hpp" />
-    <ClInclude Include="Core\Modules\Windowing\Callbacks.hpp" />
+    <ClInclude Include="Core\Modules\Windowing\Window_Properties.hpp" />
     <ClInclude Include="Core\Modules\Windowing\Window.hpp" />
     <ClInclude Include="Core\Temp\Camera.hpp" />
     <ClInclude Include="Core\Temp\Input.hpp" />

@@ -491,13 +491,13 @@ int main()
             return -1;
         }
 
-        window.Add_Callback(utils::Framebuffer_Size_Func{ framebuffer_size_callback });
+        window.Add_Callback(callbacks::Framebuffer_Size{ framebuffer_size_callback });
 
-        window.Add_Callback(utils::Content_Scale_Func{ content_scale_callback });
+        window.Add_Callback(callbacks::Content_Scale{ content_scale_callback });
 
-        window.Set<enums::Window_Properties::Aspect_Ratio>(16, 9);
+        properties::Window_Property<enums::Window_Properties::Aspect_Ratio, int, bool> aspect_ratio{ 5, true };
 
-        //wind.Remove_Callback(utils::Position_Func{ call });
+        //window.Set<enums::Window_Properties::Aspect_Ratio>(16, 9);
 
         //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -651,8 +651,9 @@ int main()
 
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-            window.Set<enums::Window_Properties::Title>(title.str());
+            
+            glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
+            //window.Set<enums::Window_Properties::Title>(title.str());
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };

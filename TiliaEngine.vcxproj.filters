@@ -1002,7 +1002,7 @@
     <ClInclude Include="Core\Modules\Windowing\Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Windowing\Callbacks.hpp">
+    <ClInclude Include="Core\Modules\Windowing\Window_Properties.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
