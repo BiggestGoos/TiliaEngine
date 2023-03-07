@@ -497,8 +497,6 @@ int main()
 
         window.Set<enums::Window_Properties::Aspect_Ratio>(16, 9);
 
-        window.Set<enums::Window_Properties::Visible>(false);
-
         //wind.Remove_Callback(utils::Position_Func{ call });
 
         //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
