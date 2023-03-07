@@ -221,6 +221,11 @@ void tilia::Window::Set_Callback(const enums::Window_Callbacks& type, callback_p
 	}
 }
 
+void tilia::Window::Set_Should_Close(const bool& should_close)
+{
+	glfwSetWindowShouldClose(m_window, should_close);
+}
+
 void tilia::Window::Position_Func(utils::GLFWwindow* window, std::int32_t x_pos, std::int32_t y_pos)
 {
 	Window& instance{ s_windows.at(window) };

@@ -55,16 +55,16 @@ namespace tilia
 		void Destroy();
 
 		template<typename T,
-			std::enable_if_t<std::is_base_of_v<callbacks::Window_Func<T::Type, 
-			typename T::Parameters>, T>>* = nullptr>
+			std::enable_if_t<std::is_same<decltype(T::Type), 
+			const enums::Window_Callbacks>::value>* = nullptr>
 		void Add_Callback(T callback)
 		{	
 			std::get<enums::operator*(T::Type)>(m_callbacks).push_back(callback.function);
 		}
 
 		template<typename T,
-			std::enable_if_t<std::is_base_of_v<callbacks::Window_Func<T::Type,
-			typename T::Parameters>, T>>* = nullptr>
+			std::enable_if_t<std::is_same<decltype(T::Type), 
+			const enums::Window_Callbacks>::value>* = nullptr>
 			void Remove_Callback(T callback)
 		{
 			auto& callbacks{ std::get<enums::operator*(T::Type)>(m_callbacks) };
@@ -82,6 +82,45 @@ namespace tilia
 		void Make_Context_Current() const;
 
 		void Swap_Buffers() const;
+
+		template<typename T, bool Access_Type = T::Access_Type,
+			std::enable_if_t<std::is_same<decltype(T::Type),
+			const enums::Window_Properties>::value && ((Access_Type == properties::Setter)? 
+				!std::is_same<typename T::First_Setter_Param, nullptr_t>::value : 
+				!std::is_same<typename T::First_Getter_Param, nullptr_t>::value)
+			>* = nullptr>
+			void Property (T&& property)
+		{
+			if (Access_Type == properties::Setter)
+			{
+				//Set_Should_Close()
+			}
+			else
+			{
+
+			}
+		}
+
+		//template<template<typename> typename T, bool Access_Type = properties::Setter,
+		//	std::enable_if_t<std::is_same<decltype(T<Access_Type>::Type),
+		//	const enums::Window_Properties>::value && 
+		//	!std::is_same<typename T<Access_Type>::First_Setter_Param, nullptr_t>::value>* = nullptr>
+		//	void Set_Property(T<Access_Type> property)
+		//{
+		//	std::cout << std::get<0>(property.set_parameters) << " : " << std::get<1>(property.set_parameters) << '\n';
+		//}
+
+		//template<template<typename> typename T, typename Access_Type = properties::Getter,
+		//	std::enable_if_t<std::is_same<decltype(T<Access_Type>::Type),
+		//	const enums::Window_Properties>::value &&
+		//	!std::is_same<typename T<Access_Type>::First_Getter_Param, nullptr_t>::value>* = nullptr >
+		//	void Get_Property(T<Access_Type> property)
+		//{
+		//	std::get<0>(property.get_parameters) = 67;
+		//	std::get<1>(property.get_parameters) = 734;
+		//	std::get<2>(property.get_parameters) = 37;
+		//	std::get<3>(property.get_parameters) = 956;
+		//}
 
 		template<enums::Window_Properties property, typename... Parameters>
 		void Set(Parameters... args) 
@@ -151,6 +190,8 @@ namespace tilia
 		> m_callbacks;
 
 		static std::unordered_map<utils::GLFWwindow*, Window&> s_windows;
+
+		void Set_Should_Close(const bool& should_close);
 
 		static void Position_Func(utils::GLFWwindow* window, std::int32_t x_pos, std::int32_t y_pos);
 

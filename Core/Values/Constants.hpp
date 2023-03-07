@@ -158,25 +158,25 @@ namespace tilia
 		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
 		enum class Window_Properties
 		{
-			Should_Close = 0x0000,
-			Size = 0x0001,
-			Frame_Size = 0x0002,
-			Framebuffer_Size = 0x0003,
-			Content_Scale = 0x0004,
-			Size_Limits = 0x0005,
-			Aspect_Ratio = 0x0006,
-			Position = 0x0007,
-			Title = 0x0008,
-			Icon = 0x0009,
-			Monitor = 0x000A,
-			Iconify = 0x000B,
-			Maximize = 0x000C,
-			Visible = 0x000D,
-			Focus = 0x0000E,
+			Should_Close	  = 0x0000,
+			Size			  = 0x0001,
+			Frame_Size		  = 0x0002,
+			Framebuffer_Size  = 0x0003,
+			Content_Scale	  = 0x0004,
+			Size_Limits		  = 0x0005,
+			Aspect_Ratio	  = 0x0006,
+			Position		  = 0x0007,
+			Title			  = 0x0008,
+			Icon			  = 0x0009,
+			Monitor			  = 0x000A,
+			Iconify			  = 0x000B,
+			Maximize		  = 0x000C,
+			Visible			  = 0x000D,
+			Focus			  = 0x000E,
 			Request_Attention = 0x000F,
-			Opacity = 0x0010,
-			Attributes = 0x0011,
-			Swap_Interval = 0x0012
+			Opacity			  = 0x0010,
+			Attributes		  = 0x0011,
+			Swap_Interval	  = 0x0012
 		}; // Window_Properties
 
 		// Window attributes.

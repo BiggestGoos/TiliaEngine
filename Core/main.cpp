@@ -495,7 +495,17 @@ int main()
 
         window.Add_Callback(callbacks::Content_Scale{ content_scale_callback });
 
-        properties::Window_Property<enums::Window_Properties::Aspect_Ratio, int, bool> aspect_ratio{ 5, true };
+        int x{ 123 }, y{ 456 }, z{ 789 }, w{ 101112 };
+
+        window.Property(properties::Iconify<properties::Setter>{ true });
+
+        std::cout << x << " : " << y << " : " << z << " : " << w << '\n';
+
+        //properties::Set_Window_Property<enums::Window_Properties::Aspect_Ratio, int> p{ 5 };
+
+        //bool fwfw{};
+
+        //window.Get_Property(properties::Get_Should_Close{ fwfw });
 
         //window.Set<enums::Window_Properties::Aspect_Ratio>(16, 9);
 
