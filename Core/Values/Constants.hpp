@@ -47,6 +47,149 @@ namespace tilia
 			Quad_Points     = 4  // The amount of points in a quad.
 		}; // Geometry_Features
 
+		// Window hints which can be used to set different values used in creating windows.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Window_Hints {
+			// Resets window hints to default
+			Reset					 = 0x00000000,
+			Focused					 = 0x00020001,
+			Iconified				 = 0x00020002,
+			Resizable				 = 0x00020003,
+			Visible					 = 0x00020004,
+			Decorated				 = 0x00020005,
+			Auto_Iconify			 = 0x00020006,
+			Floating				 = 0x00020007,
+			Maximized				 = 0x00020008,
+			Center_Cursor			 = 0x00020009,
+			Transparent_Framebuffer  = 0x0002000A,
+			Hovered					 = 0x0002000B,
+			Focus_On_Show			 = 0x0002000C,
+			Red_Bits				 = 0x00021001,
+			Green_Bits				 = 0x00021002,
+			Blue_Bits				 = 0x00021003,
+			Alpha_Bits				 = 0x00021004,
+			Depth_Bits				 = 0x00021005,
+			Stencil_Bits			 = 0x00021006,
+			Accum_Red_Bits			 = 0x00021007,
+			Accum_Green_Bits		 = 0x00021008,
+			Accum_Blue_Bits			 = 0x00021009,
+			Accum_Alpha_Bits		 = 0x0002100A,
+			AUX_Buffers				 = 0x0002100B,
+			Stereo					 = 0x0002100C,
+			Samples					 = 0x0002100D,
+			SRGB_Capable			 = 0x0002100E,
+			Refresh_Rate			 = 0x0002100F,
+			Doublebuffer			 = 0x00021010,
+			Client_API				 = 0x00022001,
+			Context_Verion_Major	 = 0x00022002,
+			Context_Verion_Minor	 = 0x00022003,
+			Context_Revision		 = 0x00022004,
+			Context_Robustness		 = 0x00022005,
+			OpenGL_Forward_Compat	 = 0x00022006,
+			OpenGL_Debug_Context	 = 0x00022007,
+			OpenGL_Profile			 = 0x00022008,
+			Context_Release_Behavior = 0x00022009,
+			Context_No_Error		 = 0x0002200A,
+			Context_Creation_API	 = 0x0002200B,
+			Scale_To_Monitor		 = 0x0002200C
+		}; // Window_Hints
+
+		// What graphics API to use.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Client_API
+		{
+			No_API    = 0x00000000,
+			OpenGL	  = 0x00030001,
+			OpenGL_ES = 0x00030002
+		}; // Client_API
+
+		// What API to create contexts for openGL.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Creation_API
+		{
+			Native = 0x00036001,
+			EGL    = 0x00036002,
+			OSMesa = 0x00036003
+		}; // Context_Creation_API
+
+		// The robustness of the created context when creating a window.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Robustness
+		{
+			No_Robustness		  = 0x00000000,
+			No_Reset_Notification = 0x00031001,
+			Lose_Context_On_Reset = 0x00031002
+		}; // Context_Robustness
+
+		// What happens when the context is released.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Release_Behavior
+		{
+			Any   = 0x00000000,
+			Flush = 0x00035001,
+			None  = 0x00035002
+		}; // Context_Release_Behavior
+
+		// The profile of the openGL context.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class OpenGL_Profile
+		{
+			Any    = 0x00000000,
+			Core   = 0x00032001,
+			Compat = 0x00032002
+		}; // OpenGL_Profile
+
+		// Windowing callbacks.
+		// Check this out for info: https://www.glfw.org/docs/3.3/group__window.html
+		enum class Window_Callbacks
+		{
+			Position		 = 0x0000,
+			Size			 = 0x0001,
+			Close			 = 0x0002,
+			Refresh			 = 0x0003,
+			Focus			 = 0x0004,
+			Iconify			 = 0x0005,
+			Maximize		 = 0x0006,
+			Framebuffer_Size = 0x0007,
+			Content_Scale	 = 0x0008
+		}; // Window_Callbacks
+
+		// Window properties.
+		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
+		enum class Window_Properties
+		{
+			Should_Close = 0x0000,
+			Size = 0x0001,
+			Frame_Size = 0x0002,
+			Framebuffer_Size = 0x0003,
+			Content_Scale = 0x0004,
+			Size_Limits = 0x0005,
+			Aspect_Ratio = 0x0006,
+			Position = 0x0007,
+			Title = 0x0008,
+			Icon = 0x0009,
+			Monitor = 0x000A,
+			Iconify = 0x000B,
+			Maximize = 0x000C,
+			Visible = 0x000D,
+			Focus = 0x0000E,
+			Request_Attention = 0x000F,
+			Opacity = 0x0010,
+			Attributes = 0x0011,
+			Swap_Interval = 0x0012
+		}; // Window_Properties
+
+		// Window attributes.
+		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
+		enum class Window_Attrubutes
+		{
+			Resizable	  = 0x00020003,
+			Decorated	  = 0x00020005,
+			Auto_Iconify  = 0x00020006,
+			Floating      = 0x00020007,
+			Focus_On_Show = 0x0002000C
+		}; // Window_Attrubutes
+
 #ifndef TILIA_GET_ENUM_VALUE
 #define TILIA_GET_ENUM_VALUE
 
@@ -79,6 +222,8 @@ namespace tilia
 #endif // TILIA_GET_ENUM_VALUE
 
     }// enums
+
+	constexpr std::int32_t DO_NOT_CARE{ -1 };
 
 } // tilia
 

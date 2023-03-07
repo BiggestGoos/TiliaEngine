@@ -44,6 +44,26 @@ namespace tilia {
 				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) },
 				m_line{ other.m_line } { }
 
+			Exception_Data& operator=(const Exception_Data& other)
+			{
+				if (this == &other)
+					return *this;
+				m_message = other.m_message;
+				m_file = other.m_file;
+				m_line = other.m_line;
+				return *this;
+			}
+
+			Exception_Data& operator=(Exception_Data&& other) noexcept
+			{
+				if (this == &other)
+					return *this;
+				m_message = std::move(other.m_message);
+				m_file = std::move(other.m_file);
+				m_line = other.m_line;
+				return *this;
+			}
+
 			Exception_Data(const std::string& file, const std::size_t& line)
 				: m_file{ file }, m_line{ line } { }
 
@@ -53,7 +73,7 @@ namespace tilia {
 			{
 				Set_Message(message...);
 			}
-
+			 
 			friend bool operator==(const Exception_Data& lhs, const Exception_Data& rhs)
 			{
 				if (&lhs == &rhs)
@@ -93,7 +113,7 @@ namespace tilia {
 				std::stringbuf str_buf{};
 				std::ostream buffer{ &str_buf };
 				((buffer << std::forward<T>(message)), ...);
-				m_message += str_buf.str();
+				m_message += std::move(str_buf.str());
 			}
 
 			/**
@@ -200,7 +220,7 @@ namespace tilia {
 					ret << "Message #" << (i + 1) << ":\n" << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
 						potential_message(message.m_message) << "\n\n";
 				}
-				static auto ret_str{ ret.str() };
+				static auto ret_str{ std::move(ret.str()) };
 				return ret_str.c_str();
 			}
 

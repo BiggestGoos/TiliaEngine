@@ -215,14 +215,14 @@ void tilia::gfx::Buffer::Map_Data(const enums::Buffer_Map_Type& mapping_type, vo
         Rebind();
 }
 
-std::optional<tilia::gfx::Buffer::Map_Value> tilia::gfx::Buffer::Map_Data_Auto(
+tilia::gfx::Buffer::Map_Value tilia::gfx::Buffer::Map_Data_Auto(
     const enums::Buffer_Map_Type& mapping_type)
 {
     const std::uint32_t none_or_local{ *enums::Buffer_Map_Type::None |
     *enums::Buffer_Map_Type::Local };
     
     if (*mapping_type == none_or_local)
-        return std::nullopt;
+        return nullptr;
 
     void* mapped_ptr{};
     Map_Data(mapping_type, mapped_ptr);

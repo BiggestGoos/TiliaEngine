@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>$(ProjectDir)</AdditionalIncludeDirectories>
@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Modules\Console\Logging.hpp" />
+    <ClInclude Include="Core\Modules\Exceptions\Exception_Handler.hpp" />
     <ClInclude Include="Core\Modules\Exceptions\Tilia_Exception.hpp" />
     <ClInclude Include="Core\Modules\File_System\Windows\File_System.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3.3\Abstractions\Buffer.hpp" />
@@ -194,6 +195,8 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Mesh.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Vertex.hpp" />
+    <ClInclude Include="Core\Modules\Windowing\Callbacks.hpp" />
+    <ClInclude Include="Core\Modules\Windowing\Window.hpp" />
     <ClInclude Include="Core\Temp\Camera.hpp" />
     <ClInclude Include="Core\Temp\Input.hpp" />
     <ClInclude Include="Core\Temp\Limit_Fps.hpp" />
@@ -494,6 +497,7 @@
   <ItemGroup>
     <ClCompile Include="Core\main.cpp" />
     <ClCompile Include="Core\Modules\Console\Logging.cpp" />
+    <ClCompile Include="Core\Modules\Exceptions\Exception_Handler.cpp" />
     <ClCompile Include="Core\Modules\Exceptions\Tilia_Exception.cpp" />
     <ClCompile Include="Core\Modules\File_System\Windows\File_System.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Buffer.cpp" />
@@ -508,6 +512,7 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Batch.cpp" />
     <ClCompile Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.cpp" />
+    <ClCompile Include="Core\Modules\Windowing\Window.cpp" />
     <ClCompile Include="Core\Temp\Input.cpp" />
     <ClCompile Include="Core\Temp\Limit_Fps.cpp" />
     <ClCompile Include="Core\Temp\Stopwatch.cpp" />

@@ -996,6 +996,15 @@
     <ClInclude Include="vendor\glad\KHR_Debug_openGL_3_3\include\KHR\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Exceptions\Exception_Handler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Windowing\Window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Windowing\Callbacks.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
@@ -1062,6 +1071,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vendor\glad\KHR_Debug_openGL_3_3\src\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Exceptions\Exception_Handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Windowing\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

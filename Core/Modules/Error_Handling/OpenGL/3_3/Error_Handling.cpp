@@ -31,7 +31,7 @@ static constexpr const char* Get_Error_String(const std::uint32_t& error_code) {
     }
 }
 
-void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, const char* function)
+void tilia::utils::Handle_OpenGL_Error(const char* file, const std::size_t& line, const char* function)
 {
     GLenum error{ glGetError() };
     if (error == GL_NO_ERROR)
@@ -55,8 +55,8 @@ void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, con
     throw t_e;
 }
 
-void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, const char* function, 
-    Exception_Data& message)
+void tilia::utils::Handle_OpenGL_Error(const char* file, const std::size_t& line, const char* function,
+    Exception_Data message)
 {
     GLenum error{ glGetError() };
     if (error == GL_NO_ERROR)
@@ -82,7 +82,7 @@ void tilia::utils::Handle_openGL_Error(const char* file, const size_t& line, con
     throw t_e;
 }
 
-void tilia::utils::Clear_openGL_Error()
+void tilia::utils::Clear_OpenGL_Error()
 {
     while (glGetError() != GL_NO_ERROR);
 }

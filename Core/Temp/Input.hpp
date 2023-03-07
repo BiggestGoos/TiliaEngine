@@ -211,6 +211,8 @@ namespace tilia {
 
 	public:
 
+		auto Get_Window() { return m_window; }
+
 		void Init(GLFWwindow* window);
 
 		void Update();

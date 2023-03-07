@@ -42,30 +42,30 @@
  * @brief Calls the given function and then if there are any errors it throws an exception with 
  * info about the error.
  */
-#define GL_CALL(func)                  tilia::utils::Clear_openGL_Error();\
+#define GL_CALL(func)                  tilia::utils::Clear_OpenGL_Error();\
                                        func;\
-                                       tilia::utils::Handle_openGL_Error(TILIA_LOCATION, #func);
+                                       tilia::utils::Handle_OpenGL_Error(TILIA_LOCATION, #func);
 
  /**
   * @brief Calls the given function and then if there are any errors it throws an exception with 
   * the given message and info about the error.
   */
-#define GL_CALL_MESSAGE(message, func) tilia::utils::Clear_openGL_Error();\
+#define GL_CALL_MESSAGE(message, func) tilia::utils::Clear_OpenGL_Error();\
                                        func;\
-                                       tilia::utils::Handle_openGL_Error(TILIA_LOCATION, #func, \
+                                       tilia::utils::Handle_OpenGL_Error(TILIA_LOCATION, #func, \
                                        message);
 
 namespace tilia {
 
     namespace utils {
 
-        void Handle_openGL_Error(const char* file, const size_t& line,
+        void Handle_OpenGL_Error(const char* file, const std::size_t& line,
             const char* function);
 
-        void Handle_openGL_Error(const char* file, const size_t& line,
-            const char* function, Exception_Data& message);
+        void Handle_OpenGL_Error(const char* file, const std::size_t& line,
+            const char* function, Exception_Data message);
 
-        void Clear_openGL_Error();
+        void Clear_OpenGL_Error();
 
     } // utils
 

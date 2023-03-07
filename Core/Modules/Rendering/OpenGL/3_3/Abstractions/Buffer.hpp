@@ -212,7 +212,7 @@ namespace tilia
 			 * 
 			 * @return 
 			 */
-			std::optional<Map_Value> Map_Data_Auto(const enums::Buffer_Map_Type& mapping_type);
+			Map_Value Map_Data_Auto(const enums::Buffer_Map_Type& mapping_type);
 
 			/**
 			 * @brief Unmaps the mapped pointer which invalidates it and uploads the data.

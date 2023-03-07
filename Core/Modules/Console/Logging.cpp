@@ -4,20 +4,11 @@
 
 // Tilia
 #include "Logging.hpp"
+#include "Core/Values/Directories.hpp"
+#include TILIA_EXCEPTION_HANDLER_INCLUDE
 
-void tilia::log::Logger::Set_Filters(std::vector<std::string> filters)
-{
-    std::lock_guard lock{ m_mutex };
-    m_filters = filters;
-}
-
-std::vector<std::string> tilia::log::Logger::Get_Filters() const
-{
-    std::lock_guard lock{ m_mutex };
-    return m_filters;
-}
-
-static bool share_filters(const std::vector<std::string>& lhs, const std::vector<std::string>& rhs)
+static bool shares_filters(const std::vector<std::string>& lhs, 
+    const std::vector<std::string>& rhs)
 {
     if (lhs == rhs)
         return true;
@@ -42,7 +33,7 @@ void tilia::log::Logger::Output(const std::string& data,
     auto used_filters{ (filters.size() == 0) ? m_filters : filters };
     for (auto& [output, output_filters] : m_outputs)
     {
-        if (share_filters(output_filters, used_filters) || used_filters.size() == 0)
+        if (shares_filters(output_filters, used_filters) || used_filters.size() == 0)
         {
             (*output) << data;
         }
@@ -63,21 +54,14 @@ void tilia::log::Logger::Output(const utils::Exception_Data& data)
     output << "Tilia Exception Data:\n"
         << "File: " << location.first << " : Line: " << location.second
         << "\nMessage:\n" << potential_message(data.Get_Message()) << '\n';
-    Output(output.str());
+    Output(std::move(output.str()));
 }
 
 void tilia::log::Logger::Output(const utils::Tilia_Exception& data)
 {
     std::stringstream output{};
     output << "Tilia Exception:\n\n" << data.what();
-    Output(output.str());
-}
-
-void tilia::log::Logger::Add_Output(std::ostream* output, 
-    std::vector<std::string> filters)
-{
-    std::lock_guard lock{ m_mutex };
-    m_outputs.push_back({ output, std::move(filters) });
+    Output(std::move(output.str()));
 }
 
 void tilia::log::Logger::Remove_Output(std::ostream* const output)
@@ -91,7 +75,8 @@ void tilia::log::Logger::Remove_Output(std::ostream* const output)
             break;
         }
     }
-    m_outputs.erase(i);
+    if (i != m_outputs.cbegin())
+        m_outputs.erase(i);
 }
 
 void tilia::log::Logger::Set_Output_Filters(std::ostream* output, 
@@ -102,17 +87,25 @@ void tilia::log::Logger::Set_Output_Filters(std::ostream* output,
     {
         if (output == i->first)
         {
-            i->second = filters;
+            i->second = std::move(filters);
         }
     }
 }
 
+/**
+ * @brief Important note is that unless GL_DEBUG_OUTPUT_SYNCHRONOUS is enabled the openGL callback 
+ * may be called from threads other than the main one.
+ */
 void tilia::log::Logger::OpenGL_Error_Callback(std::uint32_t source, std::uint32_t type,
     std::uint32_t id, std::uint32_t severity, std::int32_t length, const char* message, 
     const void* user_param)
 {
-    std::stringstream output{};
     Logger& logger{ Logger::Instance() };
+    utils::Exception_Handler& handler{ utils::Exception_Handler::Instance() };
+    if (logger.m_outputs.size() == 0)
+        return handler.Throw(utils::Tilia_Exception{ { TILIA_LOCATION, 
+            "Logger has no viable output\n" } });
+    std::stringstream output{};
     output << "OpenGL error"
         << "\nSource: " << source
         << "\nType: " << type
@@ -120,7 +113,13 @@ void tilia::log::Logger::OpenGL_Error_Callback(std::uint32_t source, std::uint32
         << "\nSeverity: " << severity
         << "\nMessage: " << message 
         << "\nUser Param: " << user_param << '\n';
-    logger.Output(output.str(), logger.m_openGL_filters);
+    // To avoid data race
+    decltype(logger.m_openGL_filters) temp_filters{};
+    { // We do this to avoid a deadlock
+        std::lock_guard lock{ logger.m_mutex };
+        temp_filters = logger.m_openGL_filters;
+    }
+    logger.Output(std::move(output.str()), std::move(temp_filters));
 }
 
 void tilia::log::Logger::GLFW_Error_Callback(std::int32_t error_code, const char* description)
@@ -130,11 +129,8 @@ void tilia::log::Logger::GLFW_Error_Callback(std::int32_t error_code, const char
     output << "GLFW error"
         << "\nError Code: " << error_code
         << "\nDescription: " << description << '\n';
-    logger.Output(output.str(), logger.m_openGL_filters);
+    logger.Output(std::move(output.str()), logger.m_openGL_filters);
 }
-
-tilia::log::Logger::Logger()
-    : m_outputs{ { &std::cout, { } } } { }
 
 #if TILIA_UNIT_TESTS == 1
 

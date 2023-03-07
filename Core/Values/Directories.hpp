@@ -12,6 +12,7 @@
 
 #define TILIA_LOGGING_INCLUDE "Core/Modules/Console/Logging.hpp"
 
+#define TILIA_EXCEPTION_HANDLER_INCLUDE "Core/Modules/Exceptions/Exception_Handler.hpp"
 #define TILIA_TILIA_EXCEPTION_INCLUDE "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 #define TILIA_WINDOWS_FILE_SYSTEM_INCLUDE "Core/Modules/File_System/Windows/File_System.hpp"
@@ -35,6 +36,9 @@
 #define TILIA_OPENGL_3_3_RENDERER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #define TILIA_OPENGL_3_3_VERTEX_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
+#define TILIA_WINDOW_INCLUDE "Core/Modules/Windowing/Window.hpp"
+#define TILIA_WINDOWING_CALLBACKS_INCLUDE "Core/Modules/Windowing/Callbacks.hpp"
+
 #define TILIA_TEMP_CAMERA_INCLUDE "Core/Temp/Camera.hpp"
 #define TILIA_TEMP_INPUT_INCLUDE "Core/Temp/Input.hpp"
 #define TILIA_TEMP_LIMIT_FPS_INCLUDE "Core/Temp/Limit_Fps.hpp"
@@ -52,6 +56,7 @@
 
 #include "Core/Modules/Console/Logging.hpp"
 
+#include "Core/Modules/Exceptions/Exception_Handler.hpp"
 #include "Core/Modules/Exceptions/Tilia_Exception.hpp"
 
 #include "Core/Modules/File_System/Windows/File_System.hpp"
@@ -74,6 +79,9 @@
 #include "Core/Modules/Rendering/OpenGL/3_3/Mesh.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
+
+#include "Core/Modules/Windowing/Window.hpp"
+#include "Core/Modules/Windowing/Callbacks.hpp"
 
 #include "Core/Temp/Camera.hpp"
 #include "Core/Temp/Input.hpp"

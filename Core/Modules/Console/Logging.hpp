@@ -1,7 +1,8 @@
 /**************************************************************************************************
  * @file   Logging.hpp
  * 
- * @brief  Declarations of functions used for logging information to the console.
+ * @brief  Holds a singleton class which can output messages to given outputs from any thread 
+ * depending on different filters.
  * 
  * @author Gustav Fagerlind
  * @date   16/05/2022
@@ -39,8 +40,7 @@ namespace tilia {
 
 			/**
 			 * @brief First time it is called it will construct an instance of Logger. A reference 
-			 * to this instance is returned to anywhere in the program. Should only be called after 
-			 * main has started.
+			 * to this instance is returned to anywhere in the program.
 			 * 
 			 * @return A reference to an instance of Logger.
 			 */
@@ -57,35 +57,43 @@ namespace tilia {
 			 * @param filters - The filters to store. If none is given then the filters are set to 
 			 * empty.
 			 */
-			void Set_Filters(std::vector<std::string> filters = {});
+			void Set_Filters(std::vector<std::string> filters = {})
+			{
+				std::lock_guard lock{ m_mutex };
+				m_filters = std::move(filters);
+			}
 
 			/**
 			 * @brief Gets the stored filters.
 			 * 
 			 * @return The stored filters.
 			 */
-			std::vector<std::string> Get_Filters() const;
+			std::vector<std::string> Get_Filters() const
+			{
+				std::lock_guard lock{ m_mutex };
+				return m_filters;
+			}
 
 			/**
 			 * @brief Prints the given data to the given outputs.
 			 * 
 			 * @param data - The data to print.
-			 * @param outputs - The outputs to print to. If none are given then it prints to all 
-			 * stored ones.
+			 * @param filters - The filters to be used. If none are given then it uses the stored
+			 * ones.
 			 */
-			void Output(const std::string& data, std::vector<std::ostream*> outputs = {});
+			void Output(const std::string& data, std::vector<std::string> filters = {});
 
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.
 			 *
 			 * @param data - The data to print.
 			 */
-			template<typename... T>
-			void Output(T... data)
+			template<typename... Data>
+			void Output(Data... data)
 			{
 				std::stringbuf str_buf{};
 				std::ostream buffer{ &str_buf };
-				((buffer << std::forward<T>(data)), ...);
+				((buffer << std::forward<Data>(data)), ...);
 				Output(str_buf.str());
 			}
 			
@@ -110,7 +118,11 @@ namespace tilia {
 			 * @param filters - The filters to be used for this output. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Add_Output(std::ostream* output, std::vector<std::string> filters = {});
+			void Add_Output(std::ostream* output, std::vector<std::string> filters = {})
+			{
+				std::lock_guard lock{ m_mutex };
+				m_outputs.push_back({ output, std::move(filters) });
+			}
 
 			/**
 			 * @brief Removes the given filter from the logger (if it exists).
@@ -137,6 +149,7 @@ namespace tilia {
 			 */
 			void Set_OpenGL_Filters(std::vector<std::string> filters = {})
 			{
+				std::lock_guard lock{ m_mutex };
 				m_openGL_filters = filters;
 			}
 
@@ -155,7 +168,8 @@ namespace tilia {
 			 */
 			void Set_GLFW_Filters(std::vector<std::string> filters = {})
 			{
-				m_GLFW_filters = filters;
+				std::lock_guard lock{ m_mutex };
+				m_GLFW_filters = std::move(filters);
 			}
 
 			/**
@@ -174,7 +188,7 @@ namespace tilia {
 
 		private:
 
-			Logger();
+			Logger() = default;
 
 			// The different outputs and their respective filters
 			std::vector<std::pair<std::ostream*, std::vector<std::string>>> m_outputs{};
