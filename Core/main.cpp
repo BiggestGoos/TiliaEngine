@@ -634,10 +634,9 @@ int main()
 
         // render loop
         // -----------
-        bool should_close{ false };
-        while (!should_close)
+        while (!window.Get<enums::Window_Properties::Should_Close>())
         {
-            window.Property(properties::Get_Should_Close{ should_close });
+            
             processInput();
 
             if (reload_shader)

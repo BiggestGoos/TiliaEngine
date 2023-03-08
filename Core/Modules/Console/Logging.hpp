@@ -2,7 +2,7 @@
  * @file   Logging.hpp
  * 
  * @brief  Holds a singleton class which can output messages to given outputs from any thread 
- * depending on different filters.
+ *		   depending on different filters.
  * 
  * @author Gustav Fagerlind
  * @date   16/05/2022
@@ -57,18 +57,18 @@ namespace tilia {
 			 * @param filters - The filters to store. If none is given then the filters are set to 
 			 * empty.
 			 */
-			void Set_Filters(std::vector<std::string> filters = {})
+			void Set_Filters(const std::vector<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
-				m_filters = std::move(filters);
+				m_filters = filters;
 			}
 
 			/**
 			 * @brief Gets the stored filters.
 			 * 
-			 * @return The stored filters.
+			 * @return The stored filters. Don't store reference.
 			 */
-			std::vector<std::string> Get_Filters() const
+			const std::vector<std::string>& Get_Filters() const
 			{
 				std::lock_guard lock{ m_mutex };
 				return m_filters;
@@ -81,7 +81,7 @@ namespace tilia {
 			 * @param filters - The filters to be used. If none are given then it uses the stored
 			 * ones.
 			 */
-			void Output(const std::string& data, std::vector<std::string> filters = {});
+			void Output(const std::string& data, const std::vector<std::string>& filters = {});
 
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.
@@ -118,10 +118,10 @@ namespace tilia {
 			 * @param filters - The filters to be used for this output. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Add_Output(std::ostream* output, std::vector<std::string> filters = {})
+			void Add_Output(std::ostream* output, const std::vector<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
-				m_outputs.push_back({ output, std::move(filters) });
+				m_outputs.push_back({ output, filters });
 			}
 
 			/**
@@ -139,7 +139,7 @@ namespace tilia {
 			 * filters are set to empty.
 			 */
 			void Set_Output_Filters(std::ostream* output, 
-				std::vector<std::string> filters = {});
+				const std::vector<std::string>& filters = {});
 
 			/**
 			 * @brief Sets the filters to be used by the openGL callback
@@ -147,7 +147,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for openGL. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Set_OpenGL_Filters(std::vector<std::string> filters = {})
+			void Set_OpenGL_Filters(const std::vector<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_openGL_filters = filters;
@@ -166,10 +166,10 @@ namespace tilia {
 			 * @param filters - The filters to be used for GLFW. If none is given then the
 			 * filters are set to empty.
 			 */
-			void Set_GLFW_Filters(std::vector<std::string> filters = {})
+			void Set_GLFW_Filters(const std::vector<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
-				m_GLFW_filters = std::move(filters);
+				m_GLFW_filters = filters;
 			}
 
 			/**

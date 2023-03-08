@@ -2,7 +2,7 @@
  * @file   Exception_Handler.hpp
  * 
  * @brief  Holds a singleton class which can recieve exceptions from any given thread and will, 
- * when told, output the exceptions to the console.
+ *		   when told, output the exceptions to the console.
  * 
  * @author Gustav Fagerlind
  * @date   04/03/2023

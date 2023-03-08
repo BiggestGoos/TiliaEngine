@@ -59,10 +59,10 @@ namespace tilia {
 
     namespace utils {
 
-        void Handle_OpenGL_Error(const char* file, const std::size_t& line,
+        void Handle_OpenGL_Error(const char* file, std::size_t line,
             const char* function);
 
-        void Handle_OpenGL_Error(const char* file, const std::size_t& line,
+        void Handle_OpenGL_Error(const char* file, std::size_t line,
             const char* function, Exception_Data message);
 
         void Clear_OpenGL_Error();

@@ -64,11 +64,11 @@ namespace tilia {
 				return *this;
 			}
 
-			Exception_Data(const std::string& file, const std::size_t& line)
+			Exception_Data(const std::string& file, std::size_t line)
 				: m_file{ file }, m_line{ line } { }
 
 			template<typename... T>
-			Exception_Data(const std::string& file, const std::size_t& line, T... message)
+			Exception_Data(const std::string& file, std::size_t line, T... message)
 				: Exception_Data(file, line)
 			{
 				Set_Message(message...);
@@ -129,7 +129,7 @@ namespace tilia {
 			 * @param file - The file at which the exception message was created.
 			 * @param line - The line at which the exception message was created.
 			 */
-			void Set_Location(const std::string& file, const std::size_t& line)
+			void Set_Location(const std::string& file, std::size_t line)
 			{
 				m_file = file; m_line = line;
 			}
@@ -249,7 +249,7 @@ namespace tilia {
 			 * 
 			 * @return The message at the index.
 			 */
-			auto Get_Message(const std::size_t& index) const { return m_messages[index]; }
+			auto Get_Message(std::size_t index) const { return m_messages[index]; }
 
 			/**
 			 * @brief The number of messages in the exception.

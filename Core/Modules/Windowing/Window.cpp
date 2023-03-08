@@ -237,8 +237,9 @@ void tilia::Window::Get_Property(const enums::Window_Properties& type, void* pro
 	switch (type)
 	{
 	case enums::Window_Properties::Should_Close:
-		auto parameters{ *static_cast<properties::Get_Should_Close_Parameters*>(property) };
+		auto& parameters{ *static_cast<properties::Get_Should_Close_Parameters*>(property) };
 		std::get<0>(parameters) = glfwWindowShouldClose(m_window);
+		std::cout << "end get should close\n";
 		break;
 	}
 }

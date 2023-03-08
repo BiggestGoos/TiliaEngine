@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <functional>
 #include <tuple>
+#include <string>
 
 // Tilia
 #include "Core/Values/Directories.hpp"
@@ -74,165 +75,45 @@ namespace tilia
 	namespace properties
 	{
 
-		static constexpr bool Setter{ true };
-		static constexpr bool Getter{ false };
-
-		template<bool Property_Access_Type, enums::Window_Properties Property_Type, typename T, typename U>
-		struct Window_Property {
-		};
-
-		template<bool Property_Access_Type, enums::Window_Properties Property_Type, typename... Set_Parameters, typename... Get_Parameters>
-		struct Window_Property<Property_Access_Type, Property_Type, std::tuple<Set_Parameters...>, std::tuple<Get_Parameters...>>
-		{
-			using Setter_Parameters  = std::tuple<Set_Parameters...>;
-			using Getter_Parameters  = std::tuple<Get_Parameters...>;
-			using First_Setter_Param = std::tuple_element_t<0, Setter_Parameters>;
-			using First_Getter_Param = std::tuple_element_t<0, Getter_Parameters>;
-
-			static constexpr auto Type{ Property_Type };
-			static constexpr auto Access_Type{ Property_Access_Type };
-
-			Setter_Parameters set_parameters;
-			Getter_Parameters get_parameters;
-
-			template<typename = std::enable_if_t<Access_Type == Setter>>
-			Window_Property(Set_Parameters&&... params)
-				: set_parameters{ (std::forward<Set_Parameters>(params))... },
-				get_parameters{ Get_Temp_Ref<Get_Parameters...>() } {}
-
-			template<typename = std::enable_if_t<Access_Type == Getter>>
-			Window_Property(Get_Parameters&&... params)
-				: get_parameters{ (std::forward<Get_Parameters>(params))... },
-				set_parameters{ Get_Temp_Ref<Set_Parameters...>() } {}
-
-		protected:
-			template<typename... Types>
-			auto Get_Temp_Ref()
-			{
-				std::tuple<typename std::remove_reference<Types>::type...> temp{};
-				return std::apply([](auto&... args)
-					{
-						return std::tuple<std::add_lvalue_reference_t<decltype(args)>...>(args...);
-					}, temp);
-			}
-		};
-
 		using Set_Should_Close_Parameters = std::tuple<const bool&>;
-		using Get_Should_Close_Parameters = std::tuple<bool&>;
+		using Get_Should_Close_Parameters = std::tuple<bool>;
 
-		template<bool Property_Access_Type>
-		using Should_Close = Window_Property<Property_Access_Type, enums::Window_Properties::Should_Close, std::tuple<const bool&>, std::tuple<bool&>>;
+		using Set_Size_Parameters = std::tuple<const int32_t&, const int32_t&>;
+		using Get_Size_Parameters = std::tuple<int32_t&, int32_t&>;
 
-		using Set_Should_Close = Should_Close<Setter>;
-		using Get_Should_Close = Should_Close<Getter>;
+		using Get_Frame_Size_Parameters = std::tuple<int32_t&, int32_t&, int32_t&, int32_t&>;
 
-		template<bool Property_Access_Type>
-		using Size = Window_Property<Property_Access_Type, enums::Window_Properties::Size, std::tuple<const int32_t&, const int32_t&>, std::tuple<int32_t&, int32_t&>>;
+		using Get_Framebuffer_Size_Parameters = std::tuple<int32_t&, int32_t&>;
 
-		using Set_Size= Size<Setter>;
-		using Get_Size= Size<Getter>;
+		using Get_Content_Scale_Parameters = std::tuple<float&, float&>;
 
-		template<bool Property_Access_Type>
-		using Frame_Size = Window_Property<Property_Access_Type, enums::Window_Properties::Frame_Size, std::tuple<nullptr_t>, std::tuple<int32_t&, int32_t&, int32_t&, int32_t&>>;
+		using Set_Size_Limits_Parameters = std::tuple<const int32_t&, const int32_t&, 
+			const int32_t&, const int32_t&>;
 
-		using Get_Frame_Size= Frame_Size<Getter>;
-		using Set_Frame_Size= Frame_Size<Setter>;
+		using Set_Size_Parameters = std::tuple<const int32_t&, const int32_t&>;
 
-		template<bool Property_Access_Type>
-		using Framebuffer_Size = Window_Property<Property_Access_Type, enums::Window_Properties::Framebuffer_Size, std::tuple<nullptr_t>, std::tuple<int32_t&, int32_t&>>;
+		using Set_Position_Parameters = std::tuple<const int32_t&, const int32_t&>;
+		using Get_Position_Parameters = std::tuple<int32_t&, int32_t&>;
 
-		using Set_Framebuffer_Size = Framebuffer_Size<Setter>;
-		using Get_Framebuffer_Size = Framebuffer_Size<Getter>;
+		using Set_Title_Parameters = std::tuple<const std::string&>;
 
-		template<bool Property_Access_Type>
-		using Content_Scale = Window_Property<Property_Access_Type, enums::Window_Properties::Content_Scale, std::tuple<nullptr_t>, std::tuple<float&, float&>>;
+		using Set_Icon_Parameters = std::tuple<nullptr_t>;
 
-		using Set_Content_Scale = Content_Scale<Setter>;
-		using Get_Content_Scale = Content_Scale<Getter>;
+		using Set_Monitor_Parameters = std::tuple<nullptr_t>;
 
-		template<bool Property_Access_Type>
-		using Size_Limits = Window_Property<Property_Access_Type, enums::Window_Properties::Size_Limits, std::tuple<const int32_t&, const int32_t&, const int32_t&, const int32_t&>, std::tuple<nullptr_t>>;
+		using Set_Iconify_Parameters = std::tuple<const bool&>;
+		using Get_Iconify_Parameters = std::tuple<bool&>;
 
-		using Set_Size_Limits = Size_Limits<Setter>;
-		using Get_Size_Limits = Size_Limits<Getter>;
+		using Set_Maximize_Parameters = std::tuple<const bool&>;
+		using Get_Maximize_Parameters = std::tuple<bool&>;
 
-		template<bool Property_Access_Type>
-		using Aspect_Ratio = Window_Property<Property_Access_Type, enums::Window_Properties::Aspect_Ratio, std::tuple<const int32_t&, const int32_t&>, std::tuple<nullptr_t>>;
+		using Set_Visibility_Parameters = std::tuple<const bool&>;
+		using Get_Visibility_Parameters = std::tuple<bool&>;
 
-		using Set_Aspect_Ratio = Aspect_Ratio<Setter>;
-		using Get_Aspect_Ratio = Aspect_Ratio<Getter>;
+		using Set_Focus_Parameters = std::tuple<void>;
+		using Get_Focus_Parameters = std::tuple<bool&>;
 
-		template<bool Property_Access_Type>
-		using Position = Window_Property<Property_Access_Type, enums::Window_Properties::Position, std::tuple<const int32_t&, const int32_t&>, std::tuple<int32_t&, int32_t&>>;
 
-		using Set_Position = Position<Setter>;
-		using Get_Position = Position<Getter>;
-
-		template<bool Property_Access_Type>
-		using Title = Window_Property<Property_Access_Type, enums::Window_Properties::Title, std::tuple<const std::string&>, std::tuple<nullptr_t>>;
-
-		using Set_Title = Title<Setter>;
-		using Get_Title = Title<Getter>;
-
-		template<bool Property_Access_Type>
-		using Icon = Window_Property<Property_Access_Type, enums::Window_Properties::Icon, std::tuple<nullptr_t>, std::tuple<nullptr_t>>;
-
-		using Set_Icon = Icon<Setter>;
-		using Get_Icon = Icon<Getter>;
-
-		template<bool Property_Access_Type>
-		using Monitor = Window_Property<Property_Access_Type, enums::Window_Properties::Monitor, std::tuple<nullptr_t>, std::tuple<nullptr_t>>;
-
-		using Set_Monitor = Monitor<Setter>;
-		using Get_Monitor = Monitor<Getter>;
-
-		template<bool Property_Access_Type>
-		using Iconify = Window_Property<Property_Access_Type, enums::Window_Properties::Iconify, std::tuple<const bool&>, std::tuple<nullptr_t>>;
-
-		using Set_Iconify = Iconify<Setter>;
-		using Get_Iconify = Iconify<Getter>;
-
-		template<bool Property_Access_Type>
-		using Maximize = Window_Property<Property_Access_Type, enums::Window_Properties::Maximize, std::tuple<const bool&>, std::tuple<nullptr_t>>;
-
-		using Set_Maximize = Maximize<Setter>;
-		using Get_Maximize = Maximize<Getter>;
-
-		template<bool Property_Access_Type>
-		using Visible = Window_Property<Property_Access_Type, enums::Window_Properties::Visible, std::tuple<const bool&>, std::tuple<nullptr_t>>;
-
-		using Set_Visible = Visible<Setter>;
-		using Get_Visible = Visible<Getter>;
-
-		template<bool Property_Access_Type>
-		using Focus = Window_Property<Property_Access_Type, enums::Window_Properties::Focus, std::tuple<nullptr_t>, std::tuple<nullptr_t>>;
-
-		using Set_Focus = Focus<Setter>;
-		using Get_Focus = Focus<Getter>;
-
-		template<bool Property_Access_Type>
-		using Request_Attention = Window_Property<Property_Access_Type, enums::Window_Properties::Request_Attention, std::tuple<nullptr_t>, std::tuple<nullptr_t>>;
-
-		using Set_Request_Attention = Request_Attention<Setter>;
-		using Get_Request_Attention = Request_Attention<Getter>;
-
-		template<bool Property_Access_Type>
-		using Opacity = Window_Property<Property_Access_Type, enums::Window_Properties::Opacity, std::tuple<const float&>, std::tuple<nullptr_t>>;
-
-		using Set_Opacity = Opacity<Setter>;
-		using Get_Opacity = Opacity<Getter>;
-
-		template<bool Property_Access_Type>
-		using Attributes = Window_Property<Property_Access_Type, enums::Window_Properties::Attributes, std::tuple<const enums::Window_Attrubutes&, const std::int32_t&>, std::tuple<nullptr_t>>;
-
-		using Set_Attributes = Attributes<Setter>;
-		using Get_Attributes = Attributes<Getter>;
-
-		template<bool Property_Access_Type>
-		using Swap_Interval = Window_Property<Property_Access_Type, enums::Window_Properties::Swap_Interval, std::tuple<const std::int32_t&>, std::tuple<nullptr_t>>;
-
-		using Set_Swap_Interval = Swap_Interval<Setter>;
-		using Get_Swap_Interval = Swap_Interval<Getter>;
 
 	} // properties
 

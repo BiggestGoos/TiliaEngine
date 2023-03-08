@@ -76,7 +76,7 @@ namespace tilia
 				if (Get_Address(callback.function) == Get_Address(callbacks[i]))
 					break;
 			}
-			if (i != callback_count)
+			if (i < callback_count)
 				callbacks.erase(callbacks.begin() + i);
 		}
 
@@ -84,51 +84,12 @@ namespace tilia
 
 		void Swap_Buffers() const;
 
-		template<typename T, bool Access_Type = T::Access_Type,
-			std::enable_if_t<std::is_same<decltype(T::Type),
-			const enums::Window_Properties>::value && ((Access_Type == properties::Setter)? 
-				!std::is_same<typename T::First_Setter_Param, nullptr_t>::value : 
-				!std::is_same<typename T::First_Getter_Param, nullptr_t>::value)
-			>* = nullptr>
-			void Property (T&& property)
-		{
-			if (Access_Type == properties::Setter)
-			{
-				Set_Property(T::Type, static_cast<void*>(&property.set_parameters));
-			}
-			else
-			{
-				Get_Property(T::Type, static_cast<void*>(&property.get_parameters));
-			}
-		}
-
-		//template<template<typename> typename T, bool Access_Type = properties::Setter,
-		//	std::enable_if_t<std::is_same<decltype(T<Access_Type>::Type),
-		//	const enums::Window_Properties>::value && 
-		//	!std::is_same<typename T<Access_Type>::First_Setter_Param, nullptr_t>::value>* = nullptr>
-		//	void Set_Property(T<Access_Type> property)
-		//{
-		//	std::cout << std::get<0>(property.set_parameters) << " : " << std::get<1>(property.set_parameters) << '\n';
-		//}
-
-		//template<template<typename> typename T, typename Access_Type = properties::Getter,
-		//	std::enable_if_t<std::is_same<decltype(T<Access_Type>::Type),
-		//	const enums::Window_Properties>::value &&
-		//	!std::is_same<typename T<Access_Type>::First_Getter_Param, nullptr_t>::value>* = nullptr >
-		//	void Get_Property(T<Access_Type> property)
-		//{
-		//	std::get<0>(property.get_parameters) = 67;
-		//	std::get<1>(property.get_parameters) = 734;
-		//	std::get<2>(property.get_parameters) = 37;
-		//	std::get<3>(property.get_parameters) = 956;
-		//}
-
 		template<enums::Window_Properties property, typename... Parameters>
 		void Set(const Parameters&... args) 
 		{ static_assert(false, "Basic Set function is not callable"); }
 
 		template<enums::Window_Properties property, typename... Parameters>
-		void Get(Parameters... args)
+		auto Get(Parameters&... args)
 		{ static_assert(false, "Basic Get function is not callable"); }
 
 		template<>
@@ -138,11 +99,17 @@ namespace tilia
 			Set_Property(enums::Window_Properties::Should_Close, &params);
 		}
 
+		/**
+		 * @brief test
+		 * 
+		 * @return 
+		 */
 		template<>
-		void Get<enums::Window_Properties::Should_Close>(bool& should_close)
+		auto Get<enums::Window_Properties::Should_Close>()
 		{
-			properties::Get_Should_Close_Parameters params{ should_close };
+			properties::Get_Should_Close_Parameters params{};
 			Get_Property(enums::Window_Properties::Should_Close, &params);
+			return std::get<0>(params);
 		}
 
 		//template<>

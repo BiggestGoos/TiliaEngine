@@ -24,13 +24,13 @@ static bool shares_filters(const std::vector<std::string>& lhs,
 }
 
 void tilia::log::Logger::Output(const std::string& data, 
-    std::vector<std::string> filters)
+    const std::vector<std::string>& filters)
 {
     std::lock_guard lock{ m_mutex };
     if (m_outputs.size() == 0)
         throw utils::Tilia_Exception{ { TILIA_LOCATION, "Logger has no viable output\n" } };
 
-    auto used_filters{ (filters.size() == 0) ? m_filters : filters };
+    const auto& used_filters{ (filters.size() == 0) ? m_filters : filters };
     for (auto& [output, output_filters] : m_outputs)
     {
         if (shares_filters(output_filters, used_filters) || used_filters.size() == 0)
@@ -75,19 +75,19 @@ void tilia::log::Logger::Remove_Output(std::ostream* const output)
             break;
         }
     }
-    if (i != m_outputs.cbegin())
+    if (i < m_outputs.cend())
         m_outputs.erase(i);
 }
 
 void tilia::log::Logger::Set_Output_Filters(std::ostream* output, 
-    std::vector<std::string> filters)
+    const std::vector<std::string>& filters)
 {
     std::lock_guard lock{ m_mutex };
     for (auto i{ m_outputs.begin() }; i < m_outputs.end(); ++i)
     {
         if (output == i->first)
         {
-            i->second = std::move(filters);
+            i->second = filters;
         }
     }
 }
