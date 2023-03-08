@@ -117,6 +117,9 @@ namespace tilia
 			}
 		};
 
+		using Set_Should_Close_Parameters = std::tuple<const bool&>;
+		using Get_Should_Close_Parameters = std::tuple<bool&>;
+
 		template<bool Property_Access_Type>
 		using Should_Close = Window_Property<Property_Access_Type, enums::Window_Properties::Should_Close, std::tuple<const bool&>, std::tuple<bool&>>;
 

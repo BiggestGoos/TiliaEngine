@@ -497,7 +497,9 @@ int main()
 
         int x{ 123 }, y{ 456 }, z{ 789 }, w{ 101112 };
 
-        //window.Property(properties::Should_Close<properties::Setter>{ true });
+        window.Set<enums::Window_Properties::Should_Close>(true);
+
+        //window.Property(properties::Set_Should_Close{ true });
 
         std::cout << x << " : " << y << " : " << z << " : " << w << '\n';
 

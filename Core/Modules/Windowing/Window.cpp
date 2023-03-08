@@ -90,91 +90,91 @@ void tilia::Window::Swap_Buffers() const
 	glfwSwapBuffers(m_window);
 }
 
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Should_Close>(bool should_close)
-{
-	glfwSetWindowShouldClose(m_window, should_close);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Size>(std::int32_t width, 
-	std::int32_t height)
-{
-	glfwSetWindowSize(m_window, width, height);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Size>(std::int32_t min_width, 
-	std::int32_t min_height, std::int32_t max_width, std::int32_t max_height)
-{
-	glfwSetWindowSizeLimits(m_window, min_width, min_height, max_width, max_height);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Aspect_Ratio>(std::int32_t numer,
-	std::int32_t denom)
-{
-	glfwSetWindowAspectRatio(m_window, numer, denom);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Position>(std::int32_t x_pos,
-	std::int32_t y_pos)
-{
-	glfwSetWindowPos(m_window, x_pos, y_pos);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Title>(std::string title)
-{
-	glfwSetWindowTitle(m_window, title.c_str());
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Icon>()
-{
-	tilia::log::Logger::Instance().Output("Can't set icon yet\n");
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Monitor>()
-{
-	tilia::log::Logger::Instance().Output("Can't set monitor yet\n");
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Iconify>(bool iconify)
-{
-	if (iconify)
-		glfwIconifyWindow(m_window);
-	else
-		glfwRestoreWindow(m_window);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Maximize>(bool maximize)
-{
-	if (maximize)
-		glfwMaximizeWindow(m_window);
-	else
-		glfwRestoreWindow(m_window);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Visible>(bool visible)
-{
-	tilia::log::Logger::Instance().Output("visible\n");
-	if (visible)
-		glfwShowWindow(m_window);
-	else
-		glfwHideWindow(m_window);
-}
-
-template<>
-void tilia::Window::Set<tilia::enums::Window_Properties::Visible>()
-{
-	glfwFocusWindow(m_window);
-}
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Should_Close>(bool should_close)
+//{
+//	glfwSetWindowShouldClose(m_window, should_close);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Size>(std::int32_t width, 
+//	std::int32_t height)
+//{
+//	glfwSetWindowSize(m_window, width, height);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Size>(std::int32_t min_width, 
+//	std::int32_t min_height, std::int32_t max_width, std::int32_t max_height)
+//{
+//	glfwSetWindowSizeLimits(m_window, min_width, min_height, max_width, max_height);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Aspect_Ratio>(std::int32_t numer,
+//	std::int32_t denom)
+//{
+//	glfwSetWindowAspectRatio(m_window, numer, denom);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Position>(std::int32_t x_pos,
+//	std::int32_t y_pos)
+//{
+//	glfwSetWindowPos(m_window, x_pos, y_pos);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Title>(std::string title)
+//{
+//	glfwSetWindowTitle(m_window, title.c_str());
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Icon>()
+//{
+//	tilia::log::Logger::Instance().Output("Can't set icon yet\n");
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Monitor>()
+//{
+//	tilia::log::Logger::Instance().Output("Can't set monitor yet\n");
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Iconify>(bool iconify)
+//{
+//	if (iconify)
+//		glfwIconifyWindow(m_window);
+//	else
+//		glfwRestoreWindow(m_window);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Maximize>(bool maximize)
+//{
+//	if (maximize)
+//		glfwMaximizeWindow(m_window);
+//	else
+//		glfwRestoreWindow(m_window);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Visible>(bool visible)
+//{
+//	tilia::log::Logger::Instance().Output("visible\n");
+//	if (visible)
+//		glfwShowWindow(m_window);
+//	else
+//		glfwHideWindow(m_window);
+//}
+//
+//template<>
+//void tilia::Window::Set<tilia::enums::Window_Properties::Visible>()
+//{
+//	glfwFocusWindow(m_window);
+//}
 
 
 
@@ -226,7 +226,7 @@ void tilia::Window::Set_Property(const enums::Window_Properties& type, void* pro
 	switch (type)
 	{
 	case enums::Window_Properties::Should_Close:
-		auto parameters{ *static_cast<properties::Should_Close<properties::Setter>::Setter_Parameters*>(property) };
+		auto parameters{ *static_cast<properties::Set_Should_Close_Parameters*>(property) };
 		glfwSetWindowShouldClose(m_window, std::get<0>(parameters));
 		break;
 	}
@@ -237,7 +237,7 @@ void tilia::Window::Get_Property(const enums::Window_Properties& type, void* pro
 	switch (type)
 	{
 	case enums::Window_Properties::Should_Close:
-		auto parameters{ *static_cast<properties::Should_Close<properties::Getter>::Getter_Parameters*>(property) };
+		auto parameters{ *static_cast<properties::Get_Should_Close_Parameters*>(property) };
 		std::get<0>(parameters) = glfwWindowShouldClose(m_window);
 		break;
 	}

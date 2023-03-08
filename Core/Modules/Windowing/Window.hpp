@@ -124,42 +124,57 @@ namespace tilia
 		//}
 
 		template<enums::Window_Properties property, typename... Parameters>
-		void Set(Parameters... args) 
+		void Set(const Parameters&... args) 
 		{ static_assert(false, "Basic Set function is not callable"); }
 
-		template<>
-		void Set<enums::Window_Properties::Should_Close>(bool should_close);
+		template<enums::Window_Properties property, typename... Parameters>
+		void Get(Parameters... args)
+		{ static_assert(false, "Basic Get function is not callable"); }
 
 		template<>
-		void Set<enums::Window_Properties::Size>(std::int32_t width, std::int32_t height);
+		void Set<enums::Window_Properties::Should_Close>(const bool& should_close)
+		{
+			properties::Set_Should_Close_Parameters params{ should_close };
+			Set_Property(enums::Window_Properties::Should_Close, &params);
+		}
 
 		template<>
-		void Set<enums::Window_Properties::Size_Limits>(std::int32_t min_width, 
-			std::int32_t min_height, std::int32_t max_width, std::int32_t max_height);
+		void Get<enums::Window_Properties::Should_Close>(bool& should_close)
+		{
+			properties::Get_Should_Close_Parameters params{ should_close };
+			Get_Property(enums::Window_Properties::Should_Close, &params);
+		}
 
-		template<>
-		void Set<enums::Window_Properties::Aspect_Ratio>(std::int32_t numer, std::int32_t denom);
+		//template<>
+		//void Set<enums::Window_Properties::Size>(std::int32_t width, std::int32_t height);
 
-		template<>
-		void Set<enums::Window_Properties::Position>(std::int32_t x_pos, std::int32_t y_pos);
+		//template<>
+		//void Set<enums::Window_Properties::Size_Limits>(std::int32_t min_width, 
+		//	std::int32_t min_height, std::int32_t max_width, std::int32_t max_height);
 
-		template<>
-		void Set<enums::Window_Properties::Title>(std::string title);
+		//template<>
+		//void Set<enums::Window_Properties::Aspect_Ratio>(std::int32_t numer, std::int32_t denom);
 
-		template<>
-		void Set<enums::Window_Properties::Icon>();
+		//template<>
+		//void Set<enums::Window_Properties::Position>(std::int32_t x_pos, std::int32_t y_pos);
 
-		template<>
-		void Set<enums::Window_Properties::Monitor>();
+		//template<>
+		//void Set<enums::Window_Properties::Title>(std::string title);
 
-		template<>
-		void Set<enums::Window_Properties::Iconify>(bool iconify);
+		//template<>
+		//void Set<enums::Window_Properties::Icon>();
 
-		template<>
-		void Set<enums::Window_Properties::Maximize>(bool maximize);
+		//template<>
+		//void Set<enums::Window_Properties::Monitor>();
 
-		template<>
-		void Set<enums::Window_Properties::Visible>(bool visible);
+		//template<>
+		//void Set<enums::Window_Properties::Iconify>(bool iconify);
+
+		//template<>
+		//void Set<enums::Window_Properties::Maximize>(bool maximize);
+
+		//template<>
+		//void Set<enums::Window_Properties::Visible>(bool visible);
 
 		//template<>
 		//void Set<enums::Window_Properties::Focus>();
