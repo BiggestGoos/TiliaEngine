@@ -221,6 +221,28 @@ void tilia::Window::Set_Callback(const enums::Window_Callbacks& type, callback_p
 	}
 }
 
+void tilia::Window::Set_Property(const enums::Window_Properties& type, void* property)
+{
+	switch (type)
+	{
+	case enums::Window_Properties::Should_Close:
+		auto parameters{ *static_cast<properties::Should_Close<properties::Setter>::Setter_Parameters*>(property) };
+		glfwSetWindowShouldClose(m_window, std::get<0>(parameters));
+		break;
+	}
+}
+
+void tilia::Window::Get_Property(const enums::Window_Properties& type, void* property)
+{
+	switch (type)
+	{
+	case enums::Window_Properties::Should_Close:
+		auto parameters{ *static_cast<properties::Should_Close<properties::Getter>::Getter_Parameters*>(property) };
+		std::get<0>(parameters) = glfwWindowShouldClose(m_window);
+		break;
+	}
+}
+
 void tilia::Window::Set_Should_Close(const bool& should_close)
 {
 	glfwSetWindowShouldClose(m_window, should_close);

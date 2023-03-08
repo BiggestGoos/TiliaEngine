@@ -497,7 +497,7 @@ int main()
 
         int x{ 123 }, y{ 456 }, z{ 789 }, w{ 101112 };
 
-        window.Property(properties::Iconify<properties::Setter>{ true });
+        //window.Property(properties::Should_Close<properties::Setter>{ true });
 
         std::cout << x << " : " << y << " : " << z << " : " << w << '\n';
 
@@ -632,9 +632,10 @@ int main()
 
         // render loop
         // -----------
-        while (!glfwWindowShouldClose(window.Get_Window()))
+        bool should_close{ false };
+        while (!should_close)
         {
-
+            window.Property(properties::Get_Should_Close{ should_close });
             processInput();
 
             if (reload_shader)

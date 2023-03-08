@@ -30,6 +30,7 @@ namespace tilia
 	private:
 
 		using callback_ptr = void*;
+		using property_ptr = void*;
 
 		template<typename T, typename... U>
 		std::size_t Get_Address(std::function<T(U...)> func) {
@@ -93,11 +94,11 @@ namespace tilia
 		{
 			if (Access_Type == properties::Setter)
 			{
-				//Set_Should_Close()
+				Set_Property(T::Type, static_cast<void*>(&property.set_parameters));
 			}
 			else
 			{
-
+				Get_Property(T::Type, static_cast<void*>(&property.get_parameters));
 			}
 		}
 
@@ -174,6 +175,9 @@ namespace tilia
 	private:
 
 		void Set_Callback(const enums::Window_Callbacks& type, callback_ptr callback);
+
+		void Set_Property(const enums::Window_Properties& type, void* property);
+		void Get_Property(const enums::Window_Properties& type, void* property);
 
 		utils::GLFWwindow* m_window{};
 
