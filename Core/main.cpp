@@ -499,6 +499,12 @@ int main()
 
         window.Set<enums::Window_Properties::Should_Close>(true);
 
+        auto [width, height] { window.Get<enums::Window_Properties::Size>() };
+
+        properties::Window_Property<enums::Window_Properties::Should_Close> f{ nullptr };
+
+        logger.Output("Width: ", width, " : Height: ", height, '\n');
+
         //window.Property(properties::Set_Should_Close{ true });
 
         std::cout << x << " : " << y << " : " << z << " : " << w << '\n';

@@ -221,15 +221,41 @@ void tilia::Window::Set_Callback(const enums::Window_Callbacks& type, callback_p
 	}
 }
 
-void tilia::Window::Set_Property(const enums::Window_Properties& type, void* property)
+static inline void Set_Should_Close(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& should_close{ *static_cast<tilia::properties::Should_Close_Parameters*>(property) };
+	glfwSetWindowShouldClose(window, std::get<0>(should_close));
+}
+
+static inline void Set_Size(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& size{ *static_cast<tilia::properties::Size_Parameters*>(property) };
+	glfwSetWindowSize(window, std::get<0>(size), std::get<1>(size));
+}
+
+void tilia::Window::Set_Property(const enums::Window_Properties& type, property_ptr property)
 {
 	switch (type)
 	{
 	case enums::Window_Properties::Should_Close:
-		auto parameters{ *static_cast<properties::Set_Should_Close_Parameters*>(property) };
-		glfwSetWindowShouldClose(m_window, std::get<0>(parameters));
+		Set_Should_Close(m_window, property);
+		break;
+	case enums::Window_Properties::Size:
+		Set_Size(m_window, property);
 		break;
 	}
+}
+
+static inline void Get_Should_Close(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& should_close{ *static_cast<tilia::properties::Should_Close_Parameters*>(property) };
+	std::get<0>(should_close) = glfwWindowShouldClose(window);
+}
+
+static inline void Get_Size(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& size{ *static_cast<tilia::properties::Size_Parameters*>(property) };
+	glfwGetWindowSize(window, &std::get<0>(size), &std::get<1>(size));
 }
 
 void tilia::Window::Get_Property(const enums::Window_Properties& type, void* property)
@@ -237,16 +263,12 @@ void tilia::Window::Get_Property(const enums::Window_Properties& type, void* pro
 	switch (type)
 	{
 	case enums::Window_Properties::Should_Close:
-		auto& parameters{ *static_cast<properties::Get_Should_Close_Parameters*>(property) };
-		std::get<0>(parameters) = glfwWindowShouldClose(m_window);
-		std::cout << "end get should close\n";
+		Get_Should_Close(m_window, property);
+		break;
+	case enums::Window_Properties::Size:
+		Get_Size(m_window, property);
 		break;
 	}
-}
-
-void tilia::Window::Set_Should_Close(const bool& should_close)
-{
-	glfwSetWindowShouldClose(m_window, should_close);
 }
 
 void tilia::Window::Position_Func(utils::GLFWwindow* window, std::int32_t x_pos, std::int32_t y_pos)

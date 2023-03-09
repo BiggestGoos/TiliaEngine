@@ -95,21 +95,55 @@ namespace tilia
 		template<>
 		void Set<enums::Window_Properties::Should_Close>(const bool& should_close)
 		{
-			properties::Set_Should_Close_Parameters params{ should_close };
+			properties::Should_Close_Parameters params{ should_close };
 			Set_Property(enums::Window_Properties::Should_Close, &params);
 		}
-
-		/**
-		 * @brief test
-		 * 
-		 * @return 
-		 */
+		
 		template<>
 		auto Get<enums::Window_Properties::Should_Close>()
 		{
-			properties::Get_Should_Close_Parameters params{};
+			properties::Should_Close_Parameters params{};
 			Get_Property(enums::Window_Properties::Should_Close, &params);
 			return std::get<0>(params);
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Size>(const std::int32_t& width, const std::int32_t& height)
+		{
+			properties::Size_Parameters params{ width, height };
+			Set_Property(enums::Window_Properties::Size, &params);
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Size>()
+		{
+			properties::Size_Parameters params{};
+			Get_Property(enums::Window_Properties::Size, &params);
+			return params;
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Frame_Size>()
+		{
+			properties::Frame_Size_Parameters params{};
+			Get_Property(enums::Window_Properties::Frame_Size, &params);
+			return params;
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Framebuffer_Size>()
+		{
+			properties::Framebuffer_Size_Parameters params{};
+			Get_Property(enums::Window_Properties::Framebuffer_Size, &params);
+			return params;
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Content_Scale>()
+		{
+			properties::Content_Scale_Parameters params{};
+			Get_Property(enums::Window_Properties::Content_Scale, &params);
+			return params;
 		}
 
 		//template<>
@@ -158,8 +192,8 @@ namespace tilia
 
 		void Set_Callback(const enums::Window_Callbacks& type, callback_ptr callback);
 
-		void Set_Property(const enums::Window_Properties& type, void* property);
-		void Get_Property(const enums::Window_Properties& type, void* property);
+		void Set_Property(const enums::Window_Properties& type, property_ptr property);
+		void Get_Property(const enums::Window_Properties& type, property_ptr property);
 
 		utils::GLFWwindow* m_window{};
 
@@ -176,8 +210,6 @@ namespace tilia
 		> m_callbacks;
 
 		static std::unordered_map<utils::GLFWwindow*, Window&> s_windows;
-
-		void Set_Should_Close(const bool& should_close);
 
 		static void Position_Func(utils::GLFWwindow* window, std::int32_t x_pos, std::int32_t y_pos);
 

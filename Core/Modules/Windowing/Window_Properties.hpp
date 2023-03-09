@@ -75,45 +75,44 @@ namespace tilia
 	namespace properties
 	{
 
-		using Set_Should_Close_Parameters = std::tuple<const bool&>;
-		using Get_Should_Close_Parameters = std::tuple<bool>;
+		using Should_Close_Parameters = std::tuple<bool>;
 
-		using Set_Size_Parameters = std::tuple<const int32_t&, const int32_t&>;
-		using Get_Size_Parameters = std::tuple<int32_t&, int32_t&>;
+		using Size_Parameters = std::tuple<int32_t, int32_t>;
 
-		using Get_Frame_Size_Parameters = std::tuple<int32_t&, int32_t&, int32_t&, int32_t&>;
+		using Frame_Size_Parameters = std::tuple<int32_t, int32_t, int32_t, int32_t>;
 
-		using Get_Framebuffer_Size_Parameters = std::tuple<int32_t&, int32_t&>;
+		using Framebuffer_Size_Parameters = std::tuple<int32_t, int32_t>;
 
-		using Get_Content_Scale_Parameters = std::tuple<float&, float&>;
+		using Content_Scale_Parameters = std::tuple<float, float>;
 
-		using Set_Size_Limits_Parameters = std::tuple<const int32_t&, const int32_t&, 
-			const int32_t&, const int32_t&>;
+		using Size_Limits_Parameters = std::tuple<int32_t, int32_t, 
+			int32_t, int32_t>;
 
-		using Set_Size_Parameters = std::tuple<const int32_t&, const int32_t&>;
+		using Size_Parameters = std::tuple<int32_t, int32_t>;
 
-		using Set_Position_Parameters = std::tuple<const int32_t&, const int32_t&>;
-		using Get_Position_Parameters = std::tuple<int32_t&, int32_t&>;
+		using Position_Parameters = std::tuple<int32_t, int32_t>;
 
-		using Set_Title_Parameters = std::tuple<const std::string&>;
+		using Title_Parameters = std::tuple<std::string>;
 
-		using Set_Icon_Parameters = std::tuple<nullptr_t>;
+		using Icon_Parameters = std::tuple<nullptr_t>;
 
-		using Set_Monitor_Parameters = std::tuple<nullptr_t>;
+		using Monitor_Parameters = std::tuple<nullptr_t>;
 
-		using Set_Iconify_Parameters = std::tuple<const bool&>;
-		using Get_Iconify_Parameters = std::tuple<bool&>;
+		using Iconify_Parameters = std::tuple<bool>;
 
-		using Set_Maximize_Parameters = std::tuple<const bool&>;
-		using Get_Maximize_Parameters = std::tuple<bool&>;
+		using Maximize_Parameters = std::tuple<bool>;
 
-		using Set_Visibility_Parameters = std::tuple<const bool&>;
-		using Get_Visibility_Parameters = std::tuple<bool&>;
+		using Visibility_Parameters = std::tuple<bool>;
 
-		using Set_Focus_Parameters = std::tuple<void>;
-		using Get_Focus_Parameters = std::tuple<bool&>;
+		using Focus_Parameters = std::tuple<bool>;
 
+		template<enums::Window_Properties Property, typename T = nullptr_t>
+		using Window_Property = T;
 
+		//using Window_Property<enums::Window_Properties::Should_Close> = std::tuple<bool>;
+
+		//template<>
+		//using Window_Property = std::tuple<bool>;
 
 	} // properties
 
