@@ -85,7 +85,7 @@ namespace tilia
 		void Swap_Buffers() const;
 
 		template<enums::Window_Properties property, typename... Parameters>
-		void Set(const Parameters&... args) 
+		void Set(Parameters... args) 
 		{ static_assert(false, "Basic Set function is not callable"); }
 
 		template<enums::Window_Properties property, typename... Parameters>
@@ -108,7 +108,7 @@ namespace tilia
 		}
 
 		template<>
-		void Set<enums::Window_Properties::Size>(const std::int32_t& width, const std::int32_t& height)
+		void Set<enums::Window_Properties::Size>(std::int32_t width, std::int32_t height)
 		{
 			properties::Size_Parameters params{ width, height };
 			Set_Property(enums::Window_Properties::Size, &params);
@@ -143,6 +143,105 @@ namespace tilia
 		{
 			properties::Content_Scale_Parameters params{};
 			Get_Property(enums::Window_Properties::Content_Scale, &params);
+			return params;
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Size_Limits>(std::int32_t min_width, 
+			std::int32_t min_height, std::int32_t max_width, std::int32_t max_height)
+		{
+			properties::Size_Limits_Parameters params{ 
+				min_width, min_height, max_width, max_height };
+			Set_Property(enums::Window_Properties::Size_Limits, &params);
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Aspect_Ratio>(std::int32_t denom, std::int32_t numer)
+		{
+			properties::Aspect_Ratio_Parameters params{ denom, numer };
+			Set_Property(enums::Window_Properties::Aspect_Ratio, &params);
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Position>(std::int32_t x_pos, std::int32_t y_pos)
+		{
+			properties::Position_Parameters params{ x_pos, y_pos};
+			Set_Property(enums::Window_Properties::Position, &params);
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Position>()
+		{
+			properties::Position_Parameters params{};
+			Get_Property(enums::Window_Properties::Position, &params);
+			return params;
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Title>(std::string title)
+		{
+			properties::Title_Parameters params{ title };
+			Set_Property(enums::Window_Properties::Title, &params);
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Icon>(nullptr_t)
+		{
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Monitor>(nullptr_t)
+		{
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Monitor>()
+		{
+			return nullptr;
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Iconify>(bool iconify)
+		{
+			properties::Iconify_Parameters params{ iconify };
+			Set_Property(enums::Window_Properties::Iconify, &params);
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Iconify>()
+		{
+			properties::Iconify_Parameters params{};
+			Get_Property(enums::Window_Properties::Iconify, &params);
+			return params;
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Maximize>(bool maximize)
+		{
+			properties::Maximize_Parameters params{ maximize };
+			Set_Property(enums::Window_Properties::Maximize, &params);
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Maximize>()
+		{
+			properties::Maximize_Parameters params{};
+			Get_Property(enums::Window_Properties::Maximize, &params);
+			return params;
+		}
+
+		template<>
+		void Set<enums::Window_Properties::Visible>(bool visible)
+		{
+			properties::Visibility_Parameters params{ visible };
+			Set_Property(enums::Window_Properties::Visible, &params);
+		}
+
+		template<>
+		auto Get<enums::Window_Properties::Visible>()
+		{
+			properties::Visibility_Parameters params{};
+			Get_Property(enums::Window_Properties::Visible, &params);
 			return params;
 		}
 

@@ -30,6 +30,13 @@ namespace tilia
 
 	} // utils
 
+	namespace hints
+	{
+
+
+
+	} // hints
+
 	namespace callbacks
 	{
 
@@ -88,7 +95,7 @@ namespace tilia
 		using Size_Limits_Parameters = std::tuple<int32_t, int32_t, 
 			int32_t, int32_t>;
 
-		using Size_Parameters = std::tuple<int32_t, int32_t>;
+		using Aspect_Ratio_Parameters = std::tuple<int32_t, int32_t>;
 
 		using Position_Parameters = std::tuple<int32_t, int32_t>;
 
@@ -105,14 +112,6 @@ namespace tilia
 		using Visibility_Parameters = std::tuple<bool>;
 
 		using Focus_Parameters = std::tuple<bool>;
-
-		template<enums::Window_Properties Property, typename T = nullptr_t>
-		using Window_Property = T;
-
-		//using Window_Property<enums::Window_Properties::Should_Close> = std::tuple<bool>;
-
-		//template<>
-		//using Window_Property = std::tuple<bool>;
 
 	} // properties
 

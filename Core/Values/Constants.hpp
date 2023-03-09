@@ -47,6 +47,24 @@ namespace tilia
 			Quad_Points     = 4  // The amount of points in a quad.
 		}; // Geometry_Features
 
+//#define GLFW_COCOA_RETINA_FRAMEBUFFER 0x00023001
+///*! @brief macOS specific
+// *  [window hint](@ref GLFW_COCOA_FRAME_NAME_hint).
+// */
+//#define GLFW_COCOA_FRAME_NAME         0x00023002
+// /*! @brief macOS specific
+//  *  [window hint](@ref GLFW_COCOA_GRAPHICS_SWITCHING_hint).
+//  */
+//#define GLFW_COCOA_GRAPHICS_SWITCHING 0x00023003
+//  /*! @brief X11 specific
+//   *  [window hint](@ref GLFW_X11_CLASS_NAME_hint).
+//   */
+//#define GLFW_X11_CLASS_NAME         0x00024001
+//   /*! @brief X11 specific
+//	*  [window hint](@ref GLFW_X11_CLASS_NAME_hint).
+//	*/
+//#define GLFW_X11_INSTANCE_NAME      0x00024002
+
 		// Window hints which can be used to set different values used in creating windows.
 		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
 		enum class Window_Hints {
@@ -91,7 +109,12 @@ namespace tilia
 			Context_Release_Behavior = 0x00022009,
 			Context_No_Error		 = 0x0002200A,
 			Context_Creation_API	 = 0x0002200B,
-			Scale_To_Monitor		 = 0x0002200C
+			Scale_To_Monitor		 = 0x0002200C,
+			Cocoa_Retina_Framebuffer = 0x00023001,
+			Cocoa_Frame_Name		 = 0x00023002,
+			Cocoa_Graphics_Switching = 0x00023003,
+			X11_Class_Name			 = 0x00024001,
+			X11_Instance_Name		 = 0x00024002
 		}; // Window_Hints
 
 		// What graphics API to use.

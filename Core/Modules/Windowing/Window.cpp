@@ -233,6 +233,31 @@ static inline void Set_Size(tilia::utils::GLFWwindow* window, void* property)
 	glfwSetWindowSize(window, std::get<0>(size), std::get<1>(size));
 }
 
+static inline void Set_Size_Limits(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& size_limits{ *static_cast<tilia::properties::Size_Limits_Parameters*>(property) };
+	glfwSetWindowSizeLimits(window, std::get<0>(size_limits), std::get<1>(size_limits),
+		std::get<2>(size_limits), std::get<3>(size_limits));
+}
+
+static inline void Set_Size(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& aspect_ratio{ *static_cast<tilia::properties::Aspect_Ratio_Parameters*>(property) };
+	glfwSetWindowAspectRatio(window, std::get<0>(aspect_ratio), std::get<1>(aspect_ratio));
+}
+
+static inline void Set_Position(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& position{ *static_cast<tilia::properties::Position_Parameters*>(property) };
+	glfwSetWindowPos(window, std::get<0>(position), std::get<1>(position));
+}
+
+static inline void Set_Title(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& title{ *static_cast<tilia::properties::Title_Parameters*>(property) };
+	glfwSetWindowTitle(window, std::get<0>(title).c_str());
+}
+
 void tilia::Window::Set_Property(const enums::Window_Properties& type, property_ptr property)
 {
 	switch (type)
@@ -256,6 +281,34 @@ static inline void Get_Size(tilia::utils::GLFWwindow* window, void* property)
 {
 	auto& size{ *static_cast<tilia::properties::Size_Parameters*>(property) };
 	glfwGetWindowSize(window, &std::get<0>(size), &std::get<1>(size));
+}
+
+static inline void Get_Frame_Size(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& frame_size{ *static_cast<tilia::properties::Frame_Size_Parameters*>(property) };
+	glfwGetWindowFrameSize(window, &std::get<0>(frame_size), &std::get<1>(frame_size),
+		&std::get<2>(frame_size), &std::get<3>(frame_size));
+}
+
+static inline void Get_Framebuffer_Size(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& framebuffer_size{ 
+		*static_cast<tilia::properties::Framebuffer_Size_Parameters*>(property) };
+	glfwGetFramebufferSize(window, &std::get<0>(framebuffer_size), &std::get<1>(framebuffer_size));
+}
+
+static inline void Get_Content_Scale(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& content_scale_size{
+		*static_cast<tilia::properties::Content_Scale_Parameters*>(property) };
+	glfwGetWindowContentScale(window, 
+		&std::get<0>(content_scale_size), &std::get<1>(content_scale_size));
+}
+
+static inline void Get_Position(tilia::utils::GLFWwindow* window, void* property)
+{
+	auto& position{ *static_cast<tilia::properties::Position_Parameters*>(property) };
+	glfwGetWindowPos(window, &std::get<0>(position), &std::get<1>(position));
 }
 
 void tilia::Window::Get_Property(const enums::Window_Properties& type, void* property)
