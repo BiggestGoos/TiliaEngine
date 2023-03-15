@@ -105,14 +105,14 @@ void tilia::gfx::Renderer::Render()
 		}
 	}
 
-	std::cout << "Batch count: " << m_batches.size() << '\n';
+	//std::cout << "Batch count: " << m_batches.size() << '\n';
 	const size_t batch_count{ m_batches.size() };
 	for (size_t i = 0; i < batch_count; i++)
 	{
-		std::cout << "Mesh count: " << m_batches[i]->Get_Mesh_Count() 
-			<< " <<>> Vertex count: " << m_batches[i]->Get_Vertex_Count() / 
-			m_batches[i]->Get_Vertex_Size()
-			<< " <<>> Index count: " << m_batches[i]->Get_Index_Count() << '\n';
+		//std::cout << "Mesh count: " << m_batches[i]->Get_Mesh_Count() 
+		//	<< " <<>> Vertex count: " << m_batches[i]->Get_Vertex_Count() / 
+		//	m_batches[i]->Get_Vertex_Size()
+		//	<< " <<>> Index count: " << m_batches[i]->Get_Index_Count() << '\n';
 		m_batches[i]->m_camera_pos = m_camera_pos;
 		m_batches[i]->Render();
 		m_batches[i]->Clear();

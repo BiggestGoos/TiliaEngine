@@ -477,6 +477,12 @@ int main()
         //}
         //glfwMakeContextCurrent(window);
         
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Profile, *enums::OpenGL_Profile::Core);
+        Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Debug_Context, true);
+        Window::Set_Window_Hint(enums::Window_Hints::Transparent_Framebuffer, true);
+
         Window window{};
         
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
@@ -491,23 +497,28 @@ int main()
             return -1;
         }
 
-        window.Add_Callback(callbacks::Framebuffer_Size{ framebuffer_size_callback });
+        window.Add_Callback(windowing::callbacks::Framebuffer_Size{ framebuffer_size_callback });
 
-        window.Add_Callback(callbacks::Content_Scale{ content_scale_callback });
+        window.Add_Callback(windowing::callbacks::Content_Scale{ content_scale_callback });
 
-        int x{ 123 }, y{ 456 }, z{ 789 }, w{ 101112 };
 
-        window.Set<enums::Window_Properties::Should_Close>(true);
 
-        auto [width, height] { window.Get<enums::Window_Properties::Size>() };
+        //window.Set(window::properties::Should_Close{ true });
 
-        properties::Window_Property<enums::Window_Properties::Should_Close> f{ nullptr };
+        //window.Set(window::properties::Opacity{ 0.0f });
 
-        logger.Output("Width: ", width, " : Height: ", height, '\n');
+        //while (window.Get(window::properties::Opacity{}) == 1.0f)
+        //{
 
-        //window.Property(properties::Set_Should_Close{ true });
+        //}
 
-        std::cout << x << " : " << y << " : " << z << " : " << w << '\n';
+        //window.Set(window::properties::Size{ 5, 7 });
+
+        //auto[ v1, v2, v3, v4 ] = window.Get(window::properties::Frame_Size{});
+
+        //std::cout << v1 << " : " << v2 << " : " << v3 << " : " << v4 << '\n';
+
+        //std::cout << x << " : " << y << " : " << z << " : " << w << '\n';
 
         //properties::Set_Window_Property<enums::Window_Properties::Aspect_Ratio, int> p{ 5 };
 
@@ -522,7 +533,9 @@ int main()
         // tell GLFW to capture our mouse
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        glfwSwapInterval(0);
+        window.Set(windowing::properties::Swap_Interval{ 0 });
+
+        //glfwSwapInterval(0);
 
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -591,7 +604,7 @@ int main()
 
         ub.Init({ { "projection", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } }, { "view", { enums::GLSL_Scalar_Type::Float, enums::GLSL_Container_Type::Matrix4 } } }, true);
 
-        ub.debug_print();
+        //ub.debug_print();
 
         ub.Bind();
 
@@ -640,7 +653,7 @@ int main()
 
         // render loop
         // -----------
-        while (!window.Get<enums::Window_Properties::Should_Close>())
+        while (!window.Get(windowing::properties::Should_Close{}))
         {
             
             processInput();
@@ -667,14 +680,19 @@ int main()
 
             //logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
 
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             
             glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
             //window.Set<enums::Window_Properties::Title>(title.str());
 
             // pass projection matrix to shader (note that in this case it could change every frame)
-            glm::mat4 projection{ glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f) };
+            glm::mat4 projection{ 1.0f };
+            if (!window.Get(windowing::properties::Iconify{}))
+            {
+                projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
+            }
+
             ub_2.Uniform("projection", projection);
             //ub_2.Uniform("projection[0]", projection[0]);
             //ub_2.Uniform("projection[1]", projection[1]);

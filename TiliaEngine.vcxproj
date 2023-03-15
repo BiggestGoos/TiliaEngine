@@ -513,6 +513,7 @@
     <ClCompile Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.cpp" />
     <ClCompile Include="Core\Modules\Windowing\Window.cpp" />
+    <ClCompile Include="Core\Modules\Windowing\Window_Properties.cpp" />
     <ClCompile Include="Core\Temp\Input.cpp" />
     <ClCompile Include="Core\Temp\Limit_Fps.cpp" />
     <ClCompile Include="Core\Temp\Stopwatch.cpp" />

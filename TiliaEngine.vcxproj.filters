@@ -1079,6 +1079,9 @@
     <ClCompile Include="Core\Modules\Windowing\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Modules\Windowing\Window_Properties.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vertex.vert" />

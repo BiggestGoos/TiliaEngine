@@ -198,20 +198,13 @@ namespace tilia
 			Focus			  = 0x000E,
 			Request_Attention = 0x000F,
 			Opacity			  = 0x0010,
-			Attributes		  = 0x0011,
-			Swap_Interval	  = 0x0012
+			Swap_Interval	  = 0x0012,
+			Resizable		  = 0x0013,
+			Decorated		  = 0x0014,
+			Auto_Iconify	  = 0x0015,
+			Floating		  = 0x0016,
+			Focus_On_Show	  = 0x0017
 		}; // Window_Properties
-
-		// Window attributes.
-		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
-		enum class Window_Attrubutes
-		{
-			Resizable	  = 0x00020003,
-			Decorated	  = 0x00020005,
-			Auto_Iconify  = 0x00020006,
-			Floating      = 0x00020007,
-			Focus_On_Show = 0x0002000C
-		}; // Window_Attrubutes
 
 #ifndef TILIA_GET_ENUM_VALUE
 #define TILIA_GET_ENUM_VALUE

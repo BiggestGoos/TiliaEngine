@@ -29,6 +29,8 @@ namespace tilia
 	{
 	private:
 
+		friend struct windowing::properties::Swap_Interval;
+
 		using callback_ptr = void*;
 		using property_ptr = void*;
 
@@ -41,8 +43,8 @@ namespace tilia
 
 	public:
 
-		static void Set_Window_Hint(const enums::Window_Hints& hint_type, 
-			const std::int32_t& hint_value);
+		static void Set_Window_Hint(enums::Window_Hints hint_type, 
+			std::int32_t hint_value);
 
 		static void Init();
 
@@ -50,7 +52,7 @@ namespace tilia
 
 		~Window();
 
-		void Init(const std::int32_t& width, const std::int32_t& height, const std::string& title,
+		void Init(std::int32_t width, std::int32_t height, std::string title,
 			void* monitor, void* share);
 
 		void Destroy();
@@ -84,228 +86,53 @@ namespace tilia
 
 		void Swap_Buffers() const;
 
-		template<enums::Window_Properties property, typename... Parameters>
-		void Set(Parameters... args) 
-		{ static_assert(false, "Basic Set function is not callable"); }
-
-		template<enums::Window_Properties property, typename... Parameters>
-		auto Get(Parameters&... args)
-		{ static_assert(false, "Basic Get function is not callable"); }
-
-		template<>
-		void Set<enums::Window_Properties::Should_Close>(const bool& should_close)
+		template<typename T,
+			std::enable_if_t<T::Settable == true>* = nullptr>
+			void Set(T property)
 		{
-			properties::Should_Close_Parameters params{ should_close };
-			Set_Property(enums::Window_Properties::Should_Close, &params);
-		}
-		
-		template<>
-		auto Get<enums::Window_Properties::Should_Close>()
-		{
-			properties::Should_Close_Parameters params{};
-			Get_Property(enums::Window_Properties::Should_Close, &params);
-			return std::get<0>(params);
+			property.Set_Property(*this);
 		}
 
-		template<>
-		void Set<enums::Window_Properties::Size>(std::int32_t width, std::int32_t height)
+		template<typename T,
+			std::enable_if_t<T::Gettable == true && 
+			(std::tuple_size<typename T::Get_Parameters_Tuple>::value > 1)>* = nullptr>
+			auto Get(T property)
 		{
-			properties::Size_Parameters params{ width, height };
-			Set_Property(enums::Window_Properties::Size, &params);
+			property.Get_Property(*this);
+			return property.Get_Properties();
 		}
 
-		template<>
-		auto Get<enums::Window_Properties::Size>()
+		template<typename T,
+			std::enable_if_t<T::Gettable == true &&
+			(std::tuple_size<typename T::Get_Parameters_Tuple>::value == 1)>* = nullptr>
+			auto Get(T property)
 		{
-			properties::Size_Parameters params{};
-			Get_Property(enums::Window_Properties::Size, &params);
-			return params;
+			property.Get_Property(*this);
+			return property.Get_First_Property();
 		}
-
-		template<>
-		auto Get<enums::Window_Properties::Frame_Size>()
-		{
-			properties::Frame_Size_Parameters params{};
-			Get_Property(enums::Window_Properties::Frame_Size, &params);
-			return params;
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Framebuffer_Size>()
-		{
-			properties::Framebuffer_Size_Parameters params{};
-			Get_Property(enums::Window_Properties::Framebuffer_Size, &params);
-			return params;
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Content_Scale>()
-		{
-			properties::Content_Scale_Parameters params{};
-			Get_Property(enums::Window_Properties::Content_Scale, &params);
-			return params;
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Size_Limits>(std::int32_t min_width, 
-			std::int32_t min_height, std::int32_t max_width, std::int32_t max_height)
-		{
-			properties::Size_Limits_Parameters params{ 
-				min_width, min_height, max_width, max_height };
-			Set_Property(enums::Window_Properties::Size_Limits, &params);
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Aspect_Ratio>(std::int32_t denom, std::int32_t numer)
-		{
-			properties::Aspect_Ratio_Parameters params{ denom, numer };
-			Set_Property(enums::Window_Properties::Aspect_Ratio, &params);
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Position>(std::int32_t x_pos, std::int32_t y_pos)
-		{
-			properties::Position_Parameters params{ x_pos, y_pos};
-			Set_Property(enums::Window_Properties::Position, &params);
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Position>()
-		{
-			properties::Position_Parameters params{};
-			Get_Property(enums::Window_Properties::Position, &params);
-			return params;
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Title>(std::string title)
-		{
-			properties::Title_Parameters params{ title };
-			Set_Property(enums::Window_Properties::Title, &params);
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Icon>(nullptr_t)
-		{
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Monitor>(nullptr_t)
-		{
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Monitor>()
-		{
-			return nullptr;
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Iconify>(bool iconify)
-		{
-			properties::Iconify_Parameters params{ iconify };
-			Set_Property(enums::Window_Properties::Iconify, &params);
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Iconify>()
-		{
-			properties::Iconify_Parameters params{};
-			Get_Property(enums::Window_Properties::Iconify, &params);
-			return params;
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Maximize>(bool maximize)
-		{
-			properties::Maximize_Parameters params{ maximize };
-			Set_Property(enums::Window_Properties::Maximize, &params);
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Maximize>()
-		{
-			properties::Maximize_Parameters params{};
-			Get_Property(enums::Window_Properties::Maximize, &params);
-			return params;
-		}
-
-		template<>
-		void Set<enums::Window_Properties::Visible>(bool visible)
-		{
-			properties::Visibility_Parameters params{ visible };
-			Set_Property(enums::Window_Properties::Visible, &params);
-		}
-
-		template<>
-		auto Get<enums::Window_Properties::Visible>()
-		{
-			properties::Visibility_Parameters params{};
-			Get_Property(enums::Window_Properties::Visible, &params);
-			return params;
-		}
-
-		//template<>
-		//void Set<enums::Window_Properties::Size>(std::int32_t width, std::int32_t height);
-
-		//template<>
-		//void Set<enums::Window_Properties::Size_Limits>(std::int32_t min_width, 
-		//	std::int32_t min_height, std::int32_t max_width, std::int32_t max_height);
-
-		//template<>
-		//void Set<enums::Window_Properties::Aspect_Ratio>(std::int32_t numer, std::int32_t denom);
-
-		//template<>
-		//void Set<enums::Window_Properties::Position>(std::int32_t x_pos, std::int32_t y_pos);
-
-		//template<>
-		//void Set<enums::Window_Properties::Title>(std::string title);
-
-		//template<>
-		//void Set<enums::Window_Properties::Icon>();
-
-		//template<>
-		//void Set<enums::Window_Properties::Monitor>();
-
-		//template<>
-		//void Set<enums::Window_Properties::Iconify>(bool iconify);
-
-		//template<>
-		//void Set<enums::Window_Properties::Maximize>(bool maximize);
-
-		//template<>
-		//void Set<enums::Window_Properties::Visible>(bool visible);
-
-		//template<>
-		//void Set<enums::Window_Properties::Focus>();
-
-		//template<enums::Window_Properties property, typename... Parameters>
-		//void Get(Parameters... args) { }
-
-		//template<>
-		//void Get<enums::Window_Properties::Should_Close>();
 
 		utils::GLFWwindow* Get_Window() { return m_window; }
 
+	protected:
+
+		std::int32_t m_swap_interval{ 1 };
+
 	private:
 
-		void Set_Callback(const enums::Window_Callbacks& type, callback_ptr callback);
-
-		void Set_Property(const enums::Window_Properties& type, property_ptr property);
-		void Get_Property(const enums::Window_Properties& type, property_ptr property);
+		void Set_Callback(enums::Window_Callbacks type, callback_ptr callback);
 
 		utils::GLFWwindow* m_window{};
 
 		std::tuple<
-			std::vector<callbacks::Position::Signature>, 
-			std::vector<callbacks::Size::Signature>,
-			std::vector<callbacks::Close::Signature>,
-			std::vector<callbacks::Refresh::Signature>,
-			std::vector<callbacks::Focus::Signature>,
-			std::vector<callbacks::Inconify::Signature>,
-			std::vector<callbacks::Maximize::Signature>,
-			std::vector<callbacks::Framebuffer_Size::Signature>,
-			std::vector<callbacks::Content_Scale::Signature>
+			std::vector<windowing::callbacks::Position::Signature>, 
+			std::vector<windowing::callbacks::Size::Signature>,
+			std::vector<windowing::callbacks::Close::Signature>,
+			std::vector<windowing::callbacks::Refresh::Signature>,
+			std::vector<windowing::callbacks::Focus::Signature>,
+			std::vector<windowing::callbacks::Inconify::Signature>,
+			std::vector<windowing::callbacks::Maximize::Signature>,
+			std::vector<windowing::callbacks::Framebuffer_Size::Signature>,
+			std::vector<windowing::callbacks::Content_Scale::Signature>
 		> m_callbacks;
 
 		static std::unordered_map<utils::GLFWwindow*, Window&> s_windows;
