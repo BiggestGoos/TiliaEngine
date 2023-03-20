@@ -86,3 +86,27 @@ void tilia::utils::Clear_OpenGL_Error()
 {
     while (glGetError() != GL_NO_ERROR);
 }
+
+#if TILIA_UNIT_TESTS == 1
+
+// Vendor
+#include "vendor/Catch2/Catch2.hpp"
+
+void tilia::utils::Error_Handling::Test()
+{
+
+    // Check that clearing the openGL errors work
+
+    glEnable(GL_FALSE);
+    glEnable(GL_TEXTURE0);
+    glEnable(GL_2_BYTES);
+
+    Clear_OpenGL_Error();
+
+    REQUIRE(glGetError() == GL_NO_ERROR);
+
+
+
+}
+
+#endif // TILIA_UNIT_TESTS == 1

@@ -54,8 +54,8 @@ void error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsi
 }
 
 // settings
-unsigned int SCR_WIDTH = 1600;
-unsigned int SCR_HEIGHT = 1200;
+int SCR_WIDTH = 1600;
+int SCR_HEIGHT = 1200;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -310,7 +310,7 @@ int main()
 
 #endif
 
-#if 0
+#if 1
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
@@ -360,11 +360,8 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-        //const GLubyte* extensions = glGetString(GL_EXTENSIONS);
-
-        //std::cout << extensions << '\n';
-
-        retval = Catch::Session().run(argc, argv);
+        Catch::Session session{};
+        retval = session.run(argc, argv);
 
         while (!glfwWindowShouldClose(window))
         {
@@ -406,37 +403,19 @@ TEST_CASE("Logger", "[Logger]") {
     tilia::log::Logger::Test();
 }
 
-TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
-    tilia::gfx::Buffer::Test();
+TEST_CASE("Error_Handling", "[Error_Handling]") {
+    tilia::utils::Error_Handling::Test();
 }
 
-//void factorials_are_computed()
-//{
-//    REQUIRE(1 == 1);
-//    REQUIRE(2 == 2);
-//    REQUIRE(6 == 6);
-//    REQUIRE(3628800 == 3628800);
-//}
-//
-//TEST_CASE("Factorials are computed", "[factorial]") {
-//    factorials_are_computed();
-//}
-//
-//void factorials_are_not_computed()
-//{
-//    REQUIRE_FALSE(2 == 1);
-//    REQUIRE_FALSE(3 == 2);
-//    REQUIRE_FALSE(7 == 6);
-//    REQUIRE_FALSE(3628801 == 3628800);
-//}
-//
-//TEST_CASE("Factorials are not computed", "[not_factorial]") {
-//    factorials_are_not_computed();
+//TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
+//    tilia::gfx::Buffer::Test();
 //}
 
 #endif
 
-#if 1
+#if 0
+
+windowing::Window window{};
 
 int main()
 {
@@ -457,7 +436,7 @@ int main()
 
         // glfw: initialize and configure
         // ------------------------------
-        Window::Init();
+        windowing::Window::Init();
 
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -479,11 +458,9 @@ int main()
         
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Profile, *enums::OpenGL_Profile::Core);
-        Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Debug_Context, true);
-        Window::Set_Window_Hint(enums::Window_Hints::Transparent_Framebuffer, true);
-
-        Window window{};
+        windowing::Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Profile, *enums::OpenGL_Profile::Core);
+        windowing::Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Debug_Context, true);
+        windowing::Window::Set_Window_Hint(enums::Window_Hints::Transparent_Framebuffer, true);
         
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 
@@ -501,7 +478,10 @@ int main()
 
         window.Add_Callback(windowing::callbacks::Content_Scale{ content_scale_callback });
 
+        window.Set(windowing::properties::Floating{ true });
 
+        glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+        //glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
 
         //window.Set(window::properties::Should_Close{ true });
 
@@ -540,7 +520,7 @@ int main()
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-        glDebugMessageCallback(Logger::OpenGL_Error_Callback, window.Get_Window());
+        glDebugMessageCallback(Logger::OpenGL_Error_Callback, &window);
 
         //int num{};
         //
@@ -665,6 +645,9 @@ int main()
                 shader_g->Compile(true);
             }
 
+            if (static_cast<int>(glfwGetTime()) % 5 == 0)
+                window.Set(windowing::properties::Request_Attention{});
+
             mesh->Set_Polymode()(polymode);
 
             fps = static_cast<uint32_t>(static_cast<double>(passed_frames) / glfwGetTime());
@@ -680,10 +663,11 @@ int main()
 
             //logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
 
-            glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             
-            glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
+            window.Set(windowing::properties::Title{ title.str() });
+
+            //glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
             //window.Set<enums::Window_Properties::Title>(title.str());
 
             // pass projection matrix to shader (note that in this case it could change every frame)
@@ -744,7 +728,7 @@ int main()
         logger.Output(e.what(), '\n');
     }
 
-    Window::Terminate();
+    windowing::Window::Terminate();
 
     while (true);
 
@@ -1352,9 +1336,6 @@ int main() {
 void processInput()
 {
 
-    if (input.Get_Key_Pressed(KEY_ESCAPE))
-        glfwSetWindowShouldClose(input.Get_Window(), true);
-
     if (input.Get_Key_Pressed(KEY_ENTER))
     {
         if (polymode == enums::Polymode::Fill)
@@ -1368,12 +1349,12 @@ void processInput()
         if (print_opengl_things == true)
         {
             print_opengl_things = false;
-            logger.Set_Output_Filters(&std::cout);
+            logger.Set_Output_Filters(std::cout.rdbuf());
         }
         else 
         {
             print_opengl_things = true;
-            logger.Set_Output_Filters(&std::cout, { "debug severity message" });
+            logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
         }
     }
 

@@ -198,7 +198,7 @@ namespace tilia {
 					return false;
 				return !(lhs == rhs);
 			}
-
+			
 			/**
 			 * @brief Gets all of the messages concatenated into one string.
 			 * 

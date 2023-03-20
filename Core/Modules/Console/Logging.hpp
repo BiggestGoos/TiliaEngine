@@ -51,7 +51,7 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Sets the filtering state that will be used to decide what outputs to print 
+			 * @brief Sets the filtering state that will be used to decide what outputs to print
 			 * to.
 			 * 
 			 * @param filters - The filters to store. If none is given then the filters are set to 
@@ -118,7 +118,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for this output. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Add_Output(std::ostream* output, const std::vector<std::string>& filters = {})
+			void Add_Output(std::streambuf* output, const std::vector<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_outputs.push_back({ output, filters });
@@ -129,7 +129,31 @@ namespace tilia {
 			 * 
 			 * @param output - The output to remove.
 			 */
-			void Remove_Output(std::ostream* const output);
+			void Remove_Output(std::streambuf* const output);
+
+			/**
+			 * @brief Gets the number of outputs attatched.
+			 * 
+			 * @return The number of outputs.
+			 */
+			auto Get_Output_Count() const
+			{ 
+				std::lock_guard lock{ m_mutex };
+				return m_outputs.size(); 
+			}
+
+			/**
+			 * @brief Gets the output at the given index.
+			 * 
+			 * @param index - The index of the output to get.
+			 * 
+			 * @return The output at the given index.
+			 */
+			auto Get_Output(std::size_t index) const
+			{
+				std::lock_guard lock{ m_mutex };
+				return m_outputs[index];
+			}
 
 			/**
 			 * @brief Sets the filters of the given output.
@@ -138,7 +162,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for this output. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Set_Output_Filters(std::ostream* output, 
+			void Set_Output_Filters(std::streambuf* output,
 				const std::vector<std::string>& filters = {});
 
 			/**
@@ -191,7 +215,7 @@ namespace tilia {
 			Logger() = default;
 
 			// The different outputs and their respective filters
-			std::vector<std::pair<std::ostream*, std::vector<std::string>>> m_outputs{};
+			std::vector<std::pair<std::streambuf*, std::vector<std::string>>> m_outputs{};
 			// Filters to be used by the openGL error callback
 			std::vector<std::string> m_openGL_filters{};
 			// Filters to be used by the GLFW error callback

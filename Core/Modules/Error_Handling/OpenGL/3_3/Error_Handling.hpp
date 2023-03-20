@@ -14,6 +14,7 @@
 // Tilia
 #include "Core/Values/Directories.hpp"
 #include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_CONSTANTS_INCLUDE
 
 #if !defined(NDEBUG) && defined(_DEBUG)
 #include <cstdlib>
@@ -66,6 +67,20 @@ namespace tilia {
             const char* function, Exception_Data message);
 
         void Clear_OpenGL_Error();
+
+#if TILIA_UNIT_TESTS == 1
+
+        namespace Error_Handling
+        {
+
+            /**
+             * @brief Unit test for Tilia_Exception.
+             */
+            void Test();
+
+        } // Error_Handling
+
+#endif // TILIA_UNIT_TESTS == 1
 
     } // utils
 

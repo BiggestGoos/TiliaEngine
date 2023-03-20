@@ -382,7 +382,7 @@ void tilia::gfx::Buffer::Test()
         buffer.Get_Data(test_ptr.get(), true);
         REQUIRE(*static_cast<int64_t*>(static_cast<void*>(test_ptr.get())) == int_64);
 
-        Map_Value test_map_ptr{ buffer.Map_Data_Auto(enums::Buffer_Map_Type::Read_Write).value() };
+        Map_Value test_map_ptr{ buffer.Map_Data_Auto(enums::Buffer_Map_Type::Read_Write) };
 
         std::cout << std::hex << test_map_ptr.get() << '\n';
 

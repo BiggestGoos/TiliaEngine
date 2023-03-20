@@ -47,24 +47,6 @@ namespace tilia
 			Quad_Points     = 4  // The amount of points in a quad.
 		}; // Geometry_Features
 
-//#define GLFW_COCOA_RETINA_FRAMEBUFFER 0x00023001
-///*! @brief macOS specific
-// *  [window hint](@ref GLFW_COCOA_FRAME_NAME_hint).
-// */
-//#define GLFW_COCOA_FRAME_NAME         0x00023002
-// /*! @brief macOS specific
-//  *  [window hint](@ref GLFW_COCOA_GRAPHICS_SWITCHING_hint).
-//  */
-//#define GLFW_COCOA_GRAPHICS_SWITCHING 0x00023003
-//  /*! @brief X11 specific
-//   *  [window hint](@ref GLFW_X11_CLASS_NAME_hint).
-//   */
-//#define GLFW_X11_CLASS_NAME         0x00024001
-//   /*! @brief X11 specific
-//	*  [window hint](@ref GLFW_X11_CLASS_NAME_hint).
-//	*/
-//#define GLFW_X11_INSTANCE_NAME      0x00024002
-
 		// Window hints which can be used to set different values used in creating windows.
 		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
 		enum class Window_Hints {
@@ -181,30 +163,47 @@ namespace tilia
 		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
 		enum class Window_Properties
 		{
-			Should_Close	  = 0x0000,
-			Size			  = 0x0001,
-			Frame_Size		  = 0x0002,
-			Framebuffer_Size  = 0x0003,
-			Content_Scale	  = 0x0004,
-			Size_Limits		  = 0x0005,
-			Aspect_Ratio	  = 0x0006,
-			Position		  = 0x0007,
-			Title			  = 0x0008,
-			Icon			  = 0x0009,
-			Monitor			  = 0x000A,
-			Iconify			  = 0x000B,
-			Maximize		  = 0x000C,
-			Visible			  = 0x000D,
-			Focus			  = 0x000E,
-			Request_Attention = 0x000F,
-			Opacity			  = 0x0010,
-			Swap_Interval	  = 0x0012,
-			Resizable		  = 0x0013,
-			Decorated		  = 0x0014,
-			Auto_Iconify	  = 0x0015,
-			Floating		  = 0x0016,
-			Focus_On_Show	  = 0x0017
+			Should_Close			= 0x0000,
+			Size					= 0x0001,
+			Frame_Size				= 0x0002,
+			Framebuffer_Size		= 0x0003,
+			Content_Scale			= 0x0004,
+			Size_Limits				= 0x0005,
+			Aspect_Ratio			= 0x0006,
+			Position				= 0x0007,
+			Title					= 0x0008,
+			Icon					= 0x0009,
+			Monitor					= 0x000A,
+			Iconify					= 0x000B,
+			Maximize				= 0x000C,
+			Visible					= 0x000D,
+			Focus					= 0x000E,
+			Request_Attention		= 0x000F,
+			Opacity					= 0x0010,
+			Swap_Interval			= 0x0012,
+			Resizable				= 0x0013,
+			Decorated				= 0x0014,
+			Auto_Iconify			= 0x0015,
+			Floating				= 0x0016,
+			Focus_On_Show			= 0x0017,
+			Transparent_Framebuffer = 0x0018,
+			Framebuffer				= 0x0019
 		}; // Window_Properties
+
+		// Context properties.
+		// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
+		enum class Context_Properties
+		{
+			Client_API				  = 0x0000,
+			Creation_API			  = 0x0001,
+			Version					  = 0x0002,
+			OpenGL_Forward_Compatible = 0x0003,
+			OpenGL_Debug_Context	  = 0x0004,
+			OpenGL_Profile			  = 0x0005,
+			Release_Behavior          = 0x0006,
+			No_Error				  = 0x0007,
+			Robustness				  = 0x0008
+		}; // Context_Properties
 
 #ifndef TILIA_GET_ENUM_VALUE
 #define TILIA_GET_ENUM_VALUE
@@ -246,6 +245,6 @@ namespace tilia
 /**
  * @brief Whether or not to include unit tests
  */
-#define TILIA_UNIT_TESTS 0
+#define TILIA_UNIT_TESTS 1
 
 #endif // TILIA_CONSTANTS_HPP
