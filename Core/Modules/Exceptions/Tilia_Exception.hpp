@@ -205,8 +205,9 @@ namespace tilia {
 			 * @return All of the messages in one string.
 			 */
 			virtual const char* what() const noexcept override {
-				std::stringstream ret{ };
-				static auto potential_message{ [](const auto& message)
+				std::stringstream ret{};
+				static std::string ret_str{};
+				auto potential_message{ [](const auto& message)
 				{
 					const auto message_length{ message.size() };
 					if (message_length > 0)
@@ -217,10 +218,11 @@ namespace tilia {
 				for (std::size_t i{ 0 }; i < message_count; ++i)
 				{
 					const auto& message{ m_messages[i] };
-					ret << "Message #" << (i + 1) << ":\n" << "File: " << message.m_file << " : Line: " << message.m_line << "\nMessage:\n" << 
+					ret << "Message #" << (i + 1) << ":\n" << "File: " << message.m_file << 
+						" : Line: " << message.m_line << "\nMessage:\n" << 
 						potential_message(message.m_message) << "\n\n";
 				}
-				static auto ret_str{ std::move(ret.str()) };
+				ret_str = std::move(ret.str());
 				return ret_str.c_str();
 			}
 

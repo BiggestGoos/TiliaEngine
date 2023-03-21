@@ -225,6 +225,7 @@ void tilia::windowing::properties::Transparent_Framebuffer::Get_Property(Window&
 
 void tilia::windowing::properties::context::Client_API::Get_Property(Window& window)
 {
+
 }
 
 void tilia::windowing::properties::context::Creation_API::Get_Property(Window& window)

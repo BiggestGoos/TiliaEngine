@@ -95,6 +95,14 @@ void tilia::utils::Clear_OpenGL_Error()
 void tilia::utils::Error_Handling::Test()
 {
 
+    const std::string fake_error_message_0{ "Some error message about stuff and whatever..." };
+
+    const std::string file_0{ __FILE__ };
+    
+    std::size_t line_0{};
+
+    const Exception_Data e_d{ TILIA_LOCATION, fake_error_message_0 };
+
     // Check that clearing the openGL errors work
 
     glEnable(GL_FALSE);
@@ -106,9 +114,6 @@ void tilia::utils::Error_Handling::Test()
     REQUIRE(glGetError() == GL_NO_ERROR);
 
     // Test that GL_CALL works and throws an exception
-
-    std::string file_0{ __FILE__ };
-    std::size_t line_0{};
 
     try
     {
@@ -124,21 +129,16 @@ void tilia::utils::Error_Handling::Test()
 
     // Test that GL_CALL_MESSAGE works and throws an exception
 
-    const std::string fake_error_message_0{ "Some error message about stuff and whatever..." };
-
-    Exception_Data e_d{ TILIA_LOCATION, fake_error_message_0 };
-    std::size_t line_1{};
-
     try
     {
-        line_1 = __LINE__; GL_CALL_MESSAGE(e_d, glEnable(GL_FALSE));
+        line_0 = __LINE__; GL_CALL_MESSAGE(e_d, glEnable(GL_FALSE));
     }
     catch (const Tilia_Exception& t_e)
     {
         REQUIRE(t_e.Get_Count() > 0);
         REQUIRE(t_e.Get_Message(0).Get_Message().find(fake_error_message_0) != std::string::npos);
         REQUIRE(t_e.Get_Message(0).Get_File() == file_0);
-        REQUIRE(t_e.Get_Message(0).Get_Line() == line_1);
+        REQUIRE(t_e.Get_Message(0).Get_Line() == line_0);
     }
 
 }

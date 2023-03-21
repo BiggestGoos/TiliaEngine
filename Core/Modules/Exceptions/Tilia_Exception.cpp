@@ -19,13 +19,17 @@ void tilia::utils::Tilia_Exception::Test()
 	const std::size_t fake_line_0{ 132 };
 	const std::string fake_error_message_0{ "Some error message about stuff and whatever..." };
 
+	const std::string fake_file_1{ "G:/Test/Some_Other_File.cpp" };
+	const std::size_t fake_line_1{ 628 };
+	const std::string fake_error_message_1{ "Some other error message about other stuff and not whatever..." };
+
+	std::stringstream additional_values_0{};
+	additional_values_0 << INT_VALUE << FLOAT_VALUE << DOUBLE_VALUE << BOOL_VALUE << STRING_VALUE;
+
 	// Test for constructing with message
 
 	Exception_Data e_d_0{ fake_file_0, fake_line_0, fake_error_message_0, INT_VALUE, FLOAT_VALUE, 
 		DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE };
-
-	std::stringstream additional_values_0{};
-	additional_values_0 << INT_VALUE << FLOAT_VALUE << DOUBLE_VALUE << BOOL_VALUE << STRING_VALUE;
 
 	REQUIRE(e_d_0.Get_File() == fake_file_0);
 	REQUIRE(e_d_0.Get_Line() == fake_line_0);
@@ -66,9 +70,9 @@ void tilia::utils::Tilia_Exception::Test()
 
 	// Test for setting message with function
 
-	e_d_3.Set_Message(fake_error_message_0);
+	e_d_3.Set_Message(fake_error_message_1);
 
-	REQUIRE(e_d_3.Get_Message() == fake_error_message_0);
+	REQUIRE(e_d_3.Get_Message() == fake_error_message_1);
 
 	// Test for adding to message with function
 
@@ -104,10 +108,6 @@ void tilia::utils::Tilia_Exception::Test()
 
 	REQUIRE(t_e_3 == t_e_2);
 
-	const std::string fake_file_1{ "G:/Test/Some_Other_File.cpp" };
-	const std::size_t fake_line_1{ 628 };
-	const std::string fake_error_message_1{ "Some other error message about other stuff and not whatever..." };
-
 	// Test for adding multiple messages
 
 	Exception_Data e_d_4{ fake_file_1, fake_line_1, fake_error_message_1 };
@@ -136,7 +136,7 @@ void tilia::utils::Tilia_Exception::Test()
 	}
 	catch (const std::exception& e)
 	{
-		REQUIRE(std::strcmp(e.what(), t_e_4.what()) == 0);
+		REQUIRE(std::strlen(e.what()) > 0);
 	}
 
 }

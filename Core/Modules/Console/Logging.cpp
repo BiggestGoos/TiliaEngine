@@ -154,7 +154,13 @@ void tilia::log::Logger::Test()
     std::stringstream additional_values_0{};
     additional_values_0 << INT_VALUE << FLOAT_VALUE << DOUBLE_VALUE << BOOL_VALUE << STRING_VALUE;
 
-    // Test for Logger::Instance() returning correct address
+    std::stringbuf my_buffer_0{};
+    std::stringbuf my_buffer_1{};
+
+    const utils::Exception_Data e_d_0{ TILIA_LOCATION, "My test output", INT_VALUE, FLOAT_VALUE,
+    DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE };
+
+    const utils::Tilia_Exception t_e_0{ e_d_0 };
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -162,9 +168,9 @@ void tilia::log::Logger::Test()
     glDebugMessageCallback(Logger::OpenGL_Error_Callback, nullptr);
     glfwSetErrorCallback(Logger::GLFW_Error_Callback);
 
-    REQUIRE(&logger == &Logger::Instance());
+    // Test for Logger::Instance() returning correct address
 
-    std::stringbuf my_buffer_0{};
+    REQUIRE(&logger == &Logger::Instance());
 
     // Test for adding an output
 
@@ -180,10 +186,6 @@ void tilia::log::Logger::Test()
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
-    REQUIRE(my_buffer_0.str() == "");
-
     // Test filter comparison function
 
     REQUIRE(shares_filters({ "test_filter_0" }, { "test_filter_0" }));
@@ -195,7 +197,10 @@ void tilia::log::Logger::Test()
 
     // Test for filters where output has none but logger does
 
+    my_buffer_0.str("");
+
     logger.Set_Filters({ "test_filter_0" });
+    logger.Set_Output_Filters(&my_buffer_0, {});
 
     REQUIRE(logger.Get_Filters() == std::vector<std::string>{ "test_filter_0" });
 
@@ -204,10 +209,11 @@ void tilia::log::Logger::Test()
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
     // Test for filters where both output and logger have same filter
 
+    my_buffer_0.str("");
+
+    logger.Set_Filters({ "test_filter_0" });
     logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
@@ -215,22 +221,24 @@ void tilia::log::Logger::Test()
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
     // Test for filters where logger has none but output does
 
-    logger.Set_Filters();
+    my_buffer_0.str("");
+
+    logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
     // Test for filters where output and logger have different filters
 
+    my_buffer_0.str("");
+
     logger.Set_Filters({ "test_filter_1" });
+    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
@@ -239,19 +247,21 @@ void tilia::log::Logger::Test()
 
     // Test for filters where output has same as one of loggers filters
 
+    my_buffer_0.str("");
+
     logger.Set_Filters({ "test_filter_0", "test_filter_1" });
+    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
     // Test for filters where logger has same as one of outputs filters
 
-    logger.Set_Filters({ "test_filter_0" });
+    my_buffer_0.str("");
 
+    logger.Set_Filters({ "test_filter_0" });
     logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0", "test_filter_1" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
@@ -259,15 +269,13 @@ void tilia::log::Logger::Test()
 
     REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
 
-    my_buffer_0.str("");
-
     // Test for filters and multiple outputs where two outputs have different filters and logger
     // has both the filters
 
+    my_buffer_0.str("");
+
     logger.Set_Filters({ "test_filter_0", "test_filter_1" });
     logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
-
-    std::stringbuf my_buffer_1{};
 
     logger.Add_Output(&my_buffer_1, { "test_filter_1" });
 
@@ -277,128 +285,156 @@ void tilia::log::Logger::Test()
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
 
+    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
     REQUIRE(my_buffer_1.str() == "My test output" + additional_values_0.str());
-    REQUIRE(my_buffer_0.str() == my_buffer_1.str());
 
     // Test for removing output
 
-    logger.Remove_Output(&my_buffer_1);
+    logger.Remove_Output(&my_buffer_0);
 
-    REQUIRE(logger.Get_Output_Count() == 1);
+    REQUIRE(logger.Get_Output(0).first == &my_buffer_1);
 
-    logger.Set_Filters();
+    // Test for removing already removed output
 
-    my_buffer_0.str("");
+    logger.Remove_Output(&my_buffer_0);
+
+    REQUIRE(logger.Get_Output(0).first == &my_buffer_1);
 
     // Test for outputting exception data
 
-    utils::Exception_Data e_d_0{ TILIA_LOCATION, "My test output", INT_VALUE, FLOAT_VALUE, 
-        DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE };
+    my_buffer_1.str("");
+
+    logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, {});
 
     logger.Output(e_d_0);
 
-    REQUIRE(my_buffer_0.str() != "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() != "");
 
     // Test for outputting tilia exception
 
-    utils::Tilia_Exception t_e_0{ e_d_0 };
+    my_buffer_1.str("");
+
+    logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, {});
 
     logger.Output(t_e_0);
 
-    REQUIRE(my_buffer_0.str() != "");
+    REQUIRE(my_buffer_1.str() != "");
 
-    my_buffer_0.str("");
+    // Test for outputting with manually giving no filters
 
-    // Test for outputting with manually giving filters
+    my_buffer_1.str("");
+
+    logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, {});
 
     logger.Output("My test output", {});
 
-    REQUIRE(my_buffer_0.str() == "My test output");
+    REQUIRE(my_buffer_1.str() == "My test output");
 
-    my_buffer_0.str("");
+    // Test for outputting with manually giving filters
 
-    logger.Set_Output_Filters(&my_buffer_0);
+    my_buffer_1.str("");
 
-    logger.Output("My test output", { "test_filter_0 "});
+    logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, { "test_filter_0" });
 
-    REQUIRE(my_buffer_0.str() == "My test output");
+    logger.Output("My test output", { "test_filter_0" });
 
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() == "My test output");
 
     // Test for openGL callback
+
+    my_buffer_1.str("");
+
+    logger.Set_OpenGL_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, {});
 
     // Call in different scope to ensure callback is called
     {
         glEnable(GL_FALSE);
     }
 
-    REQUIRE(my_buffer_0.str() != "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() != "");
 
     // Test for openGL callback filtering where both the output filters and the openGL filters are
     // the same
 
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+    my_buffer_1.str("");
+
     logger.Set_OpenGL_Filters({ "test_filter_0" });
+    logger.Set_Output_Filters(&my_buffer_1, { "test_filter_0" });
 
     // Call in different scope to ensure callback is called
     {
         glEnable(GL_FALSE);
     }
 
-    REQUIRE(my_buffer_0.str() != "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() != "");
 
     // Test for openGL callback filtering where they are different
 
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+    my_buffer_1.str("");
+
     logger.Set_OpenGL_Filters({ "test_filter_1" });
+    logger.Set_Output_Filters(&my_buffer_1, { "test_filter_0" });
 
     // Call in different scope to ensure callback is called
     {
         glEnable(GL_FALSE);
     }
 
-    REQUIRE(my_buffer_0.str() == "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() == "");
     
     // Test for GLFW callback
 
-    logger.Set_Output_Filters(&my_buffer_0);
+    my_buffer_1.str("");
+
+    logger.Set_GLFW_Filters({});
+    logger.Set_Output_Filters(&my_buffer_1, {});
 
     glfwWindowHint(999999, 888888);
 
-    REQUIRE(my_buffer_0.str() != "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() != "");
 
     // Test for GLFW callback filtering where both the output filters and the GLFW filters are
     // the same
 
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+    my_buffer_1.str("");
+
     logger.Set_GLFW_Filters({ "test_filter_0" });
+    logger.Set_Output_Filters(&my_buffer_1, { "test_filter_0" });
 
     glfwWindowHint(999999, 888888);
 
-    REQUIRE(my_buffer_0.str() != "");
-
-    my_buffer_0.str("");
+    REQUIRE(my_buffer_1.str() != "");
 
     // Test for GLFW callback filtering where they are different
 
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+    my_buffer_1.str("");
+
     logger.Set_GLFW_Filters({ "test_filter_1" });
+    logger.Set_Output_Filters(&my_buffer_1, { "test_filter_0" });
 
     glfwWindowHint(999999, 888888);
 
-    REQUIRE(my_buffer_0.str() == "");
+    REQUIRE(my_buffer_1.str() == "");
 
-    my_buffer_0.str("");
+    // Reset all values to default
+
+    logger.Set_Filters({});
+    logger.Set_OpenGL_Filters({});
+    logger.Set_GLFW_Filters({});
+
+    logger.Remove_Output(&my_buffer_0);
+    logger.Remove_Output(&my_buffer_1);
+
+    glDebugMessageCallback(nullptr, nullptr);
+    glfwSetErrorCallback(nullptr);
+
+    glDisable(GL_DEBUG_OUTPUT);
+    glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
 }
 

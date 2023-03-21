@@ -38,7 +38,7 @@ void tilia::utils::Exception_Handler::Update()
 		std::size_t i{ 1 };
 		for (auto& exception : exceptions)
 		{
-			logger.Output("Exception #", i, ":\n\n", exception.what());
+			logger.Output("Exception #", i, ":\n\n", exception.what(), '\n');
 			++i;
 		}
 	} };
@@ -56,8 +56,7 @@ void tilia::utils::Exception_Handler::Update()
 		print_exceptions(m_exceptions);
 	}
 
-	m_tilia_exceptions.clear();
-	m_exceptions.clear();
+	Clear_Exceptions();
 
 }
 
@@ -89,15 +88,17 @@ void tilia::utils::Exception_Handler::Test()
 
 	log::Logger& logger{ log::Logger::Instance() };
 
+	tilia::utils::Tilia_Exception t_e_0{ { TILIA_LOCATION,
+	"Some error message about stuff and whatever...", INT_VALUE, FLOAT_VALUE,
+	DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE } };
+
+	std::exception g_e_0{ "Some error message about stuff and whatever..." };
+
 	// Test for Exception_Handler::Instance() returning correct address
 
 	REQUIRE(&handler == &Exception_Handler::Instance());
 
 	// Test throw function with copy tilia exception
-
-	tilia::utils::Tilia_Exception t_e_0{ { TILIA_LOCATION,
-		"Some error message about stuff and whatever...", INT_VALUE, FLOAT_VALUE,
-		DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE } };
 
 	handler.Throw(t_e_0);
 
@@ -113,12 +114,33 @@ void tilia::utils::Exception_Handler::Test()
 
 	// Test throw function with copy general exception
 
-	std::exception g_e_0{ "Some error message about stuff and whatever..." };
-
 	handler.Throw(g_e_0);
 
 	REQUIRE(handler.m_exceptions.size() == 1);
 	REQUIRE(strcmp(handler.m_exceptions[0].what(), g_e_0.what()) == 0);
+
+	// Test throwing from different thread
+
+	std::thread thread_0{ thread_func_0 };
+	thread_0.join();
+
+	REQUIRE(handler.m_tilia_exceptions.size() == 3);
+
+	// Test update functions actually outputs
+
+	std::stringbuf my_buffer_0{};
+
+	logger.Add_Output(&my_buffer_0);
+
+	handler.Update();
+
+	REQUIRE(my_buffer_0.str() != "");
+
+	// Reset all values to default
+
+	handler.Clear_Exceptions();
+
+	logger.Remove_Output(&my_buffer_0);
 
 }
 

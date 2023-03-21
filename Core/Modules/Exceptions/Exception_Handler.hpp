@@ -89,6 +89,12 @@ namespace tilia
 
 			Exception_Handler() = default;
 
+			void Clear_Exceptions()
+			{
+				m_tilia_exceptions.clear();
+				m_exceptions.clear();
+			}
+
 			// The stored tilia exceptions
 			std::vector<Tilia_Exception> m_tilia_exceptions{};
 			// The stored general exceptions of type std::exception or others deriving from it
