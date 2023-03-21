@@ -69,16 +69,56 @@ void tilia::utils::Exception_Handler::Update()
 // Standard
 #include <thread>
 
+#define INT_VALUE 123
+#define FLOAT_VALUE 0.15f
+#define DOUBLE_VALUE 3.14
+#define BOOL_VALUE true
+#define STRING_VALUE "Hello World!"
+
 static tilia::utils::Exception_Handler& handler{ tilia::utils::Exception_Handler::Instance() };
+
+void thread_func_0()
+{
+	handler.Throw(tilia::utils::Tilia_Exception{ { TILIA_LOCATION,
+		"Some error message about stuff and whatever...", INT_VALUE, FLOAT_VALUE,
+		DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE } });
+}
 
 void tilia::utils::Exception_Handler::Test()
 {
+
+	log::Logger& logger{ log::Logger::Instance() };
 
 	// Test for Exception_Handler::Instance() returning correct address
 
 	REQUIRE(&handler == &Exception_Handler::Instance());
 
+	// Test throw function with copy tilia exception
 
+	tilia::utils::Tilia_Exception t_e_0{ { TILIA_LOCATION,
+		"Some error message about stuff and whatever...", INT_VALUE, FLOAT_VALUE,
+		DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE } };
+
+	handler.Throw(t_e_0);
+
+	REQUIRE(handler.m_tilia_exceptions.size() == 1);
+	REQUIRE(handler.m_tilia_exceptions[0] == t_e_0);
+
+	// Test throw function with move tilia exception
+
+	handler.Throw(std::move(t_e_0));
+
+	REQUIRE(handler.m_tilia_exceptions.size() == 2);
+	REQUIRE(handler.m_tilia_exceptions[1] == handler.m_tilia_exceptions[0]);
+
+	// Test throw function with copy general exception
+
+	std::exception g_e_0{ "Some error message about stuff and whatever..." };
+
+	handler.Throw(g_e_0);
+
+	REQUIRE(handler.m_exceptions.size() == 1);
+	REQUIRE(strcmp(handler.m_exceptions[0].what(), g_e_0.what()) == 0);
 
 }
 
