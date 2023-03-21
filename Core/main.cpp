@@ -407,6 +407,10 @@ TEST_CASE("Error_Handling", "[Error_Handling]") {
     tilia::utils::Error_Handling::Test();
 }
 
+TEST_CASE("Exception_Handler", "[Exception_Handler]") {
+    tilia::utils::Exception_Handler::Test();
+}
+
 //TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
 //    tilia::gfx::Buffer::Test();
 //}

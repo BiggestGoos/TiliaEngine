@@ -146,6 +146,8 @@ void tilia::log::Logger::GLFW_Error_Callback(std::int32_t error_code, const char
 #define BOOL_VALUE true
 #define STRING_VALUE "Hello World!"
 
+static tilia::log::Logger& logger{ tilia::log::Logger::Instance() };
+
 void tilia::log::Logger::Test()
 {
 
@@ -153,8 +155,6 @@ void tilia::log::Logger::Test()
     additional_values_0 << INT_VALUE << FLOAT_VALUE << DOUBLE_VALUE << BOOL_VALUE << STRING_VALUE;
 
     // Test for Logger::Instance() returning correct address
-
-    Logger& logger{ Logger::Instance() };
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

@@ -138,7 +138,7 @@ namespace tilia {
 			 *
 			 * @return The location of the exception message's creation.
 			 */
-			auto Get_Location() const { return std::pair{ m_file, m_line }; }
+			auto Get_Location() const { return std::make_pair(m_file, m_line); }
 
 			/**
 			 * @brief Gets the file which the exception message was created at.

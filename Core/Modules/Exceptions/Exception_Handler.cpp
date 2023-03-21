@@ -60,3 +60,26 @@ void tilia::utils::Exception_Handler::Update()
 	m_exceptions.clear();
 
 }
+
+#if TILIA_UNIT_TESTS == 1
+
+// Vendor
+#include "vendor/Catch2/Catch2.hpp"
+
+// Standard
+#include <thread>
+
+static tilia::utils::Exception_Handler& handler{ tilia::utils::Exception_Handler::Instance() };
+
+void tilia::utils::Exception_Handler::Test()
+{
+
+	// Test for Exception_Handler::Instance() returning correct address
+
+	REQUIRE(&handler == &Exception_Handler::Instance());
+
+
+
+}
+
+#endif // TILIA_UNIT_TESTS == 1

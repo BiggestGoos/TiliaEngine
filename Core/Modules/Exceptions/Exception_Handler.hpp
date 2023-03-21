@@ -18,6 +18,7 @@
 // Tilia
 #include "Core/Values/Directories.hpp"
 #include TILIA_TILIA_EXCEPTION_INCLUDE
+#include TILIA_CONSTANTS_INCLUDE
 
 namespace tilia
 {
@@ -74,6 +75,15 @@ namespace tilia
 			 * @brief Handles and then removes them the stored exceptions.
 			 */
 			void Update();
+
+#if TILIA_UNIT_TESTS == 1
+
+			/**
+			 * @brief Unit test for Tilia_Exception.
+			 */
+			static void Test();
+
+#endif // TILIA_UNIT_TESTS == 1
 
 		private:
 
