@@ -7,8 +7,8 @@
 #include "Core/Values/Directories.hpp"
 #include TILIA_EXCEPTION_HANDLER_INCLUDE
 
-static bool shares_filters(const std::vector<std::string>& lhs, 
-    const std::vector<std::string>& rhs)
+static bool shares_filters(const std::set<std::string>& lhs,
+    const std::set<std::string>& rhs)
 {
     if (lhs == rhs)
         return true;
@@ -24,12 +24,11 @@ static bool shares_filters(const std::vector<std::string>& lhs,
 }
 
 void tilia::log::Logger::Output(const std::string& data, 
-    const std::vector<std::string>& filters)
+    const std::set<std::string>& filters)
 {
     std::lock_guard lock{ m_mutex };
     if (m_outputs.size() == 0)
-        throw utils::Tilia_Exception{ { TILIA_LOCATION, "Logger has no viable output\n" } };
-
+        return;
     const auto& logger_filters{ (filters.size() == 0) ? m_filters : filters };
     for (auto& [output, output_filters] : m_outputs)
     {
@@ -44,10 +43,9 @@ void tilia::log::Logger::Output(const std::string& data,
 void tilia::log::Logger::Output(const utils::Exception_Data& data)
 {
     std::stringstream output{};
-    static auto potential_message{ [](const auto& message)
+    auto potential_message{ [](const auto& message) -> const char*
     {
-        const auto message_length{ message.size() };
-        if (message_length > 0)
+        if (message.size() > 0)
             return message.c_str();
         return "Message is empty";
     } };
@@ -102,10 +100,6 @@ void tilia::log::Logger::OpenGL_Error_Callback(std::uint32_t source, std::uint32
     const void* user_param)
 {
     Logger& logger{ Logger::Instance() };
-    utils::Exception_Handler& handler{ utils::Exception_Handler::Instance() };
-    if (logger.m_outputs.size() == 0)
-        return handler.Throw(utils::Tilia_Exception{ { TILIA_LOCATION, 
-            "Logger has no viable output\n" } });
     std::stringstream output{};
     output << "OpenGL error"
         << "\nSource: " << source
@@ -195,6 +189,18 @@ void tilia::log::Logger::Test()
     REQUIRE_FALSE(shares_filters({ "test_filter_0" }, { "test_filter_1", "test_filter_2" }));
     REQUIRE_FALSE(shares_filters({ "test_filter_0", "test_filter_2" }, { "test_filter_1" }));
 
+    // Test for filters where both output and logger have same filter
+
+    my_buffer_0.str("");
+
+    logger.Set_Filters({ "test_filter_0" });
+    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+
+    logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
+        BOOL_VALUE, STRING_VALUE);
+
+    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
+
     // Test for filters where output has none but logger does
 
     my_buffer_0.str("");
@@ -203,18 +209,6 @@ void tilia::log::Logger::Test()
     logger.Set_Output_Filters(&my_buffer_0, {});
 
     REQUIRE(logger.Get_Filters() == std::vector<std::string>{ "test_filter_0" });
-
-    logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
-        BOOL_VALUE, STRING_VALUE);
-
-    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
-
-    // Test for filters where both output and logger have same filter
-
-    my_buffer_0.str("");
-
-    logger.Set_Filters({ "test_filter_0" });
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);

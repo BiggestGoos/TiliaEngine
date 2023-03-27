@@ -79,7 +79,7 @@ namespace tilia
 #if TILIA_UNIT_TESTS == 1
 
 			/**
-			 * @brief Unit test for Tilia_Exception.
+			 * @brief Unit test for Exception_Handler.
 			 */
 			static void Test();
 

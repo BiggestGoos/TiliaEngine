@@ -209,8 +209,7 @@ namespace tilia {
 				static std::string ret_str{};
 				auto potential_message{ [](const auto& message)
 				{
-					const auto message_length{ message.size() };
-					if (message_length > 0)
+					if (message.size() > 0)
 						return message.c_str();
 					return "Message is empty";
 				} };

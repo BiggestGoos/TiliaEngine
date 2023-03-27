@@ -225,37 +225,47 @@ void tilia::windowing::properties::Transparent_Framebuffer::Get_Property(Window&
 
 void tilia::windowing::properties::context::Client_API::Get_Property(Window& window)
 {
-
+	std::get<0>(m_get_parameters) = static_cast<enums::Client_API>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CLIENT_API));
 }
 
 void tilia::windowing::properties::context::Creation_API::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Creation_API>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_CREATION_API));
 }
 
 void tilia::windowing::properties::context::Version::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_VERSION_MAJOR);
+	std::get<1>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_VERSION_MINOR);
+	std::get<2>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_REVISION);
 }
 
 void tilia::windowing::properties::context::OpenGL_Forward_Compatible::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_FORWARD_COMPAT);
 }
 
 void tilia::windowing::properties::context::OpenGL_Debug_Context::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_DEBUG_CONTEXT);
 }
 
 void tilia::windowing::properties::context::OpenGL_Profile::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = static_cast<enums::OpenGL_Profile>(glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_PROFILE));
 }
 
 void tilia::windowing::properties::context::Release_Behavior::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Release_Behavior>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_RELEASE_BEHAVIOR));
 }
 
 void tilia::windowing::properties::context::No_Error::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_NO_ERROR);
 }
 
 void tilia::windowing::properties::context::Robustness::Get_Property(Window& window)
 {
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Robustness>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_ROBUSTNESS));
 }

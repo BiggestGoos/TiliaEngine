@@ -74,7 +74,7 @@ namespace tilia {
         {
 
             /**
-             * @brief Unit test for Tilia_Exception.
+             * @brief Unit test for Error_Handling.
              */
             void Test();
 

@@ -17,8 +17,10 @@
 #include <sstream>
 #include <mutex>
 #include <vector>
+#include <set>
 #include <string>
 #include <initializer_list>
+#include <algorithm>
 
 // Tilia
 #include "Core/Values/Directories.hpp"
@@ -68,10 +70,16 @@ namespace tilia {
 			 * 
 			 * @return The stored filters. Don't store reference.
 			 */
-			const std::vector<std::string>& Get_Filters() const
+			const std::set<std::string>& Get_Filters() const
 			{
 				std::lock_guard lock{ m_mutex };
 				return m_filters;
+			}
+
+			void Add_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_filters.insert(filter);
 			}
 
 			/**
@@ -118,7 +126,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for this output. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Add_Output(std::streambuf* output, const std::vector<std::string>& filters = {})
+			void Add_Output(std::streambuf* output, const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_outputs.push_back({ output, filters });
@@ -171,7 +179,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for openGL. If none is given then the 
 			 * filters are set to empty.
 			 */
-			void Set_OpenGL_Filters(const std::vector<std::string>& filters = {})
+			void Set_OpenGL_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_openGL_filters = filters;
@@ -190,7 +198,7 @@ namespace tilia {
 			 * @param filters - The filters to be used for GLFW. If none is given then the
 			 * filters are set to empty.
 			 */
-			void Set_GLFW_Filters(const std::vector<std::string>& filters = {})
+			void Set_GLFW_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_GLFW_filters = filters;
@@ -215,13 +223,13 @@ namespace tilia {
 			Logger() = default;
 
 			// The different outputs and their respective filters
-			std::vector<std::pair<std::streambuf*, std::vector<std::string>>> m_outputs{};
+			std::vector<std::pair<std::streambuf*, std::set<std::string>>> m_outputs{};
 			// Filters to be used by the openGL error callback
-			std::vector<std::string> m_openGL_filters{};
+			std::set<std::string> m_openGL_filters{};
 			// Filters to be used by the GLFW error callback
-			std::vector<std::string> m_GLFW_filters{};
+			std::set<std::string> m_GLFW_filters{};
 			// The filters of the logger to be compared with the outputs' filters
-			std::vector<std::string> m_filters{};
+			std::set<std::string> m_filters{};
 			// A mutex which is used for the whole logger
 			mutable std::mutex m_mutex{};
 

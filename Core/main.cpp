@@ -411,10 +411,6 @@ TEST_CASE("Exception_Handler", "[Exception_Handler]") {
     tilia::utils::Exception_Handler::Test();
 }
 
-//TEST_CASE("OpenGL 3.3 Buffer", "[OpenGL 3.3 Buffer]") {
-//    tilia::gfx::Buffer::Test();
-//}
-
 #endif
 
 #if 0
@@ -427,16 +423,22 @@ int main()
     try
     {
 
-        std::cin >> print_opengl_things;
+        //std::cin >> print_opengl_things;
 
-        logger.Add_Output(&std::cout);
+        std::cin.get();
 
-        logger.Set_OpenGL_Filters({ "debug severity message" });
+        logger.Add_Output(std::cout.rdbuf());
 
-        if (print_opengl_things == true)
-        {
-            logger.Set_Output_Filters(&std::cout, { "debug severity message" });
-        }
+        //logger.Set_Filters({ "default" });
+
+        //logger.Set_Output_Filters(std::cout.rdbuf(), { "default" });
+
+        //logger.Set_OpenGL_Filters({ "debug severity message" });
+
+        //if (print_opengl_things == true)
+        //{
+        //    logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
+        //}
 
         // glfw: initialize and configure
         // ------------------------------
@@ -524,7 +526,7 @@ int main()
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-        glDebugMessageCallback(Logger::OpenGL_Error_Callback, &window);
+        //glDebugMessageCallback(Logger::OpenGL_Error_Callback, &window);
 
         //int num{};
         //
@@ -661,15 +663,23 @@ int main()
             lastFrame = currentFrame;
 
             std::stringbuf title{};
-            std::ostream buffer{ &title };
+            logger.Add_Output(&title, { "title" });
+            logger.Set_Filters({ "title" });
 
-            buffer << fps << " : " << deltaTime << " : " << add_angle << " : " << angle << " : " << axis.x << " , " << axis.y << " , " << axis.z;
+            //buffer << fps << " : " << deltaTime << " : " << add_angle << " : " << angle << " : " << axis.x << " , " << axis.y << " , " << axis.z;
 
-            //logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
+            logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
+
+            logger.Remove_Output(&title);
+            logger.Set_Filters();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             
             window.Set(windowing::properties::Title{ title.str() });
+
+            auto [major, minor, revision] { window.Get(windowing::properties::context::Version{}) };
+
+            logger.Output("Major: ", major, " : Minor: ", minor, " : Revision: ", revision, '\n');
 
             //glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
             //window.Set<enums::Window_Properties::Title>(title.str());
@@ -734,7 +744,7 @@ int main()
 
     windowing::Window::Terminate();
 
-    while (true);
+    std::cin.get();
 
     return 0;
 }
@@ -1348,19 +1358,19 @@ void processInput()
             polymode = enums::Polymode::Fill;
     }
 
-    if (input.Get_Key_Pressed(KEY_HOME))
-    {
-        if (print_opengl_things == true)
-        {
-            print_opengl_things = false;
-            logger.Set_Output_Filters(std::cout.rdbuf());
-        }
-        else 
-        {
-            print_opengl_things = true;
-            logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
-        }
-    }
+    //if (input.Get_Key_Pressed(KEY_HOME))
+    //{
+    //    if (print_opengl_things == true)
+    //    {
+    //        print_opengl_things = false;
+    //        logger.Set_Output_Filters(std::cout.rdbuf(), { "default" });
+    //    }
+    //    else 
+    //    {
+    //        print_opengl_things = true;
+    //        logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
+    //    }
+    //}
 
     if (input.Get_Key_Pressed(KEY_BACKSPACE))
         pause = !pause;

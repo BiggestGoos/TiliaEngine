@@ -33,7 +33,28 @@ namespace tilia
 		namespace hints
 		{
 
+			//template<enums::Window_Hints Hint_Type, typename... Set_Parameters>
+			//struct Hint
+			//{
+			//public:
+			//	using Set_Parameters_Tuple = std::tuple<Set_Parameters...>;
+			//protected:
+			//	Set_Parameters_Tuple m_set_parameters;
+			//public:
+			//	static constexpr auto Type{ Hint_Type };
+			//}; // Hint
 
+			//template<enums::Window_Hints Hint_Type>
+			//struct Bool_Hint : public Hint<Hint_Type, bool>
+			//{
+			//	Bool_Hint(bool value) : m_set_parameters{ value } {}
+			//}; // Bool_Hint
+
+			//struct Focused : public Bool_Hint<enums::Window_Hints::Focused>
+			//{
+			//	using Base_Type = Bool_Hint<enums::Window_Hints::Focused>
+			//	Focused(bool focused);
+			//}; // Foucesed
 
 		} // hints
 
@@ -82,9 +103,6 @@ namespace tilia
 		namespace properties
 		{
 
-			static constexpr bool Setter{ true  };
-			static constexpr bool Getter{ false };
-
 			template<enums::Window_Properties Property_Type, typename Set_Parameters, typename Get_Parameters>
 			struct Window_Property {}; // Window_Property
 
@@ -97,8 +115,8 @@ namespace tilia
 				using Get_Parameters_Tuple = std::tuple<Get_Parameters...>;
 
 			protected:
-				std::tuple<Set_Parameters...> m_set_parameters;
-				std::tuple<Get_Parameters...> m_get_parameters;
+				Set_Parameters_Tuple m_set_parameters;
+				Get_Parameters_Tuple m_get_parameters;
 			public:
 				static constexpr auto Type{ Property_Type };
 				static constexpr auto Settable{ (sizeof...(Set_Parameters) > 0) };
@@ -297,11 +315,8 @@ namespace tilia
 			namespace context
 			{
 
-				template<enums::Context_Properties Property_Type, typename Get_Parameters>
-				struct Context_Property {}; // Context_Property
-
 				template<enums::Context_Properties Property_Type, typename... Get_Parameters>
-				struct Context_Property<Property_Type, std::tuple<Get_Parameters...>>
+				struct Context_Property
 				{
 				public:
 
@@ -311,7 +326,7 @@ namespace tilia
 					std::tuple<Get_Parameters...> m_get_parameters;
 				public:
 					static constexpr auto Type{ Property_Type };
-					static constexpr auto Gettable{ (sizeof...(Get_Parameters) > 0) };
+					static constexpr auto Gettable{ true };
 
 					auto Get_Properties()
 					{
@@ -323,55 +338,55 @@ namespace tilia
 					}
 				}; // Context_Property
 
-				struct Client_API : public Context_Property<enums::Context_Properties::Client_API, std::tuple<enums::Client_API>>
+				struct Client_API : public Context_Property<enums::Context_Properties::Client_API, enums::Client_API>
 				{
 					Client_API() = default;
 					void Get_Property(Window& window);
 				}; // Client_API
 
-				struct Creation_API : public Context_Property<enums::Context_Properties::Creation_API, std::tuple<enums::Context_Creation_API>>
+				struct Creation_API : public Context_Property<enums::Context_Properties::Creation_API, enums::Context_Creation_API>
 				{
 					Creation_API() = default;
 					void Get_Property(Window& window);
 				}; // Creation_API
 
-				struct Version : public Context_Property<enums::Context_Properties::Version, std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>>
+				struct Version : public Context_Property<enums::Context_Properties::Version, std::uint32_t, std::uint32_t, std::uint32_t>
 				{
 					Version() = default;
 					void Get_Property(Window& window);
 				}; // Version
 
-				struct OpenGL_Forward_Compatible : public Context_Property<enums::Context_Properties::OpenGL_Forward_Compatible, std::tuple<bool>>
+				struct OpenGL_Forward_Compatible : public Context_Property<enums::Context_Properties::OpenGL_Forward_Compatible, bool>
 				{
 					OpenGL_Forward_Compatible() = default;
 					void Get_Property(Window& window);
 				}; // OpenGL_Forward_Compatible
 
-				struct OpenGL_Debug_Context : public Context_Property<enums::Context_Properties::OpenGL_Debug_Context, std::tuple<bool>>
+				struct OpenGL_Debug_Context : public Context_Property<enums::Context_Properties::OpenGL_Debug_Context, bool>
 				{
 					OpenGL_Debug_Context() = default;
 					void Get_Property(Window& window);
 				}; // OpenGL_Debug_Context
 
-				struct OpenGL_Profile : public Context_Property<enums::Context_Properties::OpenGL_Profile, std::tuple<enums::OpenGL_Profile>>
+				struct OpenGL_Profile : public Context_Property<enums::Context_Properties::OpenGL_Profile, enums::OpenGL_Profile>
 				{
 					OpenGL_Profile() = default;
 					void Get_Property(Window& window);
 				}; // OpenGL_Profile
 
-				struct Release_Behavior : public Context_Property<enums::Context_Properties::Release_Behavior, std::tuple<enums::Context_Release_Behavior>>
+				struct Release_Behavior : public Context_Property<enums::Context_Properties::Release_Behavior, enums::Context_Release_Behavior>
 				{
 					Release_Behavior() = default;
 					void Get_Property(Window& window);
 				}; // Release_Behavior
 
-				struct No_Error : public Context_Property<enums::Context_Properties::No_Error, std::tuple<bool>>
+				struct No_Error : public Context_Property<enums::Context_Properties::No_Error, bool>
 				{
 					No_Error() = default;
 					void Get_Property(Window& window);
 				}; // No_Error
 
-				struct Robustness : public Context_Property<enums::Context_Properties::Robustness, std::tuple<enums::Context_Robustness>>
+				struct Robustness : public Context_Property<enums::Context_Properties::Robustness, enums::Context_Robustness>
 				{
 					Robustness() = default;
 					void Get_Property(Window& window);

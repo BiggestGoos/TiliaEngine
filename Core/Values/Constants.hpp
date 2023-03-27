@@ -99,64 +99,19 @@ namespace tilia
 			X11_Instance_Name		 = 0x00024002
 		}; // Window_Hints
 
-		// What graphics API to use.
-		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-		enum class Client_API
-		{
-			No_API    = 0x00000000,
-			OpenGL	  = 0x00030001,
-			OpenGL_ES = 0x00030002
-		}; // Client_API
-
-		// What API to create contexts for openGL.
-		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-		enum class Context_Creation_API
-		{
-			Native = 0x00036001,
-			EGL    = 0x00036002,
-			OSMesa = 0x00036003
-		}; // Context_Creation_API
-
-		// The robustness of the created context when creating a window.
-		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-		enum class Context_Robustness
-		{
-			No_Robustness		  = 0x00000000,
-			No_Reset_Notification = 0x00031001,
-			Lose_Context_On_Reset = 0x00031002
-		}; // Context_Robustness
-
-		// What happens when the context is released.
-		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-		enum class Context_Release_Behavior
-		{
-			Any   = 0x00000000,
-			Flush = 0x00035001,
-			None  = 0x00035002
-		}; // Context_Release_Behavior
-
-		// The profile of the openGL context.
-		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-		enum class OpenGL_Profile
-		{
-			Any    = 0x00000000,
-			Core   = 0x00032001,
-			Compat = 0x00032002
-		}; // OpenGL_Profile
-
 		// Windowing callbacks.
 		// Check this out for info: https://www.glfw.org/docs/3.3/group__window.html
 		enum class Window_Callbacks
 		{
-			Position		 = 0x0000,
-			Size			 = 0x0001,
-			Close			 = 0x0002,
-			Refresh			 = 0x0003,
-			Focus			 = 0x0004,
-			Iconify			 = 0x0005,
-			Maximize		 = 0x0006,
+			Position = 0x0000,
+			Size = 0x0001,
+			Close = 0x0002,
+			Refresh = 0x0003,
+			Focus = 0x0004,
+			Iconify = 0x0005,
+			Maximize = 0x0006,
 			Framebuffer_Size = 0x0007,
-			Content_Scale	 = 0x0008
+			Content_Scale = 0x0008
 		}; // Window_Callbacks
 
 		// Window properties.
@@ -205,6 +160,51 @@ namespace tilia
 			Robustness				  = 0x0008
 		}; // Context_Properties
 
+				// What graphics API to use.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Client_API
+		{
+			No_API = 0x00000000,
+			OpenGL = 0x00030001,
+			OpenGL_ES = 0x00030002
+		}; // Client_API
+
+		// What API to create contexts for openGL.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Creation_API
+		{
+			Native = 0x00036001,
+			EGL = 0x00036002,
+			OSMesa = 0x00036003
+		}; // Context_Creation_API
+
+		// The robustness of the created context when creating a window.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Robustness
+		{
+			No_Robustness = 0x00000000,
+			No_Reset_Notification = 0x00031001,
+			Lose_Context_On_Reset = 0x00031002
+		}; // Context_Robustness
+
+		// What happens when the context is released.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class Context_Release_Behavior
+		{
+			Any = 0x00000000,
+			Flush = 0x00035001,
+			None = 0x00035002
+		}; // Context_Release_Behavior
+
+		// The profile of the openGL context.
+		// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
+		enum class OpenGL_Profile
+		{
+			Any = 0x00000000,
+			Core = 0x00032001,
+			Compat = 0x00032002
+		}; // OpenGL_Profile
+
 #ifndef TILIA_GET_ENUM_VALUE
 #define TILIA_GET_ENUM_VALUE
 
@@ -231,7 +231,7 @@ namespace tilia
 		 */
 		template<typename E>
 		constexpr auto operator*(const E& e) noexcept {
-			return static_cast<std::underlying_type_t<E>>(e);
+			return Get_Enum_Value(e);
 		}
 
 #endif // TILIA_GET_ENUM_VALUE
