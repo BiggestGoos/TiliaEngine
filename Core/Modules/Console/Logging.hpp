@@ -21,6 +21,7 @@
 #include <string>
 #include <initializer_list>
 #include <algorithm>
+#include <unordered_map>
 
 // Tilia
 #include "Core/Values/Directories.hpp"
@@ -59,7 +60,7 @@ namespace tilia {
 			 * @param filters - The filters to store. If none is given then the filters are set to 
 			 * empty.
 			 */
-			void Set_Filters(const std::vector<std::string>& filters = {})
+			void Set_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_filters = filters;
@@ -76,10 +77,26 @@ namespace tilia {
 				return m_filters;
 			}
 
+			/**
+			 * @brief Adds a filter to the logger.
+			 * 
+			 * @param filter - The filter to add.
+			 */
 			void Add_Filter(const std::string& filter)
 			{
 				std::lock_guard lock{ m_mutex };
 				m_filters.insert(filter);
+			}
+
+			/**
+			 * @brief Removes the given filter from the logger.
+			 * 
+			 * @param filter - The filter to remove.
+			 */
+			void Remove_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_filters.erase(filter);
 			}
 
 			/**
@@ -89,7 +106,7 @@ namespace tilia {
 			 * @param filters - The filters to be used. If none are given then it uses the stored
 			 * ones.
 			 */
-			void Output(const std::string& data, const std::vector<std::string>& filters = {});
+			void Output(const std::string& data, const std::set<std::string>& filters = {});
 
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.
@@ -128,8 +145,7 @@ namespace tilia {
 			 */
 			void Add_Output(std::streambuf* output, const std::set<std::string>& filters = {})
 			{
-				std::lock_guard lock{ m_mutex };
-				m_outputs.push_back({ output, filters });
+				Set_Output_Filters(output, filters);
 			}
 
 			/**
@@ -140,27 +156,19 @@ namespace tilia {
 			void Remove_Output(std::streambuf* const output);
 
 			/**
-			 * @brief Gets the number of outputs attatched.
+			 * @brief Gets a list of the loggers outputs.
 			 * 
-			 * @return The number of outputs.
+			 * @return A list of all of the outputs. Not ordered.
 			 */
-			auto Get_Output_Count() const
-			{ 
-				std::lock_guard lock{ m_mutex };
-				return m_outputs.size(); 
-			}
-
-			/**
-			 * @brief Gets the output at the given index.
-			 * 
-			 * @param index - The index of the output to get.
-			 * 
-			 * @return The output at the given index.
-			 */
-			auto Get_Output(std::size_t index) const
+			auto Get_Outputs(std::size_t index) const
 			{
 				std::lock_guard lock{ m_mutex };
-				return m_outputs[index];
+				std::set<std::streambuf*> ret_val{};
+				for (const auto& [key, value] : m_outputs)
+				{
+					ret_val.insert(key);
+				}
+				return std::move(ret_val);
 			}
 
 			/**
@@ -171,7 +179,17 @@ namespace tilia {
 			 * filters are set to empty.
 			 */
 			void Set_Output_Filters(std::streambuf* output,
-				const std::vector<std::string>& filters = {});
+				const std::set<std::string>& filters = {})
+			{
+				std::lock_guard lock{ m_mutex };
+				m_outputs[output] = filters;
+			}
+
+			const std::set<std::string>& Get_Output_Filters(std::streambuf* output)
+			{
+				std::lock_guard lock{ m_mutex };
+				return m_outputs.at(output);
+			}
 
 			/**
 			 * @brief Sets the filters to be used by the openGL callback
@@ -223,7 +241,7 @@ namespace tilia {
 			Logger() = default;
 
 			// The different outputs and their respective filters
-			std::vector<std::pair<std::streambuf*, std::set<std::string>>> m_outputs{};
+			std::unordered_map<std::streambuf*, std::set<std::string>> m_outputs{};
 			// Filters to be used by the openGL error callback
 			std::set<std::string> m_openGL_filters{};
 			// Filters to be used by the GLFW error callback
