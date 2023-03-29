@@ -43,7 +43,7 @@ void tilia::utils::Handle_OpenGL_Error(const char* file, std::size_t line, const
     std::size_t error_index{ 1 };
     do
     {
-        e_d.Append_Message("OpenGL error #", error_index, 
+        e_d.Add_Message("OpenGL error #", error_index, 
             "\n>>> Code: ", error,
             "\n>>> Name: ", Get_Error_String(error), "\n\n");
         ++error_index;
@@ -64,13 +64,13 @@ void tilia::utils::Handle_OpenGL_Error(const char* file, std::size_t line, const
 
     message.Set_Location(file, line);
 
-    message.Append_Message("There have been one or more openGL errors:\nFunction: ",
+    message.Add_Message("There have been one or more openGL errors:\nFunction: ",
         function, "\n\n");
 
     std::size_t error_index{ 1 };
     do
     {
-        message.Append_Message("OpenGL error #", error_index,
+        message.Add_Message("OpenGL error #", error_index,
             "\n>>> Code: ", error,
             "\n>>> Name: ", Get_Error_String(error), "\n\n");
         ++error_index;

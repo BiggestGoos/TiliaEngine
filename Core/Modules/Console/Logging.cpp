@@ -12,15 +12,11 @@ static bool shares_filters(const std::set<std::string>& lhs,
 {
     if (lhs == rhs)
         return true;
-    for (auto i{ lhs.cbegin() }; i < lhs.cend(); ++i)
-    {
-        for (auto k{ rhs.cbegin() }; k < rhs.cend(); ++k)
-        {
-            if (*i == *k)
-                return true;
-        }
-    }
-    return false;
+    std::vector<std::string> intersection;
+    std::set_intersection(lhs.begin(), lhs.end(),
+        rhs.begin(), rhs.end(),
+        std::inserter(intersection, intersection.begin()));
+    return (intersection.size() > 0);
 }
 
 void tilia::log::Logger::Output(const std::string& data, 
@@ -32,8 +28,7 @@ void tilia::log::Logger::Output(const std::string& data,
     const auto& logger_filters{ (filters.size() == 0) ? m_filters : filters };
     for (auto& [output, output_filters] : m_outputs)
     {
-        if (shares_filters(output_filters, logger_filters) || logger_filters.size() == 0 
-            || output_filters.size() == 0)
+        if (shares_filters(output_filters, logger_filters) || logger_filters.size() == 0)
         {
             std::ostream{ output } << data;
         }
@@ -51,8 +46,8 @@ void tilia::log::Logger::Output(const utils::Exception_Data& data)
     } };
     auto location{ data.Get_Location() };
     output << "Tilia Exception Data:\n"
-        << "File: " << location.first << " : Line: " << location.second
-        << "\nMessage:\n" << potential_message(data.Get_Message()) << '\n';
+           << "File: " << location.first << " : Line: " << location.second
+           << "\nMessage:\n" << potential_message(data.Get_Message()) << '\n';
     Output(std::move(output.str()));
 }
 
@@ -61,34 +56,6 @@ void tilia::log::Logger::Output(const utils::Tilia_Exception& data)
     std::stringstream output{};
     output << "Tilia Exception:\n\n" << data.what();
     Output(std::move(output.str()));
-}
-
-void tilia::log::Logger::Remove_Output(std::streambuf* const output)
-{
-    std::lock_guard lock{ m_mutex };
-    auto i{ m_outputs.cbegin() };
-    for (; i < m_outputs.cend(); ++i)
-    {
-        if (output == i->first)
-        {
-            break;
-        }
-    }
-    if (i < m_outputs.cend())
-        m_outputs.erase(i);
-}
-
-void tilia::log::Logger::Set_Output_Filters(std::streambuf* output,
-    const std::vector<std::string>& filters)
-{
-    std::lock_guard lock{ m_mutex };
-    for (auto i{ m_outputs.begin() }; i < m_outputs.end(); ++i)
-    {
-        if (output == i->first)
-        {
-            i->second = filters;
-        }
-    }
 }
 
 /**
@@ -170,8 +137,8 @@ void tilia::log::Logger::Test()
 
     logger.Add_Output(&my_buffer_0);
 
-    REQUIRE(logger.Get_Output_Count() == 1);
-    REQUIRE(logger.Get_Output(0).first == &my_buffer_0);
+    REQUIRE(logger.Get_Outputs().size() == 1);
+    REQUIRE(logger.Get_Outputs() == std::set<std::streambuf*>{ &my_buffer_0 });
 
     // Test for output with message
 
@@ -189,18 +156,6 @@ void tilia::log::Logger::Test()
     REQUIRE_FALSE(shares_filters({ "test_filter_0" }, { "test_filter_1", "test_filter_2" }));
     REQUIRE_FALSE(shares_filters({ "test_filter_0", "test_filter_2" }, { "test_filter_1" }));
 
-    // Test for filters where both output and logger have same filter
-
-    my_buffer_0.str("");
-
-    logger.Set_Filters({ "test_filter_0" });
-    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
-
-    logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
-        BOOL_VALUE, STRING_VALUE);
-
-    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
-
     // Test for filters where output has none but logger does
 
     my_buffer_0.str("");
@@ -208,18 +163,30 @@ void tilia::log::Logger::Test()
     logger.Set_Filters({ "test_filter_0" });
     logger.Set_Output_Filters(&my_buffer_0, {});
 
-    REQUIRE(logger.Get_Filters() == std::vector<std::string>{ "test_filter_0" });
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
 
-    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
+    REQUIRE(my_buffer_0.str() == "");
 
     // Test for filters where logger has none but output does
 
     my_buffer_0.str("");
 
     logger.Set_Filters({});
+    logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
+
+    logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
+        BOOL_VALUE, STRING_VALUE);
+
+    REQUIRE(my_buffer_0.str() == "My test output" + additional_values_0.str());
+
+    // Test for filters where both output and logger have same filter
+
+    my_buffer_0.str("");
+
+    logger.Set_Filters({ "test_filter_0" });
     logger.Set_Output_Filters(&my_buffer_0, { "test_filter_0" });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
@@ -273,8 +240,8 @@ void tilia::log::Logger::Test()
 
     logger.Add_Output(&my_buffer_1, { "test_filter_1" });
 
-    REQUIRE(logger.Get_Output_Count() == 2);
-    REQUIRE(logger.Get_Output(1).first == &my_buffer_1);
+    REQUIRE(logger.Get_Outputs().size() == 2);
+    REQUIRE(logger.Get_Outputs() == std::set<std::streambuf*>{ &my_buffer_0, &my_buffer_1 });
 
     logger.Output("My test output", INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE,
         BOOL_VALUE, STRING_VALUE);
@@ -286,13 +253,15 @@ void tilia::log::Logger::Test()
 
     logger.Remove_Output(&my_buffer_0);
 
-    REQUIRE(logger.Get_Output(0).first == &my_buffer_1);
+    REQUIRE(logger.Get_Outputs().size() == 1);
+    REQUIRE(logger.Get_Outputs() == std::set<std::streambuf*>{ &my_buffer_1 });
 
     // Test for removing already removed output
 
     logger.Remove_Output(&my_buffer_0);
 
-    REQUIRE(logger.Get_Output(0).first == &my_buffer_1);
+    REQUIRE(logger.Get_Outputs().size() == 1);
+    REQUIRE(logger.Get_Outputs() == std::set<std::streambuf*>{ &my_buffer_1 });
 
     // Test for outputting exception data
 
@@ -415,14 +384,144 @@ void tilia::log::Logger::Test()
 
     REQUIRE(my_buffer_1.str() == "");
 
+    // Test for adding and removing filters from logger
+
+    logger.m_filters.clear();
+
+    logger.Add_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding already added filter
+
+    logger.Add_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding different filter
+
+    logger.Add_Filter("test_filter_1");
+
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_0", "test_filter_1" });
+
+        // Test for removing filter
+
+    logger.Remove_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_1" });
+
+        // Test for removing non-existant filter
+
+    logger.Remove_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_Filters() == std::set<std::string>{ "test_filter_1" });
+
+    // Test for adding and removing filters from output
+
+    logger.m_outputs[&my_buffer_1].clear();
+
+    logger.Add_Output_Filter(&my_buffer_1, "test_filter_0");
+
+    REQUIRE(logger.Get_Output_Filters(&my_buffer_1) == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding already added filter
+
+    logger.Add_Output_Filter(&my_buffer_1, "test_filter_0");
+
+    REQUIRE(logger.Get_Output_Filters(&my_buffer_1) == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding different filter
+
+    logger.Add_Output_Filter(&my_buffer_1, "test_filter_1");
+
+    REQUIRE(logger.Get_Output_Filters(&my_buffer_1) == std::set<std::string>{ "test_filter_0", 
+        "test_filter_1" });
+
+        // Test for removing filter
+
+    logger.Remove_Output_Filter(&my_buffer_1, "test_filter_0");
+
+    REQUIRE(logger.Get_Output_Filters(&my_buffer_1) == std::set<std::string>{ "test_filter_1" });
+
+        // Test for removing non-existant filter
+
+    logger.Remove_Output_Filter(&my_buffer_1, "test_filter_0");
+
+    REQUIRE(logger.Get_Output_Filters(&my_buffer_1) == std::set<std::string>{ "test_filter_1" });
+
+    // Test for adding and removing filters from openGL callback filters
+
+    logger.m_openGL_filters.clear();
+
+    logger.Add_OpenGL_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_OpenGL_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding already added filter
+
+    logger.Add_OpenGL_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_OpenGL_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding different filter
+
+    logger.Add_OpenGL_Filter("test_filter_1");
+
+    REQUIRE(logger.Get_OpenGL_Filters() == std::set<std::string>{ "test_filter_0",
+        "test_filter_1" });
+
+        // Test for removing filter
+
+    logger.Remove_OpenGL_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_OpenGL_Filters() == std::set<std::string>{ "test_filter_1" });
+
+        // Test for removing non-existant filter
+
+    logger.Remove_OpenGL_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_OpenGL_Filters() == std::set<std::string>{ "test_filter_1" });
+
+    // Test for adding and removing filters from GLFW callback filters
+
+    logger.m_GLFW_filters.clear();
+
+    logger.Add_GLFW_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_GLFW_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding already added filter
+
+    logger.Add_GLFW_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_GLFW_Filters() == std::set<std::string>{ "test_filter_0" });
+
+        // Test for adding different filter
+
+    logger.Add_GLFW_Filter("test_filter_1");
+
+    REQUIRE(logger.Get_GLFW_Filters() == std::set<std::string>{ "test_filter_0",
+        "test_filter_1" });
+
+        // Test for removing filter
+
+    logger.Remove_GLFW_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_GLFW_Filters() == std::set<std::string>{ "test_filter_1" });
+
+        // Test for removing non-existant filter
+
+    logger.Remove_GLFW_Filter("test_filter_0");
+
+    REQUIRE(logger.Get_GLFW_Filters() == std::set<std::string>{ "test_filter_1" });
+
     // Reset all values to default
 
-    logger.Set_Filters({});
-    logger.Set_OpenGL_Filters({});
-    logger.Set_GLFW_Filters({});
+    logger.m_outputs.clear();
 
-    logger.Remove_Output(&my_buffer_0);
-    logger.Remove_Output(&my_buffer_1);
+    logger.m_filters.clear();
+    logger.m_openGL_filters.clear();
+    logger.m_GLFW_filters.clear();
 
     glDebugMessageCallback(nullptr, nullptr);
     glfwSetErrorCallback(nullptr);

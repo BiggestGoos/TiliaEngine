@@ -10,151 +10,166 @@
 #include "Core/Values/Directories.hpp"
 #include TILIA_WINDOW_INCLUDE
 
-void tilia::windowing::properties::Should_Close::Set_Property(Window& window)
+void tilia::windowing::hints::Set_Hint(std::int32_t type, std::int32_t value)
 {
-	glfwSetWindowShouldClose(window.Get_Window(), std::get<0>(m_set_parameters));
+	glfwWindowHint(type, value);
 }
 
-void tilia::windowing::properties::Should_Close::Get_Property(Window& window)
+void tilia::windowing::hints::Reset()
 {
-	std::get<0>(m_get_parameters) = glfwWindowShouldClose(window.Get_Window());
+	glfwDefaultWindowHints();
 }
 
-void tilia::windowing::properties::Size::Set_Property(Window& window)
+void tilia::windowing::properties::Underlying_Window::Get(Window& window)
 {
-	glfwSetWindowSize(window.Get_Window(), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
+	std::get<0>(m_get_parameters) = window.m_window;
 }
 
-void tilia::windowing::properties::Size::Get_Property(Window& window)
+void tilia::windowing::properties::Should_Close::Set(Window& window)
 {
-	glfwGetWindowSize(window.Get_Window(), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
+	glfwSetWindowShouldClose(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Frame_Size::Get_Property(Window& window)
+void tilia::windowing::properties::Should_Close::Get(Window& window)
 {
-	glfwGetWindowFrameSize(window.Get_Window(), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters),
+	std::get<0>(m_get_parameters) = glfwWindowShouldClose(window.Get(Underlying_Window{}));
+}
+
+void tilia::windowing::properties::Size::Set(Window& window)
+{
+	glfwSetWindowSize(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
+}
+
+void tilia::windowing::properties::Size::Get(Window& window)
+{
+	glfwGetWindowSize(window.Get(Underlying_Window{}), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
+}
+
+void tilia::windowing::properties::Frame_Size::Get(Window& window)
+{
+	glfwGetWindowFrameSize(window.Get(Underlying_Window{}), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters),
 		&std::get<2>(m_get_parameters), &std::get<3>(m_get_parameters));
 }
 
-void tilia::windowing::properties::Framebuffer_Size::Get_Property(Window& window)
+void tilia::windowing::properties::Framebuffer_Size::Get(Window& window)
 {
-	glfwGetFramebufferSize(window.Get_Window(), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
+	glfwGetFramebufferSize(window.Get(Underlying_Window{}), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
 }
 
-void tilia::windowing::properties::Content_Scale::Get_Property(Window& window)
+void tilia::windowing::properties::Content_Scale::Get(Window& window)
 {
-	glfwGetWindowContentScale(window.Get_Window(), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
+	glfwGetWindowContentScale(window.Get(Underlying_Window{}), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
 }
 
-void tilia::windowing::properties::Size_Limits::Set_Property(Window& window)
+void tilia::windowing::properties::Size_Limits::Set(Window& window)
 {
-	glfwSetWindowSizeLimits(window.Get_Window(), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters),
+	glfwSetWindowSizeLimits(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters),
 		std::get<2>(m_set_parameters), std::get<3>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Aspect_Ratio::Set_Property(Window& window)
+void tilia::windowing::properties::Aspect_Ratio::Set(Window& window)
 {
-	glfwSetWindowAspectRatio(window.Get_Window(), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
+	glfwSetWindowAspectRatio(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Position::Set_Property(Window& window)
+void tilia::windowing::properties::Position::Set(Window& window)
 {
-	glfwSetWindowPos(window.Get_Window(), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
+	glfwSetWindowPos(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters), std::get<1>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Position::Get_Property(Window& window)
+void tilia::windowing::properties::Position::Get(Window& window)
 {
-	glfwGetWindowPos(window.Get_Window(), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
+	glfwGetWindowPos(window.Get(Underlying_Window{}), &std::get<0>(m_get_parameters), &std::get<1>(m_get_parameters));
 }
 
-void tilia::windowing::properties::Title::Set_Property(Window& window)
+void tilia::windowing::properties::Title::Set(Window& window)
 {
-	glfwSetWindowTitle(window.Get_Window(), std::get<0>(m_set_parameters).c_str());
+	glfwSetWindowTitle(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters).c_str());
 	window.m_title = std::move(std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Title::Get_Property(Window& window)
+void tilia::windowing::properties::Title::Get(Window& window)
 {
 	std::get<0>(m_get_parameters) = window.m_title;
 }
 
-void tilia::windowing::properties::Iconify::Set_Property(Window& window)
+void tilia::windowing::properties::Iconify::Set(Window& window)
 {
 	if (std::get<0>(m_set_parameters) == true)
 	{
-		glfwIconifyWindow(window.Get_Window());
+		glfwIconifyWindow(window.Get(Underlying_Window{}));
 	}
-	else if(glfwGetWindowAttrib(window.Get_Window(), GLFW_ICONIFIED) != 0)
+	else if(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_ICONIFIED) != 0)
 	{
-		glfwRestoreWindow(window.Get_Window());
+		glfwRestoreWindow(window.Get(Underlying_Window{}));
 	}
 }
 
-void tilia::windowing::properties::Iconify::Get_Property(Window& window)
+void tilia::windowing::properties::Iconify::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_ICONIFIED);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_ICONIFIED);
 }
 
-void tilia::windowing::properties::Maximize::Set_Property(Window& window)
-{
-	if (std::get<0>(m_set_parameters) == true)
-	{
-		glfwMaximizeWindow(window.Get_Window());
-	}
-	else if (glfwGetWindowAttrib(window.Get_Window(), GLFW_MAXIMIZED) != 0)
-	{
-		glfwRestoreWindow(window.Get_Window());
-	}
-}
-
-void tilia::windowing::properties::Maximize::Get_Property(Window& window)
-{
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_MAXIMIZED);
-}
-
-void tilia::windowing::properties::Visible::Set_Property(Window& window)
+void tilia::windowing::properties::Maximize::Set(Window& window)
 {
 	if (std::get<0>(m_set_parameters) == true)
 	{
-		glfwShowWindow(window.Get_Window());
+		glfwMaximizeWindow(window.Get(Underlying_Window{}));
+	}
+	else if (glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_MAXIMIZED) != 0)
+	{
+		glfwRestoreWindow(window.Get(Underlying_Window{}));
+	}
+}
+
+void tilia::windowing::properties::Maximize::Get(Window& window)
+{
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_MAXIMIZED);
+}
+
+void tilia::windowing::properties::Visible::Set(Window& window)
+{
+	if (std::get<0>(m_set_parameters) == true)
+	{
+		glfwShowWindow(window.Get(Underlying_Window{}));
 	}
 	else
 	{
-		glfwHideWindow(window.Get_Window());
+		glfwHideWindow(window.Get(Underlying_Window{}));
 	}
 }
 
-void tilia::windowing::properties::Visible::Get_Property(Window& window)
+void tilia::windowing::properties::Visible::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_VISIBLE);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_VISIBLE);
 }
 
-void tilia::windowing::properties::Focus::Set_Property(Window& window)
+void tilia::windowing::properties::Focus::Set(Window& window)
 {
-	glfwFocusWindow(window.Get_Window());
+	glfwFocusWindow(window.Get(Underlying_Window{}));
 }
 
-void tilia::windowing::properties::Focus::Get_Property(Window& window)
+void tilia::windowing::properties::Focus::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_FOCUSED);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_FOCUSED);
 }
 
-void tilia::windowing::properties::Request_Attention::Set_Property(Window& window)
+void tilia::windowing::properties::Request_Attention::Set(Window& window)
 {
-	glfwRequestWindowAttention(window.Get_Window());
+	glfwRequestWindowAttention(window.Get(Underlying_Window{}));
 }
 
-void tilia::windowing::properties::Opacity::Set_Property(Window& window)
+void tilia::windowing::properties::Opacity::Set(Window& window)
 {
-	glfwSetWindowOpacity(window.Get_Window(), std::get<0>(m_set_parameters));
+	glfwSetWindowOpacity(window.Get(Underlying_Window{}), std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Opacity::Get_Property(Window& window)
+void tilia::windowing::properties::Opacity::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowOpacity(window.Get_Window());
+	std::get<0>(m_get_parameters) = glfwGetWindowOpacity(window.Get(Underlying_Window{}));
 }
 
-void tilia::windowing::properties::Swap_Interval::Set_Property(Window& window)
+void tilia::windowing::properties::Swap_Interval::Set(Window& window)
 {
 	window.m_swap_interval = std::get<0>(m_set_parameters);
 	if (window.m_window == glfwGetCurrentContext())
@@ -163,109 +178,114 @@ void tilia::windowing::properties::Swap_Interval::Set_Property(Window& window)
 	}
 }
 
-void tilia::windowing::properties::Swap_Interval::Get_Property(Window& window)
+void tilia::windowing::properties::Swap_Interval::Get(Window& window)
 {
 	std::get<0>(m_get_parameters) = window.m_swap_interval;
 }
 
-void tilia::windowing::properties::Resizeable::Set_Property(Window& window)
+void tilia::windowing::properties::Resizeable::Set(Window& window)
 {
-	glfwSetWindowAttrib(window.Get_Window(), GLFW_RESIZABLE, std::get<0>(m_set_parameters));
+	glfwSetWindowAttrib(window.Get(Underlying_Window{}), GLFW_RESIZABLE, std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Resizeable::Get_Property(Window& window)
+void tilia::windowing::properties::Resizeable::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_RESIZABLE);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_RESIZABLE);
 }
 
-void tilia::windowing::properties::Decorated::Set_Property(Window& window)
+void tilia::windowing::properties::Decorated::Set(Window& window)
 {
-	glfwSetWindowAttrib(window.Get_Window(), GLFW_DECORATED, std::get<0>(m_set_parameters));
+	glfwSetWindowAttrib(window.Get(Underlying_Window{}), GLFW_DECORATED, std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Decorated::Get_Property(Window& window)
+void tilia::windowing::properties::Decorated::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_DECORATED);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_DECORATED);
 }
 
-void tilia::windowing::properties::Auto_Iconify::Set_Property(Window& window)
+void tilia::windowing::properties::Auto_Iconify::Set(Window& window)
 {
-	glfwSetWindowAttrib(window.Get_Window(), GLFW_AUTO_ICONIFY, std::get<0>(m_set_parameters));
+	glfwSetWindowAttrib(window.Get(Underlying_Window{}), GLFW_AUTO_ICONIFY, std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Auto_Iconify::Get_Property(Window& window)
+void tilia::windowing::properties::Auto_Iconify::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_AUTO_ICONIFY);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_AUTO_ICONIFY);
 }
 
-void tilia::windowing::properties::Floating::Set_Property(Window& window)
+void tilia::windowing::properties::Floating::Set(Window& window)
 {
-	glfwSetWindowAttrib(window.Get_Window(), GLFW_FLOATING, std::get<0>(m_set_parameters));
+	glfwSetWindowAttrib(window.Get(Underlying_Window{}), GLFW_FLOATING, std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Floating::Get_Property(Window& window)
+void tilia::windowing::properties::Floating::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_FLOATING);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_FLOATING);
 }
 
-void tilia::windowing::properties::Focus_On_Show::Set_Property(Window& window)
+void tilia::windowing::properties::Focus_On_Show::Set(Window& window)
 {
-	glfwSetWindowAttrib(window.Get_Window(), GLFW_FOCUS_ON_SHOW, std::get<0>(m_set_parameters));
+	glfwSetWindowAttrib(window.Get(Underlying_Window{}), GLFW_FOCUS_ON_SHOW, std::get<0>(m_set_parameters));
 }
 
-void tilia::windowing::properties::Focus_On_Show::Get_Property(Window& window)
+void tilia::windowing::properties::Focus_On_Show::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_FOCUS_ON_SHOW);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_FOCUS_ON_SHOW);
 }
 
-void tilia::windowing::properties::Transparent_Framebuffer::Get_Property(Window& window)
+void tilia::windowing::properties::Transparent_Framebuffer::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_TRANSPARENT_FRAMEBUFFER);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_TRANSPARENT_FRAMEBUFFER);
 }
 
-void tilia::windowing::properties::context::Client_API::Get_Property(Window& window)
+void tilia::windowing::properties::context::Client_API::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = static_cast<enums::Client_API>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CLIENT_API));
+	std::get<0>(m_get_parameters) = static_cast<enums::Client_API>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CLIENT_API));
 }
 
-void tilia::windowing::properties::context::Creation_API::Get_Property(Window& window)
+void tilia::windowing::properties::context::Creation_API::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = static_cast<enums::Context_Creation_API>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_CREATION_API));
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Creation_API>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_CREATION_API));
 }
 
-void tilia::windowing::properties::context::Version::Get_Property(Window& window)
+void tilia::windowing::properties::context::Version::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_VERSION_MAJOR);
-	std::get<1>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_VERSION_MINOR);
-	std::get<2>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_REVISION);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_VERSION_MAJOR);
+	std::get<1>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_VERSION_MINOR);
+	std::get<2>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_REVISION);
 }
 
-void tilia::windowing::properties::context::OpenGL_Forward_Compatible::Get_Property(Window& window)
+void tilia::windowing::properties::context::OpenGL_Forward_Compatible::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_FORWARD_COMPAT);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_OPENGL_FORWARD_COMPAT);
 }
 
-void tilia::windowing::properties::context::OpenGL_Debug_Context::Get_Property(Window& window)
+void tilia::windowing::properties::context::OpenGL_Debug_Context::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_DEBUG_CONTEXT);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_OPENGL_DEBUG_CONTEXT);
 }
 
-void tilia::windowing::properties::context::OpenGL_Profile::Get_Property(Window& window)
+void tilia::windowing::properties::context::OpenGL_Profile::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = static_cast<enums::OpenGL_Profile>(glfwGetWindowAttrib(window.Get_Window(), GLFW_OPENGL_PROFILE));
+	std::get<0>(m_get_parameters) = static_cast<enums::OpenGL_Profile>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_OPENGL_PROFILE));
 }
 
-void tilia::windowing::properties::context::Release_Behavior::Get_Property(Window& window)
+void tilia::windowing::properties::context::Release_Behavior::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = static_cast<enums::Context_Release_Behavior>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_RELEASE_BEHAVIOR));
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Release_Behavior>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_RELEASE_BEHAVIOR));
 }
 
-void tilia::windowing::properties::context::No_Error::Get_Property(Window& window)
+void tilia::windowing::properties::context::No_Error::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_NO_ERROR);
+	std::get<0>(m_get_parameters) = glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_NO_ERROR);
 }
 
-void tilia::windowing::properties::context::Robustness::Get_Property(Window& window)
+void tilia::windowing::properties::context::Robustness::Get(Window& window)
 {
-	std::get<0>(m_get_parameters) = static_cast<enums::Context_Robustness>(glfwGetWindowAttrib(window.Get_Window(), GLFW_CONTEXT_ROBUSTNESS));
+	std::get<0>(m_get_parameters) = static_cast<enums::Context_Robustness>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_ROBUSTNESS));
+}
+
+void tilia::windowing::properties::Set_Window_Property<tilia::enums::Window_Properties::Should_Close>::Set(Window& window, Tuple tuple)
+{
+	glfwSetWindowShouldClose(window.Get(windowing::properties::Underlying_Window{}), std::get<0>(tuple));
 }

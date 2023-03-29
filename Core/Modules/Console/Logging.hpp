@@ -56,42 +56,30 @@ namespace tilia {
 			/**
 			 * @brief Sets the filtering state that will be used to decide what outputs to print
 			 * to.
-			 * 
-			 * @param filters - The filters to store. If none is given then the filters are set to 
-			 * empty.
 			 */
 			void Set_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_filters = filters;
 			}
-
 			/**
 			 * @brief Gets the stored filters.
-			 * 
-			 * @return The stored filters. Don't store reference.
 			 */
 			const std::set<std::string>& Get_Filters() const
 			{
 				std::lock_guard lock{ m_mutex };
 				return m_filters;
 			}
-
 			/**
 			 * @brief Adds a filter to the logger.
-			 * 
-			 * @param filter - The filter to add.
 			 */
 			void Add_Filter(const std::string& filter)
 			{
 				std::lock_guard lock{ m_mutex };
 				m_filters.insert(filter);
 			}
-
 			/**
 			 * @brief Removes the given filter from the logger.
-			 * 
-			 * @param filter - The filter to remove.
 			 */
 			void Remove_Filter(const std::string& filter)
 			{
@@ -100,9 +88,8 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Prints the given data to the given outputs.
+			 * @brief Prints the given data to the stored outputs depending upon filters.
 			 * 
-			 * @param data - The data to print.
 			 * @param filters - The filters to be used. If none are given then it uses the stored
 			 * ones.
 			 */
@@ -110,8 +97,6 @@ namespace tilia {
 
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.
-			 *
-			 * @param data - The data to print.
 			 */
 			template<typename... Data>
 			void Output(Data... data)
@@ -124,24 +109,16 @@ namespace tilia {
 			
 			/**
 			 * @brief Prints the given data to different outputs depending upon filters.
-			 *
-			 * @param data - The data to print.
 			 */
 			void Output(const utils::Exception_Data& data);
 
 			/**
 			* @brief Prints the given data to different outputs depending upon filters.
-			*
-			* @param data - The data to print.
 			*/
 			void Output(const utils::Tilia_Exception& data);
 
 			/**
 			 * @brief Adds an output and the filters to be used with it.
-			 * 
-			 * @param output - The output to print to.
-			 * @param filters - The filters to be used for this output. If none is given then the 
-			 * filters are set to empty.
 			 */
 			void Add_Output(std::streambuf* output, const std::set<std::string>& filters = {})
 			{
@@ -149,18 +126,18 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Removes the given filter from the logger (if it exists).
-			 * 
-			 * @param output - The output to remove.
+			 * @brief Removes the given filter (if it exists) from the logger.
 			 */
-			void Remove_Output(std::streambuf* const output);
+			void Remove_Output(std::streambuf* const output)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_outputs.erase(output);
+			}
 
 			/**
 			 * @brief Gets a list of the loggers outputs.
-			 * 
-			 * @return A list of all of the outputs. Not ordered.
 			 */
-			auto Get_Outputs(std::size_t index) const
+			auto Get_Outputs() const
 			{
 				std::lock_guard lock{ m_mutex };
 				std::set<std::streambuf*> ret_val{};
@@ -168,15 +145,11 @@ namespace tilia {
 				{
 					ret_val.insert(key);
 				}
-				return std::move(ret_val);
+				return ret_val;
 			}
 
 			/**
 			 * @brief Sets the filters of the given output.
-			 * 
-			 * @param output - The output to set the filters of.
-			 * @param filters - The filters to be used for this output. If none is given then the 
-			 * filters are set to empty.
 			 */
 			void Set_Output_Filters(std::streambuf* output,
 				const std::set<std::string>& filters = {})
@@ -185,22 +158,71 @@ namespace tilia {
 				m_outputs[output] = filters;
 			}
 
-			const std::set<std::string>& Get_Output_Filters(std::streambuf* output)
+			/**
+			 * @brief Gets a list of all the filters for the given output.
+			 * 
+			 * @return The filters of the output. Reference is valid as long as output is stored by
+			 * logger.
+			 */
+			const std::set<std::string>& Get_Output_Filters(std::streambuf* output) const
 			{
 				std::lock_guard lock{ m_mutex };
 				return m_outputs.at(output);
 			}
 
 			/**
-			 * @brief Sets the filters to be used by the openGL callback
-			 * 
-			 * @param filters - The filters to be used for openGL. If none is given then the 
-			 * filters are set to empty.
+			 * @brief Adds the given filter to the filters of the given output.
+			 */
+			void Add_Output_Filter(std::streambuf* output, const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_outputs[output].insert(filter);
+			}
+
+			/**
+			 * @brief Removes the given filter from the filters of the given output.
+			 */			
+			void Remove_Output_Filter(std::streambuf* output, const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_outputs[output].erase(filter);
+			}
+
+			/**
+			 * @brief Sets the filters to be used by the openGL callback.
 			 */
 			void Set_OpenGL_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_openGL_filters = filters;
+			}
+
+			/**
+			 * @brief Gets the filters that are used by the openGL callback.
+			 */
+			const std::set<std::string>& Get_OpenGL_Filters() const
+			{
+				std::lock_guard lock{ m_mutex };
+				return m_openGL_filters;
+			}
+
+			/**
+			 * @brief Adds the given filter to the filters that are used by the openGL callback.
+			 */
+			void Add_OpenGL_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_openGL_filters.insert(filter);
+			}
+
+			/**
+			 * @brief Removes the given filter from the filters that are used by the openGL
+			 * callback.
+			 */
+			void Remove_OpenGL_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_openGL_filters.erase(filter);
 			}
 
 			/**
@@ -211,15 +233,40 @@ namespace tilia {
 				const char* message, const void* user_param);
 
 			/**
-			 * @brief Sets the filters to be used by the GLFW callback
-			 *
-			 * @param filters - The filters to be used for GLFW. If none is given then the
-			 * filters are set to empty.
+			 * @brief Sets the filters to be used by the GLFW callback.
 			 */
 			void Set_GLFW_Filters(const std::set<std::string>& filters = {})
 			{
 				std::lock_guard lock{ m_mutex };
 				m_GLFW_filters = filters;
+			}
+
+			/**
+			 * @brief Gets the filters that are used by the GLFW callback.
+			 */
+			const std::set<std::string>& Get_GLFW_Filters() const
+			{
+				std::lock_guard lock{ m_mutex };
+				return m_GLFW_filters;
+			}
+
+			/**
+			 * @brief Adds the given filter to the filters that are used by the GLFW callback.
+			 */
+			void Add_GLFW_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_GLFW_filters.insert(filter);
+			}
+
+			/**
+			 * @brief Removes the given filter from the filters that are used by the GLFW
+			 * callback.
+			 */
+			void Remove_GLFW_Filter(const std::string& filter)
+			{
+				std::lock_guard lock{ m_mutex };
+				m_GLFW_filters.erase(filter);
 			}
 
 			/**
@@ -242,12 +289,12 @@ namespace tilia {
 
 			// The different outputs and their respective filters
 			std::unordered_map<std::streambuf*, std::set<std::string>> m_outputs{};
+			// The filters of the logger to be compared with the outputs' filters
+			std::set<std::string> m_filters{};
 			// Filters to be used by the openGL error callback
 			std::set<std::string> m_openGL_filters{};
 			// Filters to be used by the GLFW error callback
 			std::set<std::string> m_GLFW_filters{};
-			// The filters of the logger to be compared with the outputs' filters
-			std::set<std::string> m_filters{};
 			// A mutex which is used for the whole logger
 			mutable std::mutex m_mutex{};
 

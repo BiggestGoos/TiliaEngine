@@ -47,27 +47,19 @@ namespace tilia
 
 			/**
 			 * @brief Adds an exception to be handled.
-			 * 
-			 * @param exception - The exception to be handled.
 			 */
 			void Throw(const Tilia_Exception& exception);
 			/**
 			 * @brief Adds an exception to be handled.
-			 *
-			 * @param exception - The exception to be handled.
 			 */
 			void Throw(Tilia_Exception&& exception);
 
 			/**
 			 * @brief Adds an exception to be handled.
-			 *
-			 * @param exception - The exception to be handled.
 			 */
 			void Throw(const std::exception& exception);
 			/**
 			 * @brief Adds an exception to be handled.
-			 *
-			 * @param exception - The exception to be handled.
 			 */
 			void Throw(std::exception&& exception);
 

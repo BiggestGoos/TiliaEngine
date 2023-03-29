@@ -92,23 +92,19 @@ namespace tilia {
 			}
 
 			/**
-			 * @brief Sets the stored message to the one given.
-			 *
-			 * @param message - The message to store.
+			 * @brief Sets the stored message to the given one.
 			 */
 			template<typename... T>
 			void Set_Message(T... message)
 			{
 				m_message = {};
-				Append_Message(message...);
+				Add_Message(message...);
 			}
 			/**
-			 * @brief Appends given message to previous one.
-			 *
-			 * @param message - The message to append.
+			 * @brief Add given message to previous the one.
 			 */
 			template<typename... T>
-			void Append_Message(T... message)
+			void Add_Message(T... message)
 			{
 				std::stringbuf str_buf{};
 				std::ostream buffer{ &str_buf };
@@ -118,16 +114,11 @@ namespace tilia {
 
 			/**
 			 * @brief Gets the exception message.
-			 *
-			 * @return The message of the exception.
 			 */
 			auto Get_Message() const { return m_message; }
 
 			/**
 			 * @brief Sets the file and line at which the exception message was created.
-			 *
-			 * @param file - The file at which the exception message was created.
-			 * @param line - The line at which the exception message was created.
 			 */
 			void Set_Location(const std::string& file, std::size_t line)
 			{
@@ -135,23 +126,8 @@ namespace tilia {
 			}
 			/**
 			 * @brief Gets the file and line of which the exception message was created at.
-			 *
-			 * @return The location of the exception message's creation.
 			 */
 			auto Get_Location() const { return std::make_pair(m_file, m_line); }
-
-			/**
-			 * @brief Gets the file which the exception message was created at.
-			 *
-			 * @return The file of the exception message's creation.
-			 */
-			auto Get_File() const { return m_file; }
-			/**
-			 * @brief Gets the line at which the exception message was created.
-			 *
-			 * @return The line of the exception message's creation.
-			 */
-			auto Get_Line() const { return m_line; }
 
 		private:
 			// The message stream
@@ -163,9 +139,8 @@ namespace tilia {
 		}; // Exception_Data
 
 		/**
-		 * @brief Custom exception class deriving from the <stdexcept> exception class. Holds a
-		 * vector of messages which can be added to while the exception is being passed along. Also
-		 * holds all the lines and files which the exception was passed through.
+		 * @brief Custom exception class deriving from the STL exception class. Holds a
+		 * vector of messages which can be added to while the exception is being passed along.
 		 */
 		class Tilia_Exception : public std::exception
 		{
@@ -201,8 +176,6 @@ namespace tilia {
 			
 			/**
 			 * @brief Gets all of the messages concatenated into one string.
-			 * 
-			 * @return All of the messages in one string.
 			 */
 			virtual const char* what() const noexcept override {
 				std::stringstream ret{};
@@ -227,18 +200,13 @@ namespace tilia {
 
 			/**
 			 * @brief Adds a message to the exception.
-			 * 
-			 * @param message - The message to add.
 			 */
 			auto& Add_Message(const Exception_Data& message)
 			{
 				m_messages.push_back(message); return *this;
 			}
-
 			/**
 			 * @brief Adds a message to the exception.
-			 *
-			 * @param message - The message to add.
 			 */
 			auto& Add_Message(Exception_Data&& message)
 			{ 
@@ -247,15 +215,10 @@ namespace tilia {
 
 			/**
 			 * @brief Gets the message of the exception at the index.
-			 * 
-			 * @return The message at the index.
 			 */
 			auto Get_Message(std::size_t index) const { return m_messages[index]; }
-
 			/**
 			 * @brief The number of messages in the exception.
-			 * 
-			 * @return The number of messages.
 			 */
 			auto Get_Count() const { return m_messages.size(); }
 

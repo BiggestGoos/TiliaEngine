@@ -310,7 +310,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
@@ -413,7 +413,7 @@ TEST_CASE("Exception_Handler", "[Exception_Handler]") {
 
 #endif
 
-#if 0
+#if 1
 
 windowing::Window window{};
 
@@ -423,22 +423,16 @@ int main()
     try
     {
 
-        //std::cin >> print_opengl_things;
-
-        std::cin.get();
+        std::cin >> print_opengl_things;
 
         logger.Add_Output(std::cout.rdbuf());
 
-        //logger.Set_Filters({ "default" });
+        logger.Set_OpenGL_Filters({ "debug severity message" });
 
-        //logger.Set_Output_Filters(std::cout.rdbuf(), { "default" });
-
-        //logger.Set_OpenGL_Filters({ "debug severity message" });
-
-        //if (print_opengl_things == true)
-        //{
-        //    logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
-        //}
+        if (print_opengl_things == true)
+        {
+            logger.Add_Output_Filter(std::cout.rdbuf(), "debug severity message");
+        }
 
         // glfw: initialize and configure
         // ------------------------------
@@ -461,14 +455,17 @@ int main()
         //    return -1;
         //}
         //glfwMakeContextCurrent(window);
-        
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        windowing::Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Profile, *enums::OpenGL_Profile::Core);
-        windowing::Window::Set_Window_Hint(enums::Window_Hints::OpenGL_Debug_Context, true);
-        windowing::Window::Set_Window_Hint(enums::Window_Hints::Transparent_Framebuffer, true);
-        
+
+        windowing::hints::context::Verion_Major(3);
+        windowing::hints::context::Verion_Minor(3);
+        windowing::hints::context::OpenGL_Profile(enums::OpenGL_Profile::Core);
+        windowing::hints::context::OpenGL_Debug_Context(true);
+
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+
+        auto [x_4, y_4] { window.Get(windowing::properties::Size{}) };
+
+        std::cout << x_4 << " : " << y_4 << '\n';
 
         window.Make_Context_Current();
 
@@ -485,6 +482,10 @@ int main()
         window.Add_Callback(windowing::callbacks::Content_Scale{ content_scale_callback });
 
         window.Set(windowing::properties::Floating{ true });
+
+        window.Set<enums::Window_Properties::Should_Close>(windowing::properties::Should_Close{ true });
+
+        //window.Set(windowing::properties::Floating{ true });
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         //glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
@@ -526,7 +527,9 @@ int main()
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-        //glDebugMessageCallback(Logger::OpenGL_Error_Callback, &window);
+        glDebugMessageCallback(Logger::OpenGL_Error_Callback, &window);
+
+        glfwSetErrorCallback(Logger::GLFW_Error_Callback);
 
         //int num{};
         //
@@ -543,7 +546,7 @@ int main()
         //    std::cout << i << " : " << extension << '\n';
         //}
 
-        input.Init(window.Get_Window());
+        input.Init(window.Get(windowing::properties::Underlying_Window{}));
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -664,25 +667,23 @@ int main()
 
             std::stringbuf title{};
             logger.Add_Output(&title, { "title" });
-            logger.Set_Filters({ "title" });
+            logger.Add_Filter("title");
 
             //buffer << fps << " : " << deltaTime << " : " << add_angle << " : " << angle << " : " << axis.x << " , " << axis.y << " , " << axis.z;
 
             logger.Output(fps, " : ", deltaTime, " : ", add_angle, " : ", angle, " : ", axis.x, " , ", axis.y, " , ", axis.z, '\n');
 
             logger.Remove_Output(&title);
-            logger.Set_Filters();
+            logger.Remove_Filter("title");
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            
             window.Set(windowing::properties::Title{ title.str() });
-
-            auto [major, minor, revision] { window.Get(windowing::properties::context::Version{}) };
-
-            logger.Output("Major: ", major, " : Minor: ", minor, " : Revision: ", revision, '\n');
+            
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             //glfwSetWindowTitle(window.Get_Window(), title.str().c_str());
             //window.Set<enums::Window_Properties::Title>(title.str());
+
+            //window.Set(windowing::properties::Should_Close{ true });
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ 1.0f };
@@ -1358,19 +1359,19 @@ void processInput()
             polymode = enums::Polymode::Fill;
     }
 
-    //if (input.Get_Key_Pressed(KEY_HOME))
-    //{
-    //    if (print_opengl_things == true)
-    //    {
-    //        print_opengl_things = false;
-    //        logger.Set_Output_Filters(std::cout.rdbuf(), { "default" });
-    //    }
-    //    else 
-    //    {
-    //        print_opengl_things = true;
-    //        logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
-    //    }
-    //}
+    if (input.Get_Key_Pressed(KEY_END))
+    {
+        if (print_opengl_things == true)
+        {
+            print_opengl_things = false;
+            logger.Set_Output_Filters(std::cout.rdbuf(), { "default" });
+        }
+        else 
+        {
+            print_opengl_things = true;
+            logger.Set_Output_Filters(std::cout.rdbuf(), { "debug severity message" });
+        }
+    }
 
     if (input.Get_Key_Pressed(KEY_BACKSPACE))
         pause = !pause;

@@ -32,6 +32,7 @@ namespace tilia
 		{
 		private:
 
+			friend struct properties::Underlying_Window;
 			friend struct properties::Title;
 			friend struct properties::Swap_Interval;
 
@@ -46,9 +47,6 @@ namespace tilia
 			}
 
 		public:
-
-			static void Set_Window_Hint(enums::Window_Hints hint_type,
-				std::int32_t hint_value);
 
 			static void Init();
 
@@ -90,32 +88,28 @@ namespace tilia
 
 			void Swap_Buffers() const;
 
+			template<enums::Window_Properties Property, typename... Types, typename T = properties::Set_Window_Property<Property>,
+				std::enable_if_t<std::is_same<std::tuple<Types...>, typename T::Tuple>::type>* = nullptr>
+				void Set(Types... arguments)
+			{
+				T::Set(*this, arguments...);
+			}
+
 			template<typename T,
 				std::enable_if_t<T::Settable == true>* = nullptr>
 				void Set(T property)
 			{
-				property.Set_Property(*this);
+				property.Set(*this);
 			}
 
 			template<typename T,
-				std::enable_if_t<T::Gettable == true &&
-				(std::tuple_size<typename T::Get_Parameters_Tuple>::value > 1)>* = nullptr>
+				std::enable_if_t<T::Gettable == true>* = nullptr>
 				auto Get(T property)
 			{
-				property.Get_Property(*this);
-				return property.Get_Properties();
+				property.Get(*this);
+				constexpr bool multiple_values{ (std::tuple_size<typename T::Get_Parameters_Tuple>::value > 1) };
+				return property.Get_Value<multiple_values>();
 			}
-
-			template<typename T,
-				std::enable_if_t<T::Gettable == true &&
-				(std::tuple_size<typename T::Get_Parameters_Tuple>::value == 1)>* = nullptr>
-				auto Get(T property)
-			{
-				property.Get_Property(*this);
-				return property.Get_First_Property();
-			}
-
-			GLFWwindow* Get_Window() { return m_window; }
 
 		protected:
 

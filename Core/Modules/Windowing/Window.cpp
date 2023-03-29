@@ -8,17 +8,6 @@
 
 std::unordered_map<tilia::windowing::GLFWwindow*, tilia::windowing::Window&> tilia::windowing::Window::s_windows{ };
 
-void tilia::windowing::Window::Set_Window_Hint(enums::Window_Hints hint_type,
-	std::int32_t hint_value)
-{
-	if (hint_type == enums::Window_Hints::Reset)
-	{
-		glfwDefaultWindowHints();
-		return;
-	}
-	glfwWindowHint(*hint_type, hint_value);
-}
-
 void tilia::windowing::Window::Init()
 {
 	glfwInit();
@@ -37,8 +26,6 @@ tilia::windowing::Window::~Window()
 		s_windows.erase(m_window);
 		m_window = nullptr;
 	}
-	if (s_windows.size() == 0)
-		glfwTerminate();
 }
 
 void tilia::windowing::Window::Init(std::int32_t width, std::int32_t height,
@@ -78,8 +65,7 @@ void tilia::windowing::Window::Destroy()
 	glfwDestroyWindow(m_window);
 	s_windows.erase(m_window);
 	m_window = nullptr;
-	if (s_windows.size() == 0)
-		glfwTerminate();
+	m_title = "GLFW";
 	m_swap_interval = 1;
 }
 

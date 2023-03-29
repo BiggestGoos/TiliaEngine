@@ -76,7 +76,7 @@ void tilia::utils::Tilia_Exception::Test()
 
 	// Test for adding to message with function
 
-	e_d_3.Append_Message(INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE);
+	e_d_3.Add_Message(INT_VALUE, FLOAT_VALUE, DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE);
 
 	REQUIRE(e_d_3 == e_d_2);
 
