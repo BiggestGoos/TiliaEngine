@@ -483,7 +483,15 @@ int main()
 
         window.Set(windowing::properties::Floating{ true });
 
-        window.Set<enums::Window_Properties::Should_Close>(windowing::properties::Should_Close{ true });
+        window.Set<enums::Window_Properties::Should_Close>({ true });
+        window.Set<enums::Window_Properties::Should_Close>({ false });
+
+        window.Set(windowing::properties::Should_Close{ true });
+        window.Set(windowing::properties::Should_Close{ false });
+
+        std::cout << window.Get<enums::Window_Properties::Underlying_Window>() << '\n';
+
+        //window.Set<enums::Window_Properties::Should_Close>(windowing::properties::Should_Close{ true });
 
         //window.Set(windowing::properties::Floating{ true });
 

@@ -35,6 +35,7 @@ namespace tilia
 			friend struct properties::Underlying_Window;
 			friend struct properties::Title;
 			friend struct properties::Swap_Interval;
+			friend struct properties::Get_Window_Property<enums::Window_Properties::Underlying_Window>;
 
 			using callback_ptr = void*;
 			using property_ptr = void*;
@@ -88,11 +89,16 @@ namespace tilia
 
 			void Swap_Buffers() const;
 
-			template<enums::Window_Properties Property, typename... Types, typename T = properties::Set_Window_Property<Property>,
-				std::enable_if_t<std::is_same<std::tuple<Types...>, typename T::Tuple>::type>* = nullptr>
-				void Set(Types... arguments)
+			template<enums::Window_Properties Type, typename Property = properties::Set_Window_Property<Type>>
+			void Set(typename Property::Parameters parameters)
 			{
-				T::Set(*this, arguments...);
+				Property::Set(*this, std::move(parameters));
+			}
+
+			template<enums::Window_Properties Type, typename Property = properties::Get_Window_Property<Type>>
+			auto Get()
+			{
+				return Property::Get(*this);
 			}
 
 			template<typename T,

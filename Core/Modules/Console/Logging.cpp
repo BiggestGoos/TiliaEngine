@@ -1,6 +1,7 @@
 // Standard
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 
 // Tilia
 #include "Logging.hpp"

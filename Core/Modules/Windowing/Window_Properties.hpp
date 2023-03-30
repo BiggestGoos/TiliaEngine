@@ -200,16 +200,26 @@ namespace tilia
 				}
 			}; // Window_Property
 
-			template<enums::Window_Properties type>
-			struct Set_Window_Property
+			template<enums::Window_Properties Type>
+			struct Set_Window_Property {};
+
+			template<enums::Window_Properties Type>
+			struct Get_Window_Property {};
+
+#define TILIA_SET_WINDOW_PROPERTY 
+
+			template<>
+			struct Get_Window_Property<enums::Window_Properties::Underlying_Window>
 			{
+				using Parameters = std::tuple<GLFWwindow*>;
+				static GLFWwindow* Get(Window& window);
 			};
 
 			template<>
 			struct Set_Window_Property<enums::Window_Properties::Should_Close>
 			{
-				using Tuple = std::tuple<bool>;
-				static void Set(Window& window, Tuple tuple);
+				using Parameters = std::tuple<bool>;
+				static void Set(Window& window, Parameters&& parameters);
 			};
 
 			struct Underlying_Window : public Window_Property<enums::Window_Properties::Underlying_Window, std::tuple<>, std::tuple<GLFWwindow*>>
@@ -482,7 +492,7 @@ namespace tilia
 
 			} // context
 
-		} // properties
+} // properties
 
 	} // windowing
 

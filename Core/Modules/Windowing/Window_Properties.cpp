@@ -20,6 +20,16 @@ void tilia::windowing::hints::Reset()
 	glfwDefaultWindowHints();
 }
 
+tilia::windowing::GLFWwindow* tilia::windowing::properties::Get_Window_Property<tilia::enums::Window_Properties::Underlying_Window>::Get(Window& window)
+{
+	return window.m_window;
+}
+
+void tilia::windowing::properties::Set_Window_Property<tilia::enums::Window_Properties::Should_Close>::Set(Window& window, Parameters&& parameters)
+{
+	glfwSetWindowShouldClose(window.Get<enums::Window_Properties::Underlying_Window>(), std::get<0>(parameters));
+}
+
 void tilia::windowing::properties::Underlying_Window::Get(Window& window)
 {
 	std::get<0>(m_get_parameters) = window.m_window;
@@ -283,9 +293,4 @@ void tilia::windowing::properties::context::No_Error::Get(Window& window)
 void tilia::windowing::properties::context::Robustness::Get(Window& window)
 {
 	std::get<0>(m_get_parameters) = static_cast<enums::Context_Robustness>(glfwGetWindowAttrib(window.Get(Underlying_Window{}), GLFW_CONTEXT_ROBUSTNESS));
-}
-
-void tilia::windowing::properties::Set_Window_Property<tilia::enums::Window_Properties::Should_Close>::Set(Window& window, Tuple tuple)
-{
-	glfwSetWindowShouldClose(window.Get(windowing::properties::Underlying_Window{}), std::get<0>(tuple));
 }
