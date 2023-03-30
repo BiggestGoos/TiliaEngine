@@ -167,10 +167,10 @@ namespace tilia
 		{
 
 			template<enums::Window_Properties Property_Type, typename Set_Parameters, typename Get_Parameters>
-			struct Window_Property {};
+			struct Window_Property_ {};
 
 			template<enums::Window_Properties Property_Type, typename... Set_Parameters, typename... Get_Parameters>
-			struct Window_Property<Property_Type, std::tuple<Set_Parameters...>, std::tuple<Get_Parameters...>>
+			struct Window_Property_<Property_Type, std::tuple<Set_Parameters...>, std::tuple<Get_Parameters...>>
 			{
 			public:
 
@@ -198,37 +198,102 @@ namespace tilia
 				{
 					return std::get<0>(m_get_parameters);
 				}
-			}; // Window_Property
+			}; // Window_Property_
 
 			template<enums::Window_Properties Type>
-			struct Set_Window_Property {};
-
-			template<enums::Window_Properties Type>
-			struct Get_Window_Property {};
-
-#define TILIA_SET_WINDOW_PROPERTY 
+			struct Window_Property {};
 
 			template<>
-			struct Get_Window_Property<enums::Window_Properties::Underlying_Window>
+			struct Window_Property<enums::Window_Properties::Should_Close>
 			{
-				using Parameters = std::tuple<GLFWwindow*>;
-				static GLFWwindow* Get(Window& window);
+				using Set_Parameters = bool;
+				using Get_Parameters = bool;
+				static void Set(Window& window, Set_Parameters&& parameters);
+				static Get_Parameters Get(Window& window);
 			};
 
 			template<>
-			struct Set_Window_Property<enums::Window_Properties::Should_Close>
+			struct Window_Property<enums::Window_Properties::Size>
 			{
-				using Parameters = std::tuple<bool>;
-				static void Set(Window& window, Parameters&& parameters);
+				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				static void Set(Window& window, Set_Parameters&& parameters);
+				static Get_Parameters Get(Window& window);
 			};
 
-			struct Underlying_Window : public Window_Property<enums::Window_Properties::Underlying_Window, std::tuple<>, std::tuple<GLFWwindow*>>
+			template<>
+			struct Window_Property<enums::Window_Properties::Frame_Size>
+			{
+				using Get_Parameters = std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
+				static Get_Parameters Get(Window& window);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Framebuffer_Size>
+			{
+				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				static Get_Parameters Get(Window& window);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Content_Scale>
+			{
+				using Get_Parameters = std::tuple<float, float>;
+				static Get_Parameters Get(Window& window);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Size_Limits>
+			{
+				using Set_Parameters = std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
+				static void Set(Window& window, Set_Parameters&& parameters);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Aspect_Ratio>
+			{
+				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				static void Set(Window& window, Set_Parameters&& parameters);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Position>
+			{
+				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				static void Set(Window& window, Set_Parameters&& parameters);
+				static Get_Parameters Get(Window& window);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Title>
+			{
+				using Set_Parameters = std::string;
+				using Get_Parameters = std::string;
+				static void Set(Window& window, Set_Parameters&& parameters);
+				static Get_Parameters Get(Window& window);
+			};
+
+			// Todo: When image loading is done, implement this
+			template<>
+			struct Window_Property<enums::Window_Properties::Icon>
+			{
+			};
+
+			// Todo: When monitor abstraction is done, implement this
+			template<>
+			struct Window_Property<enums::Window_Properties::Monitor>
+			{
+			};
+
+			/*
+			struct Underlying_Window : public Window_Property_<enums::Window_Properties::Underlying_Window, std::tuple<>, std::tuple<GLFWwindow*>>
 			{
 				Underlying_Window() = default;
 				void Get(Window& window);
 			};
 
-			struct Should_Close : public Window_Property<enums::Window_Properties::Should_Close, std::tuple<bool>, std::tuple<bool>>
+			struct Should_Close : public Window_Property_<enums::Window_Properties::Should_Close, std::tuple<bool>, std::tuple<bool>>
 			{
 				Should_Close() = default;
 				Should_Close(bool should_close) { m_set_parameters = should_close; }
@@ -236,7 +301,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Size : public Window_Property<enums::Window_Properties::Size, std::tuple<std::int32_t, std::int32_t>, std::tuple<std::int32_t, std::int32_t>>
+			struct Size : public Window_Property_<enums::Window_Properties::Size, std::tuple<std::int32_t, std::int32_t>, std::tuple<std::int32_t, std::int32_t>>
 			{
 				Size() = default;
 				Size(std::int32_t width, std::int32_t height) { m_set_parameters = { width, height }; }
@@ -244,27 +309,30 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Frame_Size : public Window_Property<enums::Window_Properties::Frame_Size, std::tuple<>,
+			struct Frame_Size : public Window_Property_<enums::Window_Properties::Frame_Size, std::tuple<>,
 				std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>>
 			{
 				Frame_Size() = default;
 				void Get(Window& window);
 			};
 
-			struct Framebuffer_Size : public Window_Property<
+			struct Framebuffer_Size : public Window_Property_<
 				enums::Window_Properties::Framebuffer_Size, std::tuple<>, std::tuple<std::int32_t, std::int32_t>>
 			{
 				Framebuffer_Size() = default;
 				void Get(Window& window);
 			};
+			*/
 
-			struct Content_Scale : public Window_Property<enums::Window_Properties::Content_Scale, std::tuple<>, std::tuple<float, float>>
+			/*
+
+			struct Content_Scale : public Window_Property_<enums::Window_Properties::Content_Scale, std::tuple<>, std::tuple<float, float>>
 			{
 				Content_Scale() = default;
 				void Get(Window& window);
 			};
 
-			struct Size_Limits : public Window_Property<enums::Window_Properties::Size_Limits, 
+			struct Size_Limits : public Window_Property_<enums::Window_Properties::Size_Limits, 
 				std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>, std::tuple<>>
 			{
 				Size_Limits(std::int32_t min_width, std::int32_t min_height,
@@ -273,14 +341,14 @@ namespace tilia
 				void Set(Window& window);
 			};
 
-			struct Aspect_Ratio : public Window_Property<enums::Window_Properties::Aspect_Ratio, 
+			struct Aspect_Ratio : public Window_Property_<enums::Window_Properties::Aspect_Ratio, 
 				std::tuple<std::int32_t, std::int32_t>, std::tuple<>>
 			{
 				Aspect_Ratio(std::int32_t numer, std::int32_t denom) { m_set_parameters = { numer, denom }; }
 				void Set(Window& window);
 			};
 
-			struct Position : public Window_Property<enums::Window_Properties::Position, 
+			struct Position : public Window_Property_<enums::Window_Properties::Position, 
 				std::tuple<std::int32_t, std::int32_t>, std::tuple<std::int32_t, std::int32_t>>
 			{
 				Position() = default;
@@ -289,7 +357,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Title : public Window_Property<enums::Window_Properties::Title, std::tuple<std::string>, std::tuple<std::string>>
+			struct Title : public Window_Property_<enums::Window_Properties::Title, std::tuple<std::string>, std::tuple<std::string>>
 			{
 				Title() = default;
 				Title(std::string title) { m_set_parameters = title; }
@@ -298,15 +366,15 @@ namespace tilia
 			};
 
 			// Todo: When image loading is done, implement this
-			struct Icon : public Window_Property<enums::Window_Properties::Icon, std::tuple<>, std::tuple<>>
+			struct Icon : public Window_Property_<enums::Window_Properties::Icon, std::tuple<>, std::tuple<>>
 			{
 			};
 
-			struct Monitor : public Window_Property<enums::Window_Properties::Monitor, std::tuple<>, std::tuple<>>
+			struct Monitor : public Window_Property_<enums::Window_Properties::Monitor, std::tuple<>, std::tuple<>>
 			{
 			};
 
-			struct Iconify : public Window_Property<enums::Window_Properties::Iconify, std::tuple<bool>, std::tuple<bool>>
+			struct Iconify : public Window_Property_<enums::Window_Properties::Iconify, std::tuple<bool>, std::tuple<bool>>
 			{
 				Iconify() = default;
 				Iconify(bool iconify) { m_set_parameters = iconify; }
@@ -314,7 +382,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Maximize : public Window_Property<enums::Window_Properties::Maximize, std::tuple<bool>, std::tuple<bool>>
+			struct Maximize : public Window_Property_<enums::Window_Properties::Maximize, std::tuple<bool>, std::tuple<bool>>
 			{
 				Maximize() = default;
 				Maximize(bool maximize) { m_set_parameters = maximize; }
@@ -322,7 +390,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Visible : public Window_Property<enums::Window_Properties::Visible, std::tuple<bool>, std::tuple<bool>>
+			struct Visible : public Window_Property_<enums::Window_Properties::Visible, std::tuple<bool>, std::tuple<bool>>
 			{
 				Visible() = default;
 				Visible(bool visible) { m_set_parameters = visible; }
@@ -330,20 +398,20 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Focus : public Window_Property<enums::Window_Properties::Focus, std::tuple<bool>, std::tuple<bool>>
+			struct Focus : public Window_Property_<enums::Window_Properties::Focus, std::tuple<bool>, std::tuple<bool>>
 			{
 				Focus() { m_set_parameters = true; }
 				void Set(Window& window);
 				void Get(Window& window);
 			};
 
-			struct Request_Attention : public Window_Property<enums::Window_Properties::Request_Attention, std::tuple<bool>, std::tuple<>>
+			struct Request_Attention : public Window_Property_<enums::Window_Properties::Request_Attention, std::tuple<bool>, std::tuple<>>
 			{
 				Request_Attention() { m_set_parameters = true; }
 				void Set(Window& window);
 			};
 
-			struct Opacity : public Window_Property<enums::Window_Properties::Opacity, std::tuple<float>, std::tuple<float>>
+			struct Opacity : public Window_Property_<enums::Window_Properties::Opacity, std::tuple<float>, std::tuple<float>>
 			{
 				Opacity() = default;
 				Opacity(float opacity) { m_set_parameters = opacity; }
@@ -351,7 +419,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Swap_Interval : public Window_Property<enums::Window_Properties::Swap_Interval, std::tuple<std::int32_t>, std::tuple<std::int32_t>>
+			struct Swap_Interval : public Window_Property_<enums::Window_Properties::Swap_Interval, std::tuple<std::int32_t>, std::tuple<std::int32_t>>
 			{
 				Swap_Interval() = default;
 				Swap_Interval(std::int32_t swap_interval) { m_set_parameters = swap_interval; }
@@ -359,7 +427,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Resizeable : public Window_Property<enums::Window_Properties::Resizable, std::tuple<bool>, std::tuple<bool>>
+			struct Resizeable : public Window_Property_<enums::Window_Properties::Resizable, std::tuple<bool>, std::tuple<bool>>
 			{
 				Resizeable() = default;
 				Resizeable(bool resizeable) { m_set_parameters = resizeable; }
@@ -367,7 +435,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Decorated : public Window_Property<enums::Window_Properties::Decorated, std::tuple<bool>, std::tuple<bool>>
+			struct Decorated : public Window_Property_<enums::Window_Properties::Decorated, std::tuple<bool>, std::tuple<bool>>
 			{
 				Decorated() = default;
 				Decorated(bool decorated) { m_set_parameters = decorated; }
@@ -375,7 +443,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Auto_Iconify : public Window_Property<enums::Window_Properties::Auto_Iconify, std::tuple<bool>, std::tuple<bool>>
+			struct Auto_Iconify : public Window_Property_<enums::Window_Properties::Auto_Iconify, std::tuple<bool>, std::tuple<bool>>
 			{
 				Auto_Iconify() = default;
 				Auto_Iconify(bool auto_iconify) { m_set_parameters = auto_iconify; }
@@ -383,7 +451,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Floating : public Window_Property<enums::Window_Properties::Floating, std::tuple<bool>, std::tuple<bool>>
+			struct Floating : public Window_Property_<enums::Window_Properties::Floating, std::tuple<bool>, std::tuple<bool>>
 			{
 				Floating() = default;
 				Floating(bool floating) { m_set_parameters = floating; }
@@ -391,7 +459,7 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Focus_On_Show : public Window_Property<enums::Window_Properties::Focus_On_Show, std::tuple<bool>, std::tuple<bool>>
+			struct Focus_On_Show : public Window_Property_<enums::Window_Properties::Focus_On_Show, std::tuple<bool>, std::tuple<bool>>
 			{
 				Focus_On_Show() = default;
 				Focus_On_Show(bool focus_on_show) { m_set_parameters = focus_on_show; }
@@ -399,14 +467,14 @@ namespace tilia
 				void Get(Window& window);
 			};
 
-			struct Transparent_Framebuffer : public Window_Property<enums::Window_Properties::Transparent_Framebuffer, std::tuple<>, std::tuple<bool>>
+			struct Transparent_Framebuffer : public Window_Property_<enums::Window_Properties::Transparent_Framebuffer, std::tuple<>, std::tuple<bool>>
 			{
 				Transparent_Framebuffer() = default;
 				void Get(Window& window);
 			};
 
 			// Todo: When framebuffer is done, implement this
-			struct Framebuffer : public Window_Property<enums::Window_Properties::Framebuffer, std::tuple<>, std::tuple<>>
+			struct Framebuffer : public Window_Property_<enums::Window_Properties::Framebuffer, std::tuple<>, std::tuple<>>
 			{
 			};
 
@@ -492,7 +560,9 @@ namespace tilia
 
 			} // context
 
-} // properties
+			*/
+
+		} // properties
 
 	} // windowing
 

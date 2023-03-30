@@ -463,9 +463,9 @@ int main()
 
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 
-        auto [x_4, y_4] { window.Get(windowing::properties::Size{}) };
+        glm::ivec2 vec { 6, 1 };
 
-        std::cout << x_4 << " : " << y_4 << '\n';
+        window.Set<enums::Window_Properties::Position>({ vec.x, vec.y });
 
         window.Make_Context_Current();
 
@@ -481,13 +481,13 @@ int main()
 
         window.Add_Callback(windowing::callbacks::Content_Scale{ content_scale_callback });
 
-        window.Set(windowing::properties::Floating{ true });
+        //window.Set(windowing::properties::Floating{ true });
 
-        window.Set<enums::Window_Properties::Should_Close>({ true });
-        window.Set<enums::Window_Properties::Should_Close>({ false });
+        //window.Set<enums::Window_Properties::Should_Close>({ true });
+        //window.Set<enums::Window_Properties::Should_Close>({ false });
 
-        window.Set(windowing::properties::Should_Close{ true });
-        window.Set(windowing::properties::Should_Close{ false });
+        //window.Set(windowing::properties::Should_Close{ true });
+        //window.Set(windowing::properties::Should_Close{ false });
 
         std::cout << window.Get<enums::Window_Properties::Underlying_Window>() << '\n';
 
@@ -528,7 +528,7 @@ int main()
         // tell GLFW to capture our mouse
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        window.Set(windowing::properties::Swap_Interval{ 0 });
+        //window.Set(windowing::properties::Swap_Interval{ 0 });
 
         //glfwSwapInterval(0);
 
@@ -554,7 +554,7 @@ int main()
         //    std::cout << i << " : " << extension << '\n';
         //}
 
-        input.Init(window.Get(windowing::properties::Underlying_Window{}));
+        input.Init(window.Get<enums::Window_Properties::Underlying_Window>());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -650,7 +650,7 @@ int main()
 
         // render loop
         // -----------
-        while (!window.Get(windowing::properties::Should_Close{}))
+        while (!window.Get<enums::Window_Properties::Should_Close>())
         {
             
             processInput();
@@ -662,8 +662,8 @@ int main()
                 shader_g->Compile(true);
             }
 
-            if (static_cast<int>(glfwGetTime()) % 5 == 0)
-                window.Set(windowing::properties::Request_Attention{});
+            //if (static_cast<int>(glfwGetTime()) % 5 == 0)
+                //window.Set(windowing::properties::Request_Attention{});
 
             mesh->Set_Polymode()(polymode);
 
@@ -684,7 +684,7 @@ int main()
             logger.Remove_Output(&title);
             logger.Remove_Filter("title");
 
-            window.Set(windowing::properties::Title{ title.str() });
+            //window.Set(windowing::properties::Title{ title.str() });
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -695,7 +695,8 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ 1.0f };
-            if (!window.Get(windowing::properties::Iconify{}))
+            //if (!window.Get(windowing::properties::Iconify{}))
+            if (1)
             {
                 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
             }
