@@ -10,6 +10,9 @@
 #ifndef TILIA_WINDOW_HPP
 #define TILIA_WINDOW_HPP
 
+// Vendor
+#include "vendor/glm/include/glm/glm.hpp"
+
 // Standard
 #include <string>
 #include <utility>
@@ -33,16 +36,16 @@ namespace tilia
 		private:
 
 			friend struct properties::Window_Property<enums::Window_Properties::Title>;
-			//friend struct properties::Swap_Interval;
+			friend struct properties::Window_Property<enums::Window_Properties::Focus>;
+			friend struct properties::Window_Property<enums::Window_Properties::Swap_Interval>;
 
 			using callback_ptr = void*;
 			using property_ptr = void*;
 
-			template<typename T, typename... U>
-			std::size_t Get_Address(std::function<T(U...)> func) {
-				using func_type = T(*)(U...);
-				func_type* func_ptr = func.target<func_type>();
-				return *static_cast<std::size_t*>(static_cast<void*>(*func_ptr));
+			template<typename Func>
+			bool is_same_function(Func& f1, Func& f2) {
+				return f1.target_type() == f2.target_type() &&
+					*reinterpret_cast<void**>(&f1) == *reinterpret_cast<void**>(&f2);
 			}
 
 		public:
@@ -63,7 +66,7 @@ namespace tilia
 				const enums::Window_Callbacks>::value>* = nullptr>
 				void Add_Callback(T callback)
 			{
-				std::get<enums::operator*(T::Type)>(m_callbacks).push_back(callback.function);
+				std::get<enums::operator*(T::Type)>(m_callbacks).push_back(std::move(callback));
 			}
 
 			template<typename T,
@@ -76,7 +79,7 @@ namespace tilia
 				std::size_t i{ 0 };
 				for (; i < callback_count; ++i)
 				{
-					if (Get_Address(callback.function) == Get_Address(callbacks[i]))
+					if (is_same_function(callback.function, callbacks[i].function))
 						break;
 				}
 				if (i < callback_count)
@@ -88,9 +91,15 @@ namespace tilia
 			void Swap_Buffers() const;
 
 			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
-			void Set(typename Property::Parameters parameters)
+			void Set(typename Property::Set_Parameters parameters)
 			{
 				Property::Set(*this, std::move(parameters));
+			}
+
+			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
+			void Set()
+			{
+				Property::Set(*this);
 			}
 
 			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
@@ -103,22 +112,6 @@ namespace tilia
 			auto Get<enums::Window_Properties::Underlying_Window>()
 			{
 				return m_window;
-			}
-
-			template<typename T,
-				std::enable_if_t<T::Settable == true>* = nullptr>
-				void Set(T property)
-			{
-				property.Set(*this);
-			}
-
-			template<typename T,
-				std::enable_if_t<T::Gettable == true>* = nullptr>
-				auto Get(T property)
-			{
-				property.Get(*this);
-				constexpr bool multiple_values{ (std::tuple_size<typename T::Get_Parameters_Tuple>::value > 1) };
-				return property.Get_Value<multiple_values>();
 			}
 
 		protected:
@@ -134,16 +127,18 @@ namespace tilia
 			GLFWwindow* m_window{};
 
 			std::tuple<
-				std::vector<callbacks::Position::Signature>,
-				std::vector<callbacks::Size::Signature>,
-				std::vector<callbacks::Close::Signature>,
-				std::vector<callbacks::Refresh::Signature>,
-				std::vector<callbacks::Focus::Signature>,
-				std::vector<callbacks::Inconify::Signature>,
-				std::vector<callbacks::Maximize::Signature>,
-				std::vector<callbacks::Framebuffer_Size::Signature>,
-				std::vector<callbacks::Content_Scale::Signature>
+				std::vector<callbacks::Position>,
+				std::vector<callbacks::Size>,
+				std::vector<callbacks::Close>,
+				std::vector<callbacks::Refresh>,
+				std::vector<callbacks::Focus>,
+				std::vector<callbacks::Inconify>,
+				std::vector<callbacks::Maximize>,
+				std::vector<callbacks::Framebuffer_Size>,
+				std::vector<callbacks::Content_Scale>
 			> m_callbacks;
+
+			static GLFWwindow* s_hidden_window;
 
 			static std::unordered_map<GLFWwindow*, Window&> s_windows;
 

@@ -123,8 +123,7 @@ void tilia::utils::Error_Handling::Test()
     {
         REQUIRE(t_e.Get_Count() > 0);
         REQUIRE(t_e.Get_Message(0).Get_Message() != "");
-        REQUIRE(t_e.Get_Message(0).Get_File() == file_0);
-        REQUIRE(t_e.Get_Message(0).Get_Line() == line_0);
+        REQUIRE(t_e.Get_Message(0).Get_Location() == std::pair{ file_0, line_0 });
     }
 
     // Test that GL_CALL_MESSAGE works and throws an exception
@@ -137,8 +136,7 @@ void tilia::utils::Error_Handling::Test()
     {
         REQUIRE(t_e.Get_Count() > 0);
         REQUIRE(t_e.Get_Message(0).Get_Message().find(fake_error_message_0) != std::string::npos);
-        REQUIRE(t_e.Get_Message(0).Get_File() == file_0);
-        REQUIRE(t_e.Get_Message(0).Get_Line() == line_0);
+        REQUIRE(t_e.Get_Message(0).Get_Location() == std::pair{ file_0, line_0 });
     }
 
 }

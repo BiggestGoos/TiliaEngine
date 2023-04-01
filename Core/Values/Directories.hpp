@@ -36,6 +36,7 @@
 #define TILIA_OPENGL_3_3_RENDERER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #define TILIA_OPENGL_3_3_VERTEX_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
+#define TILIA_MONITOR_INCLUDE "Core/Modules/Windowing/Monitor.hpp"
 #define TILIA_WINDOW_INCLUDE "Core/Modules/Windowing/Window.hpp"
 #define TILIA_WINDOW_PROPERTIES_INCLUDE "Core/Modules/Windowing/Window_Properties.hpp"
 
@@ -80,6 +81,7 @@
 #include "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
+#include "Core/Modules/Windowing/Monitor.hpp"
 #include "Core/Modules/Windowing/Window.hpp"
 #include "Core/Modules/Windowing/Window_Properties.hpp"
 

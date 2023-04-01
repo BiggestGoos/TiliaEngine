@@ -6,11 +6,24 @@
 #include "Window.hpp"
 #include TILIA_LOGGING_INCLUDE
 
+GLFWwindow* tilia::windowing::Window::s_hidden_window{ };
 std::unordered_map<tilia::windowing::GLFWwindow*, tilia::windowing::Window&> tilia::windowing::Window::s_windows{ };
 
 void tilia::windowing::Window::Init()
 {
 	glfwInit();
+
+	monitoring::Monitor::Init();
+
+	// Create a hidden window which can be used to set focus to
+
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+	s_hidden_window = glfwCreateWindow(1, 1, "", nullptr, nullptr);
+
+	glfwDefaultWindowHints();
+
 }
 
 void tilia::windowing::Window::Terminate()
@@ -128,7 +141,7 @@ void tilia::windowing::Window::Position_Func(GLFWwindow* window, std::int32_t x_
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Position>(instance.m_callbacks))
 	{
-		func(window, x_pos, y_pos);
+		func.function(window, x_pos, y_pos);
 	}
 }
 
@@ -137,7 +150,7 @@ void tilia::windowing::Window::Size_Func(GLFWwindow* window, std::int32_t width,
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Size>(instance.m_callbacks))
 	{
-		func(window, width, height);
+		func.function(window, width, height);
 	}
 }
 
@@ -146,7 +159,7 @@ void tilia::windowing::Window::Close_Func(GLFWwindow* window)
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Close>(instance.m_callbacks))
 	{
-		func(window);
+		func.function(window);
 	}
 }
 
@@ -155,7 +168,7 @@ void tilia::windowing::Window::Refresh_Func(GLFWwindow* window)
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Refresh>(instance.m_callbacks))
 	{
-		func(window);
+		func.function(window);
 	}
 }
 
@@ -164,7 +177,7 @@ void tilia::windowing::Window::Focus_Func(GLFWwindow* window, std::int32_t focus
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Focus>(instance.m_callbacks))
 	{
-		func(window, focused);
+		func.function(window, focused);
 	}
 }
 
@@ -173,7 +186,7 @@ void tilia::windowing::Window::Inconify_Func(GLFWwindow* window, std::int32_t ic
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Iconify>(instance.m_callbacks))
 	{
-		func(window, iconified);
+		func.function(window, iconified);
 	}
 }
 
@@ -182,7 +195,7 @@ void tilia::windowing::Window::Maximize_Func(GLFWwindow* window, std::int32_t ma
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Maximize>(instance.m_callbacks))
 	{
-		func(window, maximized);
+		func.function(window, maximized);
 	}
 }
 
@@ -191,7 +204,7 @@ void tilia::windowing::Window::Framebuffer_Size_Func(GLFWwindow* window, std::in
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Framebuffer_Size>(instance.m_callbacks))
 	{
-		func(window, width, height);
+		func.function(window, width, height);
 	}
 }
 
@@ -200,6 +213,6 @@ void tilia::windowing::Window::Content_Scale_Func(GLFWwindow* window, float x_sc
 	Window& instance{ s_windows.at(window) };
 	for (auto& func : std::get<*enums::Window_Callbacks::Content_Scale>(instance.m_callbacks))
 	{
-		func(window, x_scale, y_scale);
+		func.function(window, x_scale, y_scale);
 	}
 }

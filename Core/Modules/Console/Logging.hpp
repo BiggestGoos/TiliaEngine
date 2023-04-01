@@ -281,7 +281,7 @@ namespace tilia {
 			 */
 			static void Test();
 
-#endif
+#endif // TILIA_UNIT_TESTS == 1
 
 		private:
 

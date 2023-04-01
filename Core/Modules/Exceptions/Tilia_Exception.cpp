@@ -31,8 +31,6 @@ void tilia::utils::Tilia_Exception::Test()
 	Exception_Data e_d_0{ fake_file_0, fake_line_0, fake_error_message_0, INT_VALUE, FLOAT_VALUE, 
 		DOUBLE_VALUE, BOOL_VALUE, STRING_VALUE };
 
-	REQUIRE(e_d_0.Get_File() == fake_file_0);
-	REQUIRE(e_d_0.Get_Line() == fake_line_0);
 	REQUIRE(e_d_0.Get_Location() == std::pair{ fake_file_0, fake_line_0 });
 	REQUIRE(e_d_0.Get_Message() == fake_error_message_0 + additional_values_0.str());
 
@@ -40,8 +38,6 @@ void tilia::utils::Tilia_Exception::Test()
 
 	Exception_Data e_d_1{ e_d_0 };
 
-	REQUIRE(e_d_1.Get_File() == fake_file_0);
-	REQUIRE(e_d_1.Get_Line() == fake_line_0);
 	REQUIRE(e_d_1.Get_Location() == std::pair{ fake_file_0, fake_line_0 });
 	REQUIRE(e_d_1.Get_Message() == fake_error_message_0 + additional_values_0.str());
 
@@ -53,8 +49,6 @@ void tilia::utils::Tilia_Exception::Test()
 
 	Exception_Data e_d_2{ std::move(e_d_0) };
 
-	REQUIRE(e_d_2.Get_File() == fake_file_0);
-	REQUIRE(e_d_2.Get_Line() == fake_line_0);
 	REQUIRE(e_d_2.Get_Location() == std::pair{ fake_file_0, fake_line_0 });
 	REQUIRE(e_d_2.Get_Message() == fake_error_message_0 + additional_values_0.str());
 
@@ -64,8 +58,6 @@ void tilia::utils::Tilia_Exception::Test()
 
 	Exception_Data e_d_3{ fake_file_0, fake_line_0 };
 
-	REQUIRE(e_d_3.Get_File() == fake_file_0);
-	REQUIRE(e_d_3.Get_Line() == fake_line_0);
 	REQUIRE(e_d_3.Get_Location() == std::pair{ fake_file_0, fake_line_0 });
 
 	// Test for setting message with function

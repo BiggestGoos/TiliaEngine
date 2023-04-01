@@ -37,6 +37,7 @@
 #include TILIA_CONSTANTS_INCLUDE
 #include TILIA_OPENGL_3_3_BUFFER_INCLUDE
 #include TILIA_WINDOW_INCLUDE
+#include TILIA_MONITOR_INCLUDE
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -310,7 +311,7 @@ int main()
 
 #endif
 
-#if 0
+#if 1
 
 #define CATCH_CONFIG_RUNNER
 #include "vendor/Catch2/Catch2.hpp"
@@ -332,7 +333,7 @@ int main(int argc, char* argv[])
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-
+        
         // glfw window creation
         // --------------------
         GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -411,9 +412,13 @@ TEST_CASE("Exception_Handler", "[Exception_Handler]") {
     tilia::utils::Exception_Handler::Test();
 }
 
+TEST_CASE("Monitor", "[Monitor]") {
+    tilia::monitoring::Monitor::Test();
+}
+
 #endif
 
-#if 1
+#if 0
 
 windowing::Window window{};
 
@@ -463,10 +468,6 @@ int main()
 
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 
-        glm::ivec2 vec { 6, 1 };
-
-        window.Set<enums::Window_Properties::Position>({ vec.x, vec.y });
-
         window.Make_Context_Current();
 
         //glad: load all OpenGL function pointers
@@ -480,6 +481,29 @@ int main()
         window.Add_Callback(windowing::callbacks::Framebuffer_Size{ framebuffer_size_callback });
 
         window.Add_Callback(windowing::callbacks::Content_Scale{ content_scale_callback });
+
+        window.Set<enums::Window_Properties::Floating>({ true });
+
+        window.Set<enums::Window_Properties::Swap_Interval>(0);
+
+        monitoring::Monitor primary_monitor{ monitoring::Monitor::Get_Monitors()[0] };
+
+        auto resolution{ primary_monitor.Get<enums::Monitor_Properties::Resolution>() };
+        auto refresh_rate{ primary_monitor.Get<enums::Monitor_Properties::Refresh_Rate>() };
+
+        std::cout << "primary monitor: " << resolution.first << " : " << resolution.second << " : " << refresh_rate << '\n';
+
+        auto supported_refresh_rates{ primary_monitor.Get<enums::Monitor_Properties::Supported_Refresh_Rates>(resolution) };
+        const auto s_r_r_count{ supported_refresh_rates.size() };
+
+        for (std::size_t i{ 0 }; i < s_r_r_count; ++i)
+        {
+            std::cout << "Supported refresh rate #" << i << " : " << supported_refresh_rates[i] << '\n';
+        }
+
+        window.Set<enums::Window_Properties::Monitor>(primary_monitor);
+
+        //glfwSetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>(), nullptr, 3840 >> 1, 2160 >> 1, 3840, 2160, GLFW_DONT_CARE);
 
         //window.Set(windowing::properties::Floating{ true });
 
@@ -684,7 +708,7 @@ int main()
             logger.Remove_Output(&title);
             logger.Remove_Filter("title");
 
-            //window.Set(windowing::properties::Title{ title.str() });
+            window.Set<enums::Window_Properties::Title>(title.str());
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -695,10 +719,14 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ 1.0f };
-            //if (!window.Get(windowing::properties::Iconify{}))
-            if (1)
+            if (!window.Get<enums::Window_Properties::Iconify>())
             {
                 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
+            }
+
+            if (input.Get_Key_Pressed(KEY_RIGHT_SHIFT))
+            {
+                window.Set<enums::Window_Properties::Focus>(false);
             }
 
             ub_2.Uniform("projection", projection);
