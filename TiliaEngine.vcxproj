@@ -529,6 +529,8 @@
     <None Include="cpp.hint" />
     <None Include="res\shaders\cube_shader.vert" />
     <None Include="res\shaders\light_shader.vert" />
+    <None Include="res\shaders\texture.frag" />
+    <None Include="res\shaders\texture.vert" />
     <None Include="vendor\glm\include\glm\detail\func_common.inl" />
     <None Include="vendor\glm\include\glm\detail\func_common_simd.inl" />
     <None Include="vendor\glm\include\glm\detail\func_exponential.inl" />

@@ -1502,8 +1502,6 @@
     <None Include="build\res\shaders\cube_shader.vert" />
     <None Include="build\res\shaders\light_shader.vert" />
     <None Include="cpp.hint" />
-    <None Include="res\shaders\cube_shader.vert" />
-    <None Include="res\shaders\light_shader.vert" />
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
     <None Include="x64\Release\res\shaders\cube_shader.vert" />
@@ -1512,5 +1510,9 @@
     <None Include="x64\Release\res\shaders\compare.frag" />
     <None Include="x64\Debug\res\shaders\texture.vert" />
     <None Include="x64\Debug\res\shaders\texture.frag" />
+    <None Include="res\shaders\cube_shader.vert" />
+    <None Include="res\shaders\light_shader.vert" />
+    <None Include="res\shaders\texture.frag" />
+    <None Include="res\shaders\texture.vert" />
   </ItemGroup>
 </Project>
