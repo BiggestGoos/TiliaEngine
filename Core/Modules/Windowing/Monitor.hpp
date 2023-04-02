@@ -43,7 +43,13 @@ namespace tilia
 
 		namespace callbacks
 		{
-
+			
+			/**
+			 * @brief Called everytime that a monitor is connected or disconnected.
+			 * 
+			 * @param monitor - The monitor that is connected or disconnected.
+			 * @param event - Whether the monitor was connected or disconnected.
+			 */
 			struct Monitor_Func
 			{
 				using Parameters = void(GLFWmonitor*, std::int32_t);
@@ -60,85 +66,115 @@ namespace tilia
 			template<enums::Monitor_Properties Type>
 			struct Monitor_Property {};
 
+			/**
+			 * @brief The resolution of the screen in screen coordinates.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Resolution>
 			{
 				using Get_Parameters = std::pair<std::uint32_t, std::uint32_t>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief Bit depths of the RGB values.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Bit_Depths>
 			{
 				using Get_Parameters = std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief Refresh rate of monitor in Hz.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Refresh_Rate>
 			{
 				using Get_Parameters = std::uint32_t;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief All supported resolutions of the monitor. 
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Supported_Resolutions>
 			{
 				using Get_Parameters = std::set<std::pair<std::uint32_t, std::uint32_t>>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief All supported bit depths of the monitor at the resolution.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Supported_Bit_Depths>
 			{
-				using Get_Parameters = std::vector<std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>>;
-				using Get_Arguments = Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
+				using Get_Parameters = 
+					std::vector<std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>>;
+				using Get_Arguments = 
+					Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
 				static Get_Parameters Get(Monitor& monitor, Get_Arguments&& get_arguments);
 			};
-
+			/**
+			 * @brief All supported refresh rates of the monitor at the resolution.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Supported_Refresh_Rates>
 			{
 				using Get_Parameters = std::vector<std::uint32_t>;
-				using Get_Arguments = Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
+				using Get_Arguments = 
+					Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
 				static Get_Parameters Get(Monitor& monitor, Get_Arguments&& get_arguments);
 			};
-
+			/**
+			 * @brief An approximation of the physical size of the monitor.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Physical_Size>
 			{
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief Ratio of monitor DPI and platform default DPI.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Content_Scale>
 			{
 				using Get_Parameters = std::pair<float, float>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief The position of the monitor on the virtual desktop in screen coordinates.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Virtual_Position>
 			{
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief The are of the monitor not used by global task bars or menu bars in screen
+			 * coordinates.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Workarea>
 			{
-				using Get_Parameters = std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
+				using Get_Parameters = 
+					std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief The name of the monitor.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Name>
 			{
 				using Get_Parameters = std::string;
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief The gamma ramp of the monitor.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Gamma_Ramp>
 			{
@@ -147,7 +183,9 @@ namespace tilia
 				static void Set(Monitor& monitor, Set_Parameters&& parameters);
 				static Get_Parameters Get(Monitor& monitor);
 			};
-
+			/**
+			 * @brief A simpler version of the gamma ramp.
+			 */
 			template<>
 			struct Monitor_Property<enums::Monitor_Properties::Gamma>
 			{

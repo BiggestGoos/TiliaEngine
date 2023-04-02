@@ -182,8 +182,8 @@ namespace tilia
 			template<>
 			struct Window_Property<enums::Window_Properties::Size>
 			{
-				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
-				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
+				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 				static Get_Parameters Get(Window& window);
 			};
@@ -198,14 +198,14 @@ namespace tilia
 			template<>
 			struct Window_Property<enums::Window_Properties::Framebuffer_Size>
 			{
-				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Window& window);
 			};
 
 			template<>
 			struct Window_Property<enums::Window_Properties::Content_Scale>
 			{
-				using Get_Parameters = std::tuple<float, float>;
+				using Get_Parameters = std::pair<float, float>;
 				static Get_Parameters Get(Window& window);
 			};
 
@@ -219,15 +219,15 @@ namespace tilia
 			template<>
 			struct Window_Property<enums::Window_Properties::Aspect_Ratio>
 			{
-				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 			};
 
 			template<>
 			struct Window_Property<enums::Window_Properties::Position>
 			{
-				using Set_Parameters = std::tuple<std::int32_t, std::int32_t>;
-				using Get_Parameters = std::tuple<std::int32_t, std::int32_t>;
+				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
+				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 				static Get_Parameters Get(Window& window);
 			};
@@ -252,6 +252,15 @@ namespace tilia
 			{
 				using Set_Parameters = monitoring::Monitor;
 				using Get_Parameters = monitoring::Monitor;
+				static void Set(Window& window, Set_Parameters&& parameters);
+				static Get_Parameters Get(Window& window);
+			};
+
+			template<>
+			struct Window_Property<enums::Window_Properties::Fullscreen>
+			{
+				using Set_Parameters = std::tuple<monitoring::Monitor, std::pair<std::uint32_t, std::uint32_t>, std::uint32_t>;
+				using Get_Parameters = bool;
 				static void Set(Window& window, Set_Parameters&& parameters);
 				static Get_Parameters Get(Window& window);
 			};
@@ -295,7 +304,6 @@ namespace tilia
 			template<>
 			struct Window_Property<enums::Window_Properties::Request_Attention>
 			{
-				using Set_Parameters = void;
 				static void Set(Window& window);
 			};
 
@@ -367,6 +375,12 @@ namespace tilia
 			{
 				using Get_Parameters = bool;
 				static Get_Parameters Get(Window& window);
+			};
+
+			// TODO: implement when framebuffer abstraction is implemented.
+			template<>
+			struct Window_Property<enums::Window_Properties::Framebuffer>
+			{
 			};
 
 			namespace context

@@ -668,6 +668,8 @@
     <None Include="src\vertex.vert" />
     <None Include="x64\Debug\res\shaders\cube_shader.vert" />
     <None Include="x64\Debug\res\shaders\light_shader.vert" />
+    <None Include="x64\Debug\res\shaders\texture.frag" />
+    <None Include="x64\Debug\res\shaders\texture.vert" />
     <None Include="x64\Release\res\shaders\compare.frag" />
     <None Include="x64\Release\res\shaders\compare.vert" />
     <None Include="x64\Release\res\shaders\cube_shader.vert" />

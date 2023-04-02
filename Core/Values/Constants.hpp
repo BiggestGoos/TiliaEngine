@@ -131,20 +131,21 @@ namespace tilia
 			Title					= 0x0009,
 			Icon					= 0x000A,
 			Monitor					= 0x000B,
-			Iconify					= 0x000C,
-			Maximize				= 0x000D,
-			Visible					= 0x000E,
-			Focus					= 0x000F,
-			Request_Attention		= 0x0010,
-			Opacity					= 0x0011,
-			Swap_Interval			= 0x0012,
-			Resizable				= 0x0013,
-			Decorated				= 0x0014,
-			Auto_Iconify			= 0x0015,
-			Floating				= 0x0016,
-			Focus_On_Show			= 0x0017,
-			Transparent_Framebuffer = 0x0018,
-			Framebuffer				= 0x0019
+			Fullscreen				= 0x000C,
+			Iconify					= 0x000D,
+			Maximize				= 0x000E,
+			Visible					= 0x000F,
+			Focus					= 0x0010,
+			Request_Attention		= 0x0011,
+			Opacity					= 0x0012,
+			Swap_Interval			= 0x0013,
+			Resizable				= 0x0014,
+			Decorated				= 0x0015,
+			Auto_Iconify			= 0x0016,
+			Floating				= 0x0017,
+			Focus_On_Show			= 0x0018,
+			Transparent_Framebuffer = 0x0019,
+			Framebuffer				= 0x001A
 		}; // Window_Properties
 
 		// Context properties.
@@ -265,6 +266,6 @@ namespace tilia
 /**
  * @brief Whether or not to include unit tests
  */
-#define TILIA_UNIT_TESTS 1
+#define TILIA_UNIT_TESTS 0
 
 #endif // TILIA_CONSTANTS_HPP

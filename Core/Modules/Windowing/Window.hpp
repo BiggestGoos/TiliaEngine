@@ -38,6 +38,8 @@ namespace tilia
 			friend struct properties::Window_Property<enums::Window_Properties::Title>;
 			friend struct properties::Window_Property<enums::Window_Properties::Focus>;
 			friend struct properties::Window_Property<enums::Window_Properties::Swap_Interval>;
+			friend struct properties::Window_Property<enums::Window_Properties::Monitor>;
+			friend struct properties::Window_Property<enums::Window_Properties::Fullscreen>;
 
 			using callback_ptr = void*;
 			using property_ptr = void*;
@@ -119,6 +121,9 @@ namespace tilia
 			std::string m_title{ "GLFW" };
 
 			std::int32_t m_swap_interval{ 1 };
+
+			std::pair<std::pair<std::uint32_t, std::uint32_t>, 
+				std::pair<std::uint32_t, std::uint32_t>> m_stored_area{};
 
 		private:
 

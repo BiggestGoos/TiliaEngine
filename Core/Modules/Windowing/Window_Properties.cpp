@@ -99,14 +99,47 @@ void tilia::windowing::properties::Window_Property<tilia::enums::Window_Properti
 {
 	auto underlying_window{ window.Get<enums::Window_Properties::Underlying_Window>() };
 	auto underlying_monitor{ parameters.Get<enums::Monitor_Properties::Underlying_Monitor>() };
-	auto [res_x, res_y] { parameters.Get<enums::Monitor_Properties::Resolution>() };
-	auto refresh_rate{ parameters.Get<enums::Monitor_Properties::Refresh_Rate>() };
-	glfwSetWindowMonitor(underlying_window, underlying_monitor, 0, 0, res_x, res_y, refresh_rate);
+	if (underlying_monitor != nullptr)
+	{
+		auto [res_x, res_y] { parameters.Get<enums::Monitor_Properties::Resolution>() };
+		auto refresh_rate{ parameters.Get<enums::Monitor_Properties::Refresh_Rate>() };
+		window.m_stored_area = { window.Get<enums::Window_Properties::Position>(), window.Get<enums::Window_Properties::Size>() };
+		glfwSetWindowMonitor(underlying_window, underlying_monitor, 0, 0, res_x, res_y, refresh_rate);
+	}
+	else
+	{
+		const auto& stored_area{ window.m_stored_area };
+		glfwSetWindowMonitor(underlying_window, nullptr, stored_area.first.first, stored_area.first.second, stored_area.second.first, stored_area.second.second, 0);
+	}
 }
 
 tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Monitor>::Get_Parameters tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Monitor>::Get(Window& window)
 {
 	return glfwGetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>());
+}
+
+void tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Fullscreen>::Set(Window& window, Set_Parameters&& parameters)
+{
+	auto underlying_window{ window.Get<enums::Window_Properties::Underlying_Window>() };
+	auto underlying_monitor{ std::get<0>(parameters).Get<enums::Monitor_Properties::Underlying_Monitor>() };
+
+	if (underlying_monitor != nullptr)
+	{
+		window.m_stored_area = { window.Get<enums::Window_Properties::Position>(), window.Get<enums::Window_Properties::Size>() };
+		auto& resolution{ std::get<1>(parameters) };
+		glfwSetWindowMonitor(underlying_window, underlying_monitor, 0, 0, resolution.first, resolution.second, std::get<2>(parameters));
+	}
+	else
+	{
+		const auto& stored_area{ window.m_stored_area };
+		glfwSetWindowMonitor(underlying_window, nullptr, stored_area.first.first, stored_area.first.second, stored_area.second.first, stored_area.second.second, 0);
+	}
+
+}
+
+tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Fullscreen>::Get_Parameters tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Fullscreen>::Get(Window& window)
+{
+	return (glfwGetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>()) != nullptr);
 }
 
 void tilia::windowing::properties::Window_Property<tilia::enums::Window_Properties::Iconify>::Set(Window& window, Set_Parameters&& parameters)
