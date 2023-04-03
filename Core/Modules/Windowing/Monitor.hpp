@@ -47,20 +47,20 @@ namespace tilia
 			// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
 			enum class Properties
 			{
-				Underlying_Monitor = 0x0000,
-				Resolution = 0x0001,
-				Bit_Depths = 0x0002,
-				Refresh_Rate = 0x0003,
-				Supported_Resolutions = 0x0004,
-				Supported_Bit_Depths = 0x0005,
+				Underlying_Monitor		= 0x0000,
+				Resolution				= 0x0001,
+				Bit_Depths				= 0x0002,
+				Refresh_Rate			= 0x0003,
+				Supported_Resolutions	= 0x0004,
+				Supported_Bit_Depths	= 0x0005,
 				Supported_Refresh_Rates = 0x0006,
-				Physical_Size = 0x0007,
-				Content_Scale = 0x0008,
-				Virtual_Position = 0x0009,
-				Workarea = 0x000A,
-				Name = 0x000B,
-				Gamma_Ramp = 0x000C,
-				Gamma = 0x000D
+				Physical_Size			= 0x0007,
+				Content_Scale			= 0x0008,
+				Virtual_Position		= 0x0009,
+				Workarea				= 0x000A,
+				Name					= 0x000B,
+				Gamma_Ramp				= 0x000C,
+				Gamma					= 0x000D
 			}; // Properties
 		} // enums
 

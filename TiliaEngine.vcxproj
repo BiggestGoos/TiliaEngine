@@ -195,6 +195,7 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Mesh.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.hpp" />
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Vertex.hpp" />
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\Framebuffer.hpp" />
     <ClInclude Include="Core\Modules\Windowing\Monitor.hpp" />
     <ClInclude Include="Core\Modules\Windowing\Window_Properties.hpp" />
     <ClInclude Include="Core\Modules\Windowing\Window.hpp" />
@@ -513,6 +514,7 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Batch.cpp" />
     <ClCompile Include="Core\Modules\Error_Handling\OpenGL\3_3\Error_Handling.cpp" />
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Renderer.cpp" />
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\Framebuffer.cpp" />
     <ClCompile Include="Core\Modules\Windowing\Monitor.cpp" />
     <ClCompile Include="Core\Modules\Windowing\Window.cpp" />
     <ClCompile Include="Core\Modules\Windowing\Window_Properties.cpp" />
