@@ -463,7 +463,7 @@ int main()
 
         windowing::hints::context::Verion_Major(3);
         windowing::hints::context::Verion_Minor(3);
-        windowing::hints::context::OpenGL_Profile(enums::OpenGL_Profile::Core);
+        windowing::hints::context::OpenGL_Profile(windowing::enums::context::OpenGL_Profile::Core);
         windowing::hints::context::OpenGL_Debug_Context(true);
         windowing::hints::Transparent_Framebuffer(true);
 
@@ -485,16 +485,16 @@ int main()
 
         //window.Set<enums::Window_Properties::Floating>({ true });
 
-        window.Set<enums::Window_Properties::Swap_Interval>(0);
+        window.Set<windowing::enums::Properties::Swap_Interval>(0);
 
         monitoring::Monitor primary_monitor{ monitoring::Monitor::Get_Monitors()[0] };
 
-        auto resolution{ primary_monitor.Get<enums::Monitor_Properties::Resolution>() };
-        auto refresh_rate{ primary_monitor.Get<enums::Monitor_Properties::Refresh_Rate>() };
+        auto resolution{ primary_monitor.Get<monitoring::enums::Properties::Resolution>() };
+        auto refresh_rate{ primary_monitor.Get<monitoring::enums::Properties::Refresh_Rate>() };
 
         std::cout << "primary monitor: " << resolution.first << " : " << resolution.second << " : " << refresh_rate << '\n';
 
-        auto supported_refresh_rates{ primary_monitor.Get<enums::Monitor_Properties::Supported_Refresh_Rates>(resolution) };
+        auto supported_refresh_rates{ primary_monitor.Get<monitoring::enums::Properties::Supported_Refresh_Rates>(resolution) };
         const auto s_r_r_count{ supported_refresh_rates.size() };
 
         for (std::size_t i{ 0 }; i < s_r_r_count; ++i)
@@ -502,13 +502,13 @@ int main()
             std::cout << "Supported refresh rate #" << i << " : " << supported_refresh_rates[i] << '\n';
         }
 
-        window.Set<enums::Window_Properties::Monitor>(primary_monitor);
+        window.Set<windowing::enums::Properties::Monitor>(primary_monitor);
 
-        std::cout << std::boolalpha << window.Get<enums::Window_Properties::Fullscreen>() << '\n';
+        std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
 
-        window.Set<enums::Window_Properties::Monitor>(nullptr);
+        window.Set<windowing::enums::Properties::Monitor>(nullptr);
 
-        std::cout << std::boolalpha << window.Get<enums::Window_Properties::Fullscreen>() << '\n';
+        std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
 
         //glfwSetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>(), nullptr, 3840 >> 1, 2160 >> 1, 3840, 2160, GLFW_DONT_CARE);
 
@@ -520,9 +520,9 @@ int main()
         //window.Set(windowing::properties::Should_Close{ true });
         //window.Set(windowing::properties::Should_Close{ false });
 
-        std::cout << window.Get<enums::Window_Properties::Underlying_Window>() << '\n';
+        std::cout << window.Get<windowing::enums::Properties::Underlying_Window>() << '\n';
 
-        auto [content_scale_x, content_scale_y] { primary_monitor.Get<enums::Monitor_Properties::Content_Scale>() };
+        auto [content_scale_x, content_scale_y] { primary_monitor.Get<monitoring::enums::Properties::Content_Scale>() };
 
         std::cout << content_scale_x << " : " << content_scale_y << '\n';
 
@@ -589,7 +589,7 @@ int main()
         //    std::cout << i << " : " << extension << '\n';
         //}
 
-        input.Init(window.Get<enums::Window_Properties::Underlying_Window>());
+        input.Init(window.Get<windowing::enums::Properties::Underlying_Window>());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -744,7 +744,7 @@ int main()
 
         // render loop
         // -----------
-        while (!window.Get<enums::Window_Properties::Should_Close>())
+        while (!window.Get<windowing::enums::Properties::Should_Close>())
         {
 
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -786,7 +786,7 @@ int main()
             logger.Remove_Output(&title);
             logger.Remove_Filter("title");
 
-            window.Set<enums::Window_Properties::Title>(title.str());
+            window.Set<windowing::enums::Properties::Title>(title.str());
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -797,14 +797,14 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ 1.0f };
-            if (!window.Get<enums::Window_Properties::Iconify>())
+            if (!window.Get<windowing::enums::Properties::Iconify>())
             {
                 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
             }
 
             if (input.Get_Key_Pressed(KEY_RIGHT_SHIFT))
             {
-                window.Set<enums::Window_Properties::Focus>(false);
+                window.Set<windowing::enums::Properties::Focus>(false);
             }
 
             ub_2.Uniform("projection", projection);

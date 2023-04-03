@@ -41,6 +41,29 @@ namespace tilia
 		// Type for containing a gamma ramp for red, green, and blue values
 		using Gamma_Ramp = std::vector<std::tuple<std::uint16_t, std::uint16_t, std::uint16_t>>;
 
+		namespace enums
+		{
+			// Monitor properties.
+			// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
+			enum class Properties
+			{
+				Underlying_Monitor = 0x0000,
+				Resolution = 0x0001,
+				Bit_Depths = 0x0002,
+				Refresh_Rate = 0x0003,
+				Supported_Resolutions = 0x0004,
+				Supported_Bit_Depths = 0x0005,
+				Supported_Refresh_Rates = 0x0006,
+				Physical_Size = 0x0007,
+				Content_Scale = 0x0008,
+				Virtual_Position = 0x0009,
+				Workarea = 0x000A,
+				Name = 0x000B,
+				Gamma_Ramp = 0x000C,
+				Gamma = 0x000D
+			}; // Properties
+		} // enums
+
 		namespace callbacks
 		{
 			
@@ -63,14 +86,14 @@ namespace tilia
 		namespace properties
 		{
 
-			template<enums::Monitor_Properties Type>
+			template<enums::Properties Type>
 			struct Monitor_Property {};
 
 			/**
 			 * @brief The resolution of the screen in screen coordinates.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Resolution>
+			struct Monitor_Property<enums::Properties::Resolution>
 			{
 				using Get_Parameters = std::pair<std::uint32_t, std::uint32_t>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -79,7 +102,7 @@ namespace tilia
 			 * @brief Bit depths of the RGB values.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Bit_Depths>
+			struct Monitor_Property<enums::Properties::Bit_Depths>
 			{
 				using Get_Parameters = std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -88,7 +111,7 @@ namespace tilia
 			 * @brief Refresh rate of monitor in Hz.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Refresh_Rate>
+			struct Monitor_Property<enums::Properties::Refresh_Rate>
 			{
 				using Get_Parameters = std::uint32_t;
 				static Get_Parameters Get(Monitor& monitor);
@@ -97,7 +120,7 @@ namespace tilia
 			 * @brief All supported resolutions of the monitor. 
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Supported_Resolutions>
+			struct Monitor_Property<enums::Properties::Supported_Resolutions>
 			{
 				using Get_Parameters = std::set<std::pair<std::uint32_t, std::uint32_t>>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -106,30 +129,30 @@ namespace tilia
 			 * @brief All supported bit depths of the monitor at the resolution.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Supported_Bit_Depths>
+			struct Monitor_Property<enums::Properties::Supported_Bit_Depths>
 			{
 				using Get_Parameters = 
 					std::vector<std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>>;
 				using Get_Arguments = 
-					Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
+					Monitor_Property<enums::Properties::Resolution>::Get_Parameters;
 				static Get_Parameters Get(Monitor& monitor, Get_Arguments&& get_arguments);
 			};
 			/**
 			 * @brief All supported refresh rates of the monitor at the resolution.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Supported_Refresh_Rates>
+			struct Monitor_Property<enums::Properties::Supported_Refresh_Rates>
 			{
 				using Get_Parameters = std::vector<std::uint32_t>;
 				using Get_Arguments = 
-					Monitor_Property<enums::Monitor_Properties::Resolution>::Get_Parameters;
+					Monitor_Property<enums::Properties::Resolution>::Get_Parameters;
 				static Get_Parameters Get(Monitor& monitor, Get_Arguments&& get_arguments);
 			};
 			/**
 			 * @brief An approximation of the physical size of the monitor.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Physical_Size>
+			struct Monitor_Property<enums::Properties::Physical_Size>
 			{
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -138,7 +161,7 @@ namespace tilia
 			 * @brief Ratio of monitor DPI and platform default DPI.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Content_Scale>
+			struct Monitor_Property<enums::Properties::Content_Scale>
 			{
 				using Get_Parameters = std::pair<float, float>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -147,7 +170,7 @@ namespace tilia
 			 * @brief The position of the monitor on the virtual desktop in screen coordinates.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Virtual_Position>
+			struct Monitor_Property<enums::Properties::Virtual_Position>
 			{
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Monitor& monitor);
@@ -157,7 +180,7 @@ namespace tilia
 			 * coordinates.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Workarea>
+			struct Monitor_Property<enums::Properties::Workarea>
 			{
 				using Get_Parameters = 
 					std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
@@ -167,7 +190,7 @@ namespace tilia
 			 * @brief The name of the monitor.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Name>
+			struct Monitor_Property<enums::Properties::Name>
 			{
 				using Get_Parameters = std::string;
 				static Get_Parameters Get(Monitor& monitor);
@@ -176,7 +199,7 @@ namespace tilia
 			 * @brief The gamma ramp of the monitor.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Gamma_Ramp>
+			struct Monitor_Property<enums::Properties::Gamma_Ramp>
 			{
 				using Set_Parameters = Gamma_Ramp;
 				using Get_Parameters = Gamma_Ramp;
@@ -187,7 +210,7 @@ namespace tilia
 			 * @brief A simpler version of the gamma ramp.
 			 */
 			template<>
-			struct Monitor_Property<enums::Monitor_Properties::Gamma>
+			struct Monitor_Property<enums::Properties::Gamma>
 			{
 				using Set_Parameters = float;
 				static void Set(Monitor& monitor, Set_Parameters&& parameters);
@@ -236,7 +259,7 @@ namespace tilia
 			/**
 			 * @brief Sets the property of the given type with the given parameters.
 			 */
-			template<enums::Monitor_Properties Type, 
+			template<enums::Properties Type, 
 				typename Property = properties::Monitor_Property<Type>>
 			void Set(typename Property::Set_Parameters parameters)
 			{
@@ -246,7 +269,7 @@ namespace tilia
 			/**
 			 * @brief Gets the property of the given type.
 			 */
-			template<enums::Monitor_Properties Type, 
+			template<enums::Properties Type, 
 				typename Property = properties::Monitor_Property<Type>>
 			auto Get()
 			{
@@ -256,7 +279,7 @@ namespace tilia
 			/**
 			 * @brief Gets the property of the given type based on the given arguments.
 			 */
-			template<enums::Monitor_Properties Type, 
+			template<enums::Properties Type, 
 				typename Property = properties::Monitor_Property<Type>>
 			auto Get(typename Property::Get_Arguments arguments)
 			{
@@ -267,7 +290,7 @@ namespace tilia
 			 * @brief Gets the GLFWmonitor pointer.
 			 */
 			template<>
-			auto Get<enums::Monitor_Properties::Underlying_Monitor>()
+			auto Get<enums::Properties::Underlying_Monitor>()
 			{
 				return m_monitor;
 			}

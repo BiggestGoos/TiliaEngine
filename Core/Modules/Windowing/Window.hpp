@@ -35,11 +35,11 @@ namespace tilia
 		{
 		private:
 
-			friend struct properties::Window_Property<enums::Window_Properties::Title>;
-			friend struct properties::Window_Property<enums::Window_Properties::Focus>;
-			friend struct properties::Window_Property<enums::Window_Properties::Swap_Interval>;
-			friend struct properties::Window_Property<enums::Window_Properties::Monitor>;
-			friend struct properties::Window_Property<enums::Window_Properties::Fullscreen>;
+			friend struct properties::Window_Property<enums::Properties::Title>;
+			friend struct properties::Window_Property<enums::Properties::Focus>;
+			friend struct properties::Window_Property<enums::Properties::Swap_Interval>;
+			friend struct properties::Window_Property<enums::Properties::Monitor>;
+			friend struct properties::Window_Property<enums::Properties::Fullscreen>;
 
 			using callback_ptr = void*;
 			using property_ptr = void*;
@@ -65,7 +65,7 @@ namespace tilia
 
 			template<typename T,
 				std::enable_if_t<std::is_same<decltype(T::Type),
-				const enums::Window_Callbacks>::value>* = nullptr>
+				const enums::Callbacks>::value>* = nullptr>
 				void Add_Callback(T callback)
 			{
 				std::get<enums::operator*(T::Type)>(m_callbacks).push_back(std::move(callback));
@@ -73,7 +73,7 @@ namespace tilia
 
 			template<typename T,
 				std::enable_if_t<std::is_same<decltype(T::Type),
-				const enums::Window_Callbacks>::value>* = nullptr>
+				const enums::Callbacks>::value>* = nullptr>
 				void Remove_Callback(T callback)
 			{
 				auto& callbacks{ std::get<enums::operator*(T::Type)>(m_callbacks) };
@@ -92,26 +92,26 @@ namespace tilia
 
 			void Swap_Buffers() const;
 
-			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
+			template<enums::Properties Type, typename Property = properties::Window_Property<Type>>
 			void Set(typename Property::Set_Parameters parameters)
 			{
 				Property::Set(*this, std::move(parameters));
 			}
 
-			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
+			template<enums::Properties Type, typename Property = properties::Window_Property<Type>>
 			void Set()
 			{
 				Property::Set(*this);
 			}
 
-			template<enums::Window_Properties Type, typename Property = properties::Window_Property<Type>>
+			template<enums::Properties Type, typename Property = properties::Window_Property<Type>>
 			auto Get()
 			{
 				return Property::Get(*this);
 			}
 
 			template<>
-			auto Get<enums::Window_Properties::Underlying_Window>()
+			auto Get<enums::Properties::Underlying_Window>()
 			{
 				return m_window;
 			}
@@ -127,7 +127,7 @@ namespace tilia
 
 		private:
 
-			void Set_Callback(enums::Window_Callbacks type, callback_ptr callback);
+			void Set_Callback(enums::Callbacks type, callback_ptr callback);
 
 			GLFWwindow* m_window{};
 
