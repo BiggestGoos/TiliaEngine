@@ -13,6 +13,18 @@
 namespace tilia
 {
 
+	class Framebuffer
+	{
+	public:
+
+
+
+	private:
+
+
+
+	};
+
 }
 
 #endif // TILIA_FRAMEBUFFER_HPP

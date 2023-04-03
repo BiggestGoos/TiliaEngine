@@ -1,16 +1,7 @@
 /**************************************************************************************************
  * @file   File_System.hpp
- * 
  * @brief  Holds a class which will do all of the I/O of files.
- * 
- * @define TILIA_FILE_SYSTEM_HPP
- * 
- * Standard:
- * <cstdint>
- * 
- * Tilia:
- * "Enums.hpp"
- * 
+
  * @author Gustav Fagerlind
  * @date   12/07/2022
  *************************************************************************************************/
@@ -53,7 +44,7 @@ namespace tilia {
              * @exception                      Loaded width, height, or number of color channels is
              *                                 equel to zero.
              */
-            std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, 
+            static std::uint8_t* Load_Image(const std::string& file_path, std::int32_t& width, 
                 std::int32_t& height, std::int32_t& color_channels, 
                 const std::int32_t& desired_color_channels, const bool& flip_image_y);
             /**
@@ -67,7 +58,7 @@ namespace tilia {
              * @exception         Reasons:
              * @exception         Fails to load in data.
              */
-            std::string Load_File(const std::string& file_path);
+            static std::string Load_File(const std::string& file_path);
 
         }; // File_System
 

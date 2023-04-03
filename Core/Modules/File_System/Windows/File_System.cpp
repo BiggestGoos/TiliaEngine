@@ -10,9 +10,6 @@
 #include "Core/Values/Directories.hpp"
 #include TILIA_TILIA_EXCEPTION_INCLUDE
 
-// Global File_System
-tilia::utils::File_System file_system{};
-
 std::uint8_t* tilia::utils::File_System::Load_Image(const std::string& file_path, 
 	std::int32_t& width, std::int32_t& height, std::int32_t& color_channels, 
 	const std::int32_t& desired_color_channels, const bool& flip_image_y)

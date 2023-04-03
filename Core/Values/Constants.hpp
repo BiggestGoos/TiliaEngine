@@ -90,6 +90,11 @@ namespace tilia
 		return Get_Enum_Value(e); \
 	} \
 
+	namespace enums
+	{
+		TILIA_GET_UNDERLYING_ENUM_VALUE
+	} // enums
+
 	namespace windowing::enums
 	{
 		TILIA_GET_UNDERLYING_ENUM_VALUE

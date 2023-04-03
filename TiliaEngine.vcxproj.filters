@@ -1011,6 +1011,9 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\Framebuffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Images\Image.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
@@ -1092,6 +1095,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Images\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
