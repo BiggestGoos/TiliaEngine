@@ -381,6 +381,7 @@ namespace tilia
 			template<>
 			struct Window_Property<enums::Window_Properties::Framebuffer>
 			{
+
 			};
 
 			namespace context

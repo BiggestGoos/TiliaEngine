@@ -55,8 +55,8 @@ void error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsi
 }
 
 // settings
-int SCR_WIDTH = 1600;
-int SCR_HEIGHT = 1200;
+int SCR_WIDTH = 1440;
+int SCR_HEIGHT = 810;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -465,6 +465,7 @@ int main()
         windowing::hints::context::Verion_Minor(3);
         windowing::hints::context::OpenGL_Profile(enums::OpenGL_Profile::Core);
         windowing::hints::context::OpenGL_Debug_Context(true);
+        windowing::hints::Transparent_Framebuffer(true);
 
         window.Init(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 
@@ -693,6 +694,7 @@ int main()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+        
         // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
         unsigned int rbo;
         glGenRenderbuffers(1, &rbo);
@@ -713,13 +715,13 @@ int main()
 
         float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
             // positions   // texCoords
-            -1.0f,  1.0f,  0.0f, 1.0f,
+            -1.0f,  0.5f,  0.0f, 1.0f,
             -1.0f, -1.0f,  0.0f, 0.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
+             0.5f, -1.0f,  1.0f, 0.0f,
 
-            -1.0f,  1.0f,  0.0f, 1.0f,
-             1.0f, -1.0f,  1.0f, 0.0f,
-             1.0f,  1.0f,  1.0f, 1.0f
+            -1.0f,  0.5f,  0.0f, 1.0f,
+             0.5f, -1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  1.0f, 1.0f
         };
 
         // screen quad VAO
@@ -832,9 +834,11 @@ int main()
             glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
             glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
             // clear all relevant buffers
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
+            glClearColor(0.5f, 0.5f, 0.5f, 0.5f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
             glClear(GL_COLOR_BUFFER_BIT);
 
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            
             fbo_shader->Bind();
             glBindVertexArray(quadVAO);
             glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
@@ -1132,7 +1136,7 @@ int main()
         cube_shader->Bind_Uniform_Block("Matrices", 0);
 
         Cube_Map_Data def{};
-
+        
         def.sides[0].file_path = "res/textures/container2.png";
         def.sides[1].file_path = "res/textures/container2.png";
         def.sides[2].file_path = "res/textures/container2.png";
