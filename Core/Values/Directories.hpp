@@ -42,6 +42,8 @@
 #define TILIA_WINDOW_INCLUDE "Core/Modules/Windowing/Window.hpp"
 #define TILIA_WINDOW_PROPERTIES_INCLUDE "Core/Modules/Windowing/Window_Properties.hpp"
 
+#define TILIA_IMAGE_INCLUDE "Core/Modules/Images/Image.hpp"
+
 #define TILIA_TEMP_CAMERA_INCLUDE "Core/Temp/Camera.hpp"
 #define TILIA_TEMP_INPUT_INCLUDE "Core/Temp/Input.hpp"
 #define TILIA_TEMP_LIMIT_FPS_INCLUDE "Core/Temp/Limit_Fps.hpp"
@@ -88,6 +90,8 @@
 #include "Core/Modules/Windowing/Monitor.hpp"
 #include "Core/Modules/Windowing/Window.hpp"
 #include "Core/Modules/Windowing/Window_Properties.hpp"
+
+#include "Core/Modules/Images/Image.hpp"
 
 #include "Core/Temp/Camera.hpp"
 #include "Core/Temp/Input.hpp"

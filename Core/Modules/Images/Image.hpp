@@ -12,22 +12,21 @@
 
 // Standard
 #include <memory>
+#include <string>
 
 namespace tilia
 {
 
 	namespace enums
 	{
-		enum class Image_Format
+		enum class Image_Channels
 		{
-			Red		  = 0x0000,
-			Red_Green = 0x0001,
-			RGB       = 0x0002,
-			BGR		  = 0x0003,
-			RGBA	  = 0x0004,
-			BGRA	  = 0x0005
-		};
-	}
+			Gray	   = 0x0000,
+			Gray_Alpha = 0x0001,
+			RGB		   = 0x0002,
+			RGBA	   = 0x0003
+		}; // Image_Channels
+	} // enums
 
 	class Image
 	{
@@ -37,17 +36,27 @@ namespace tilia
 
 	public:
 
+		Image(const std::string& filename, bool flip_vertical = false);
 
+		auto Get() { return m_image_data.get(); }
+
+		auto Width() { return m_width; }
+		auto Height() { return m_height; }
+		auto Channel_Count() { return m_channel_count; }
 
 	private:
 
-		Byte* m_texture_data{};
+		static void Free_Image(Byte* image_data);
 
-		std::int32_t m_width{}, m_height{};
-		std::int32_t m_channel_count{};
+		std::unique_ptr<Byte[], void (*)(Byte*)> m_image_data{ nullptr, Free_Image };
 
-	};
+		std::int32_t 
+			m_width{}, 
+			m_height{}, 
+			m_channel_count{};
 
-}
+	}; // Image
+
+} // tilia
 
 #endif // TILIA_IMAGE_HPP

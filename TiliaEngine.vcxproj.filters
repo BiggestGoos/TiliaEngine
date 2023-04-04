@@ -1100,6 +1100,9 @@
     <ClCompile Include="Core\Modules\Images\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\stb_image\implementation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vertex.vert" />

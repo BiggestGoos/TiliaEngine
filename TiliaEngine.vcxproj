@@ -526,6 +526,7 @@
     <ClCompile Include="Core\Values\OpenGL\3_3\Utils.cpp" />
     <ClCompile Include="vendor\glad\KHR_Debug_openGL_3_3\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
+    <ClCompile Include="vendor\stb_image\implementation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\res\shaders\cube_shader.vert" />

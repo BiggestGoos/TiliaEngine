@@ -38,6 +38,7 @@
 #include TILIA_OPENGL_3_3_BUFFER_INCLUDE
 #include TILIA_WINDOW_INCLUDE
 #include TILIA_MONITOR_INCLUDE
+#include TILIA_IMAGE_INCLUDE
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput();
@@ -502,13 +503,13 @@ int main()
             std::cout << "Supported refresh rate #" << i << " : " << supported_refresh_rates[i] << '\n';
         }
 
-        window.Set<windowing::enums::Properties::Monitor>(primary_monitor);
+        //window.Set<windowing::enums::Properties::Monitor>(primary_monitor);
 
-        std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
+        //std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
 
-        window.Set<windowing::enums::Properties::Monitor>(nullptr);
+        //window.Set<windowing::enums::Properties::Monitor>(nullptr);
 
-        std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
+        //std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
 
         //glfwSetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>(), nullptr, 3840 >> 1, 2160 >> 1, 3840, 2160, GLFW_DONT_CARE);
 
@@ -723,7 +724,7 @@ int main()
              0.5f, -1.0f,  1.0f, 0.0f,
              0.5f,  0.5f,  1.0f, 1.0f
         };
-
+        
         // screen quad VAO
         unsigned int quadVAO, quadVBO;
         glGenVertexArrays(1, &quadVAO);
@@ -741,6 +742,16 @@ int main()
         fbo_shader->Uniform("texture_2d", { 0 });
 
         glEnable(GL_BLEND);
+
+        Image image{ "res/textures/spaceInvader.png" };
+
+        GLFWimage glfw_image{};
+
+        glfw_image.width = image.Width();
+        glfw_image.height = image.Height();
+        glfw_image.pixels = image.Get();
+
+        glfwSetWindowIcon(window.Get<windowing::enums::Properties::Underlying_Window>(), 1, &glfw_image);
 
         // render loop
         // -----------
