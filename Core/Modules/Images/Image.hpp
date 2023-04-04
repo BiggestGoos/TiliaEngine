@@ -20,7 +20,12 @@ namespace tilia
 	{
 		enum class Image_Format
 		{
-
+			Red		  = 0x0000,
+			Red_Green = 0x0001,
+			RGB       = 0x0002,
+			BGR		  = 0x0003,
+			RGBA	  = 0x0004,
+			BGRA	  = 0x0005
 		};
 	}
 

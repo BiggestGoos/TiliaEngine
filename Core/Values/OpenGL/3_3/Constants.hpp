@@ -335,37 +335,37 @@ namespace tilia {
 			// The user will be able to both read from and write to the mapped memory.
 			Read_Write = 0x88BA  
 		}; // Buffer_Map_Type
-
-#ifndef TILIA_GET_ENUM_VALUE
-#define TILIA_GET_ENUM_VALUE
-
-		/**
-		 * @brief Can take any enum value as parameter and will return (if any) the underlying
-		 * value.
-		 *
-		 * @param e - The enum value
-		 *
-		 * @return The underlying value of the enum value
-		 */
-		template<typename E>
-		constexpr auto Get_Enum_Value(const E& e) noexcept {
-			return static_cast<std::underlying_type_t<E>>(e);
-		}
-
-		/**
-		 * @brief Can take any enum value as parameter and will return (if any) the underlying
-		 * value.
-		 *
-		 * @param e - The enum value
-		 *
-		 * @return The underlying value of the enum value
-		 */
-		template<typename E>
-		constexpr auto operator*(const E& e) noexcept {
-			return static_cast<std::underlying_type_t<E>>(e);
-		}
-
-#endif // TILIA_GET_ENUM_VALUE
+//
+//#ifndef TILIA_GET_ENUM_VALUE
+//#define TILIA_GET_ENUM_VALUE
+//
+//		/**
+//		 * @brief Can take any enum value as parameter and will return (if any) the underlying
+//		 * value.
+//		 *
+//		 * @param e - The enum value
+//		 *
+//		 * @return The underlying value of the enum value
+//		 */
+//		template<typename E>
+//		constexpr auto Get_Enum_Value(const E& e) noexcept {
+//			return static_cast<std::underlying_type_t<E>>(e);
+//		}
+//
+//		/**
+//		 * @brief Can take any enum value as parameter and will return (if any) the underlying
+//		 * value.
+//		 *
+//		 * @param e - The enum value
+//		 *
+//		 * @return The underlying value of the enum value
+//		 */
+//		template<typename E>
+//		constexpr auto operator*(const E& e) noexcept {
+//			return static_cast<std::underlying_type_t<E>>(e);
+//		}
+//
+//#endif // TILIA_GET_ENUM_VALUE
 
 	} // enums
 

@@ -690,7 +690,7 @@ int main()
         unsigned int textureColorbuffer;
         glGenTextures(1, &textureColorbuffer);
         glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH >> 2, SCR_HEIGHT >> 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH >> 2, SCR_HEIGHT >> 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
@@ -740,7 +740,7 @@ int main()
 
         fbo_shader->Uniform("texture_2d", { 0 });
 
-
+        glEnable(GL_BLEND);
 
         // render loop
         // -----------
@@ -751,7 +751,7 @@ int main()
             glViewport(0, 0, SCR_WIDTH >> 2, SCR_HEIGHT >> 2);
             glEnable(GL_DEPTH_TEST);
 
-            glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
             processInput();
 
@@ -832,10 +832,10 @@ int main()
             // now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-            glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+            //glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
             // clear all relevant buffers
             glClearColor(0.5f, 0.5f, 0.5f, 0.5f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             

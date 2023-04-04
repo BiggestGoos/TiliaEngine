@@ -47,36 +47,36 @@ namespace tilia
 			Quad_Points     = 4  // The amount of points in a quad.
 		}; // Geometry_Features
 
-#ifndef TILIA_GET_ENUM_VALUE
-#define TILIA_GET_ENUM_VALUE
-
-		/**
-		 * @brief Can take any enum value as parameter and will return (if any) the underlying
-		 * value.
-		 *
-		 * @param e - The enum value
-		 *
-		 * @return The underlying value of the enum value
-		 */
-		template<typename E>
-		constexpr auto Get_Enum_Value(const E& e) noexcept {
-			return static_cast<std::underlying_type_t<E>>(e);
-		}
-
-		/**
-		 * @brief Can take any enum value as parameter and will return (if any) the underlying
-		 * value.
-		 *
-		 * @param e - The enum value
-		 *
-		 * @return The underlying value of the enum value
-		 */
-		template<typename E>
-		constexpr auto operator*(const E& e) noexcept {
-			return Get_Enum_Value(e);
-		}
-
-#endif // TILIA_GET_ENUM_VALUE
+//#ifndef TILIA_GET_ENUM_VALUE
+//#define TILIA_GET_ENUM_VALUE
+//
+//		/**
+//		 * @brief Can take any enum value as parameter and will return (if any) the underlying
+//		 * value.
+//		 *
+//		 * @param e - The enum value
+//		 *
+//		 * @return The underlying value of the enum value
+//		 */
+//		template<typename E>
+//		constexpr auto Get_Enum_Value(const E& e) noexcept {
+//			return static_cast<std::underlying_type_t<E>>(e);
+//		}
+//
+//		/**
+//		 * @brief Can take any enum value as parameter and will return (if any) the underlying
+//		 * value.
+//		 *
+//		 * @param e - The enum value
+//		 *
+//		 * @return The underlying value of the enum value
+//		 */
+//		template<typename E>
+//		constexpr auto operator*(const E& e) noexcept {
+//			return Get_Enum_Value(e);
+//		}
+//
+//#endif // TILIA_GET_ENUM_VALUE
 
     }// enums
 
