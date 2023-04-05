@@ -417,6 +417,10 @@ TEST_CASE("Monitor", "[Monitor]") {
     tilia::monitoring::Monitor::Test();
 }
 
+TEST_CASE("Image", "[Image]") {
+    tilia::Image::Test();
+}
+
 #endif
 
 #if 1
@@ -745,13 +749,7 @@ int main()
 
         Image image{ "res/textures/spaceInvader.png" };
 
-        GLFWimage glfw_image{};
-
-        glfw_image.width = image.Width();
-        glfw_image.height = image.Height();
-        glfw_image.pixels = image.Get();
-
-        glfwSetWindowIcon(window.Get<windowing::enums::Properties::Underlying_Window>(), 1, &glfw_image);
+        window.Set<windowing::enums::Properties::Icon>({ image });
 
         // render loop
         // -----------

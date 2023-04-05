@@ -20,6 +20,7 @@
 #include "Core/Values/Directories.hpp"
 #include TILIA_CONSTANTS_INCLUDE
 #include TILIA_MONITOR_INCLUDE
+#include TILIA_IMAGE_INCLUDE
 
 namespace tilia
 {
@@ -401,10 +402,11 @@ namespace tilia
 				static Get_Parameters Get(Window& window);
 			};
 
-			// Todo: When image loading is done, implement this
 			template<>
 			struct Window_Property<enums::Properties::Icon>
 			{
+				using Set_Parameters = std::vector<Image>;
+				static void Set(Window& window, Set_Parameters&& parameters);
 			};
 
 			template<>

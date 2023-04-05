@@ -95,6 +95,19 @@ tilia::windowing::properties::Window_Property<tilia::windowing::enums::Propertie
 	return window.m_title;
 }
 
+void tilia::windowing::properties::Window_Property<tilia::windowing::enums::Properties::Icon>::Set(Window& window, Set_Parameters&& parameters)
+{
+	const auto count{ parameters.size() };
+	std::vector<GLFWimage> images(count);
+	for (std::size_t i{ 0 }; i < count; ++i)
+	{
+		images[i].width = parameters[i].Width();
+		images[i].height = parameters[i].Height();
+		images[i].pixels = parameters[i].Get_Data();
+	}
+	glfwSetWindowIcon(window.Get<enums::Properties::Underlying_Window>(), static_cast<std::int32_t>(count), images.data());
+}
+
 void tilia::windowing::properties::Window_Property<tilia::windowing::enums::Properties::Monitor>::Set(Window& window, Set_Parameters&& parameters)
 {
 	auto underlying_window{ window.Get<enums::Properties::Underlying_Window>() };
