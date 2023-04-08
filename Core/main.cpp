@@ -118,6 +118,11 @@ void content_scale_callback(GLFWwindow* window, float x_scale, float y_scale)
     std::cout << window << " :  x_scale: " << x_scale << " :  y_scale: " << y_scale << '\n';
 }
 
+void test_function(bool value)
+{
+
+}
+
 #if 0
 
 int main()
@@ -747,7 +752,7 @@ int main()
 
         glEnable(GL_BLEND);
 
-        Image image{ "res/textures/spaceInvader.png" };
+        Image image{ "res/textures/spaceInvader.png", enums::Image_Channels::Largest, false };
 
         window.Set<windowing::enums::Properties::Icon>({ image });
 

@@ -55,6 +55,8 @@ namespace tilia
 
 	public:
 
+		Image() = default;
+
 		Image(const Image& other)
 			: m_image_data{ nullptr, [](Byte* image_data) { delete[] image_data; } },
 			m_width{ other.m_width }, m_height{ other.m_height },
