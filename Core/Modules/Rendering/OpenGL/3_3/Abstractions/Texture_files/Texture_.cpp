@@ -1,6 +1,6 @@
 /**************************************************************************************************
- * @file   Texture.cpp
- * @brief  Defines all non-inline member functions and constructors/destructors of the @Texture
+ * @file   Texture_.cpp
+ * @brief  Defines all non-inline member functions and constructors/destructors of the @Texture_
  * class
  * 
  * Dependencies:
@@ -10,7 +10,7 @@
  * @include <string.h>
  * 
  * Headers:
- * @include "headers/Texture.h"
+ * @include "headers/Texture_.h"
  * @include "headers/Utils.h"
  * @include "headers/Logging.h"	
  * @include "headers/Error_Handling.h"	
@@ -26,7 +26,7 @@
 #include <string.h>
 
 // Headers
-#include "Texture.hpp"
+#include "Texture_.hpp"
 #include "Core/Values/Directories.hpp"
 #include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
 #include TILIA_OPENGL_3_3_UTILS_INCLUDE
@@ -34,34 +34,34 @@
 #include TILIA_TILIA_EXCEPTION_INCLUDE
 
 // Initialize static member which holds the bound textures ids
-std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::gfx::Texture::s_bound_ID{};
+std::unordered_map<tilia::enums::Texture_Type_, uint32_t> tilia::gfx::Texture_::s_bound_ID{};
 // Initialize static member which holds the previously bound textures ids
-std::unordered_map<tilia::enums::Texture_Type, uint32_t> tilia::gfx::Texture::s_previous_ID{};
+std::unordered_map<tilia::enums::Texture_Type_, uint32_t> tilia::gfx::Texture_::s_previous_ID{};
 
 /**
  * @brief Returns the type of texture as a string
  * 
  * @return The type of texture as a string
  */
-std::string tilia::gfx::Texture::Get_Type_String() const
+std::string tilia::gfx::Texture_::Get_Type_String() const
 {
 	
 	char texture_type_string[19]{ "TEXTURE_" };
 	// Gets texture type as string
 	switch (m_texture_type)
 	{
-	case tilia::enums::Texture_Type::OneD:
+	case tilia::enums::Texture_Type_::OneD:
 		strcat_s(texture_type_string, 19, "1D\0");
 		break;
-	case tilia::enums::Texture_Type::TwoD:
+	case tilia::enums::Texture_Type_::TwoD:
 		strcat_s(texture_type_string, 19, "2D\0");
 		break;
-	case tilia::enums::Texture_Type::Cube_Map:
+	case tilia::enums::Texture_Type_::Cube_Map:
 		strcat_s(texture_type_string, 19, "CUBE_MAP");
 		break;
 	default:
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture { ID: ", m_ID, " } type is undefined",
+			"Texture_ { ID: ", m_ID, " } type is undefined",
 			"\n>>> Type: ", *m_texture_type } };
 	}
 
@@ -70,9 +70,9 @@ std::string tilia::gfx::Texture::Get_Type_String() const
 }
 
 /**
- * Generates a new texture and sets the id of the Texture using glad functions
+ * Generates a new texture and sets the id of the Texture_ using glad functions
  */
-void tilia::gfx::Texture::Generate_Texture()
+void tilia::gfx::Texture_::Generate_Texture()
 {
 	try
 	{
@@ -87,14 +87,14 @@ void tilia::gfx::Texture::Generate_Texture()
 		// Possibly forward e to someplace else and then throw
 
 	}
-	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture { ID: %u } was successfuly
+	//log::Log(log::Type::SUCCESS, Get_Type_String().c_str(), "Texture_ { ID: %u } was successfuly
 	//created", m_ID);
 }
 
 /**
  * Deletes the texture from openGL and frees m_texture_def.texture_data
  */
-tilia::gfx::Texture::~Texture()
+tilia::gfx::Texture_::~Texture_()
 {
 	try
 	{
@@ -115,13 +115,13 @@ tilia::gfx::Texture::~Texture()
  * Binds the openGL texture with m_ID to the given slot. If slot is outside 
  * of range, prints errors. Also sets s_bound_ID of m_texture_type to m_ID.
  */
-void tilia::gfx::Texture::Bind(const uint32_t& slot) const
+void tilia::gfx::Texture_::Bind(const uint32_t& slot) const
 {
 
 	// Checks if slot is in range and prints errors if not
 	if (slot > utils::Get_Max_Textures() - 1) {
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture { Slot: ", slot, " } is out of the texture slot range { Min: 0, Max: ",
+			"Texture_ { Slot: ", slot, " } is out of the texture slot range { Min: 0, Max: ",
 			utils::Get_Max_Textures() - 1, " }" } };
 	}
 
@@ -140,7 +140,7 @@ void tilia::gfx::Texture::Bind(const uint32_t& slot) const
  * of the type m_texture_type to 0, effectively unbinding it. Also sets s_bound_ID of 
  * m_texture_type to 0.
  */
-void tilia::gfx::Texture::Unbind(const bool& save_id) const
+void tilia::gfx::Texture_::Unbind(const bool& save_id) const
 {
 
 	// Checks save_id
@@ -164,7 +164,7 @@ void tilia::gfx::Texture::Unbind(const bool& save_id) const
 /**
  * Static version of unbind. Takes in a texture_type instead of using member.
  */
-void tilia::gfx::Texture::Unbind(const enums::Texture_Type& texture_type, const bool& save_id)
+void tilia::gfx::Texture_::Unbind(const enums::Texture_Type_& texture_type, const bool& save_id)
 {
 
 	// Checks save_id
@@ -188,7 +188,7 @@ void tilia::gfx::Texture::Unbind(const enums::Texture_Type& texture_type, const 
 /**
  * Binds the stored s_previous_ID to the texture type, m_texture_type.
  */
-void tilia::gfx::Texture::Rebind() const
+void tilia::gfx::Texture_::Rebind() const
 {
 
 	GL_CALL(glBindTexture(*m_texture_type, s_previous_ID[m_texture_type]));
@@ -198,7 +198,7 @@ void tilia::gfx::Texture::Rebind() const
 /**
  * Static version of rebind.
  */
-void tilia::gfx::Texture::Rebind(const enums::Texture_Type& texture_type)
+void tilia::gfx::Texture_::Rebind(const enums::Texture_Type_& texture_type)
 {
 
 	GL_CALL(glBindTexture(*texture_type, s_previous_ID[texture_type]));

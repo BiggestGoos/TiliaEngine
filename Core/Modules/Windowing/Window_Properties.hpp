@@ -1,5 +1,5 @@
 /**************************************************************************************************
- * @file   Callbacks.hpp
+ * @file   Callback.hpp
  * 
  * @brief  
  * 
@@ -36,7 +36,7 @@ namespace tilia
 		{
 			// Window hints which can be used to set different values used in creating windows.
 			// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-			enum class Hints {
+			enum class Hint {
 				Resizable = 0x00020003,
 				Visible = 0x00020004,
 				Decorated = 0x00020005,
@@ -49,10 +49,10 @@ namespace tilia
 				Focus_On_Show = 0x0002000C,
 				Scale_To_Monitor = 0x0002200C,
 				Refresh_Rate = 0x0002100F
-			}; // Hints
+			}; // Hint
 			// Windowing callbacks.
 			// Check this out for info: https://www.glfw.org/docs/3.3/group__window.html
-			enum class Callbacks
+			enum class Callback
 			{
 				Position = 0x0000,
 				Size = 0x0001,
@@ -63,10 +63,10 @@ namespace tilia
 				Maximize = 0x0006,
 				Framebuffer_Size = 0x0007,
 				Content_Scale = 0x0008
-			}; // Callbacks
+			}; // Callback
 			// Window properties.
 			// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
-			enum class Properties
+			enum class Property
 			{
 				Underlying_Window = 0x0000,
 				Should_Close = 0x0001,
@@ -95,12 +95,12 @@ namespace tilia
 				Focus_On_Show = 0x0018,
 				Transparent_Framebuffer = 0x0019,
 				Framebuffer = 0x001A
-			}; // Properties
+			}; // Property
 			namespace framebuffer
 			{
 				// Framebuffer hints which can be used to set different values used in creating windows.
 				// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-				enum class Hints
+				enum class Hint
 				{
 					Red_Bits = 0x00021001,
 					Green_Bits = 0x00021002,
@@ -117,13 +117,13 @@ namespace tilia
 					Samples = 0x0002100D,
 					SRGB_Capable = 0x0002100E,
 					Doublebuffer = 0x00021010,
-				}; // Hints
+				}; // Hint
 			} // framebuffer
 			namespace context
 			{
 				// Contexts hints which can be used to set different values used in creating windows.
 				// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
-				enum class Hints
+				enum class Hint
 				{
 					Client_API = 0x00022001,
 					Creation_API = 0x0002200B,
@@ -134,10 +134,10 @@ namespace tilia
 					OpenGL_Profile = 0x00022008,
 					Robustness = 0x00022005,
 					Release_Behavior = 0x00022009,
-				}; // Hints
+				}; // Hint
 				// Context properties.
 				// Check this out for info: https://www.glfw.org/docs/3.3/window_guide.html
-				enum class Properties
+				enum class Property
 				{
 					Client_API = 0x0000,
 					Creation_API = 0x0001,
@@ -148,7 +148,7 @@ namespace tilia
 					Release_Behavior = 0x0006,
 					No_Error = 0x0007,
 					Robustness = 0x0008
-				}; // Properties
+				}; // Property
 				// What graphics API to use.
 				// Check this out for info: https://www.glfw.org/docs/latest/window_guide.html
 				enum class Client_API
@@ -199,85 +199,85 @@ namespace tilia
 
 			void Reset();
 
-			inline void Resizable(bool resizable = true) { Set_Hint(*enums::Hints::Resizable, resizable); }
+			inline void Resizable(bool resizable = true) { Set_Hint(*enums::Hint::Resizable, resizable); }
 
-			inline void Visible(bool visible = true) { Set_Hint(*enums::Hints::Visible, visible); }
+			inline void Visible(bool visible = true) { Set_Hint(*enums::Hint::Visible, visible); }
 
-			inline void Decorated(bool decorated = true) { Set_Hint(*enums::Hints::Decorated, decorated); }
+			inline void Decorated(bool decorated = true) { Set_Hint(*enums::Hint::Decorated, decorated); }
 
-			inline void Focused(bool focused = true) { Set_Hint(*enums::Hints::Focused, focused); }
+			inline void Focused(bool focused = true) { Set_Hint(*enums::Hint::Focused, focused); }
 
-			inline void Auto_Iconify(bool auto_iconify = true) { Set_Hint(*enums::Hints::Auto_Iconify, auto_iconify); }
+			inline void Auto_Iconify(bool auto_iconify = true) { Set_Hint(*enums::Hint::Auto_Iconify, auto_iconify); }
 
-			inline void Floating(bool floating = false) { Set_Hint(*enums::Hints::Floating, floating); }
+			inline void Floating(bool floating = false) { Set_Hint(*enums::Hint::Floating, floating); }
 
-			inline void Maximized(bool maximized = false) { Set_Hint(*enums::Hints::Maximized, maximized); }
+			inline void Maximized(bool maximized = false) { Set_Hint(*enums::Hint::Maximized, maximized); }
 
-			inline void Center_Cursor(bool center_cursor = true) { Set_Hint(*enums::Hints::Center_Cursor, center_cursor); }
+			inline void Center_Cursor(bool center_cursor = true) { Set_Hint(*enums::Hint::Center_Cursor, center_cursor); }
 
-			inline void Transparent_Framebuffer(bool transparent_framebuffer = false) { Set_Hint(*enums::Hints::Transparent_Framebuffer, transparent_framebuffer); }
+			inline void Transparent_Framebuffer(bool transparent_framebuffer = false) { Set_Hint(*enums::Hint::Transparent_Framebuffer, transparent_framebuffer); }
 
-			inline void Focus_On_Show(bool focus_on_show = true) { Set_Hint(*enums::Hints::Focus_On_Show, focus_on_show); }
+			inline void Focus_On_Show(bool focus_on_show = true) { Set_Hint(*enums::Hint::Focus_On_Show, focus_on_show); }
 
-			inline void Scale_To_Monitor(bool scale_to_monitor = false) { Set_Hint(*enums::Hints::Scale_To_Monitor, scale_to_monitor); }
+			inline void Scale_To_Monitor(bool scale_to_monitor = false) { Set_Hint(*enums::Hint::Scale_To_Monitor, scale_to_monitor); }
 
-			inline void Refresh_Rate(std::int32_t refresh_rate = DO_NOT_CARE) { Set_Hint(*enums::Hints::Refresh_Rate, refresh_rate); }
+			inline void Refresh_Rate(std::int32_t refresh_rate = DO_NOT_CARE) { Set_Hint(*enums::Hint::Refresh_Rate, refresh_rate); }
 
 			namespace framebuffer
 			{
 
-				inline void Red_Bits(std::int32_t red_bits = 8) { Set_Hint(*enums::framebuffer::Hints::Red_Bits, red_bits); }
+				inline void Red_Bits(std::int32_t red_bits = 8) { Set_Hint(*enums::framebuffer::Hint::Red_Bits, red_bits); }
 
-				inline void Green_Bits(std::int32_t green_bits = 8) { Set_Hint(*enums::framebuffer::Hints::Green_Bits, green_bits); }
+				inline void Green_Bits(std::int32_t green_bits = 8) { Set_Hint(*enums::framebuffer::Hint::Green_Bits, green_bits); }
 
-				inline void Blue_Bits(std::int32_t blue_bits = 8) { Set_Hint(*enums::framebuffer::Hints::Blue_Bits, blue_bits); }
+				inline void Blue_Bits(std::int32_t blue_bits = 8) { Set_Hint(*enums::framebuffer::Hint::Blue_Bits, blue_bits); }
 
-				inline void Alpha_Bits(std::int32_t alpha_bits = 8) { Set_Hint(*enums::framebuffer::Hints::Alpha_Bits, alpha_bits); }
+				inline void Alpha_Bits(std::int32_t alpha_bits = 8) { Set_Hint(*enums::framebuffer::Hint::Alpha_Bits, alpha_bits); }
 
-				inline void Depth_Bits(std::int32_t depth_bits = 24) { Set_Hint(*enums::framebuffer::Hints::Depth_Bits, depth_bits); }
+				inline void Depth_Bits(std::int32_t depth_bits = 24) { Set_Hint(*enums::framebuffer::Hint::Depth_Bits, depth_bits); }
 
-				inline void Stencil_Bits(std::int32_t stencil_bits = 8) { Set_Hint(*enums::framebuffer::Hints::Stencil_Bits, stencil_bits); }
+				inline void Stencil_Bits(std::int32_t stencil_bits = 8) { Set_Hint(*enums::framebuffer::Hint::Stencil_Bits, stencil_bits); }
 
-				inline void Accum_Red_Bits(std::int32_t accum_red_bits = 0) { Set_Hint(*enums::framebuffer::Hints::Accum_Red_Bits, accum_red_bits); }
+				inline void Accum_Red_Bits(std::int32_t accum_red_bits = 0) { Set_Hint(*enums::framebuffer::Hint::Accum_Red_Bits, accum_red_bits); }
 
-				inline void Accum_Green_Bits(std::int32_t accum_green_bits = 0) { Set_Hint(*enums::framebuffer::Hints::Accum_Green_Bits, accum_green_bits); }
+				inline void Accum_Green_Bits(std::int32_t accum_green_bits = 0) { Set_Hint(*enums::framebuffer::Hint::Accum_Green_Bits, accum_green_bits); }
 
-				inline void Accum_Blue_Bits(std::int32_t accum_blue_bits = 0) { Set_Hint(*enums::framebuffer::Hints::Accum_Blue_Bits, accum_blue_bits); }
+				inline void Accum_Blue_Bits(std::int32_t accum_blue_bits = 0) { Set_Hint(*enums::framebuffer::Hint::Accum_Blue_Bits, accum_blue_bits); }
 
-				inline void Accum_Alpha_Bits(std::int32_t accum_alpha_bits = 0) { Set_Hint(*enums::framebuffer::Hints::Accum_Alpha_Bits, accum_alpha_bits); }
+				inline void Accum_Alpha_Bits(std::int32_t accum_alpha_bits = 0) { Set_Hint(*enums::framebuffer::Hint::Accum_Alpha_Bits, accum_alpha_bits); }
 
-				inline void AUX_Buffers(std::int32_t AUX_buffers = 0) { Set_Hint(*enums::framebuffer::Hints::AUX_Buffers, AUX_buffers); }
+				inline void AUX_Buffers(std::int32_t AUX_buffers = 0) { Set_Hint(*enums::framebuffer::Hint::AUX_Buffers, AUX_buffers); }
 
-				inline void Stereo(bool stereo = false) { Set_Hint(*enums::framebuffer::Hints::Stereo, stereo); }
+				inline void Stereo(bool stereo = false) { Set_Hint(*enums::framebuffer::Hint::Stereo, stereo); }
 
-				inline void Samples(std::int32_t samples = 0) { Set_Hint(*enums::framebuffer::Hints::Samples, samples); }
+				inline void Samples(std::int32_t samples = 0) { Set_Hint(*enums::framebuffer::Hint::Samples, samples); }
 
-				inline void SRGB_Capable(bool SRGB_capable = false) { Set_Hint(*enums::framebuffer::Hints::SRGB_Capable, SRGB_capable); }
+				inline void SRGB_Capable(bool SRGB_capable = false) { Set_Hint(*enums::framebuffer::Hint::SRGB_Capable, SRGB_capable); }
 
-				inline void Doublebuffer(bool doublebuffer = true) { Set_Hint(*enums::framebuffer::Hints::Doublebuffer, doublebuffer); }
+				inline void Doublebuffer(bool doublebuffer = true) { Set_Hint(*enums::framebuffer::Hint::Doublebuffer, doublebuffer); }
 
 			} // framebuffer
 
 			namespace context
 			{
 
-				inline void Client_API(enums::context::Client_API client_API = enums::context::Client_API::OpenGL) { Set_Hint(*enums::context::Hints::Client_API, *client_API); }
+				inline void Client_API(enums::context::Client_API client_API = enums::context::Client_API::OpenGL) { Set_Hint(*enums::context::Hint::Client_API, *client_API); }
 
-				inline void Creation_API(enums::context::Creation_API context_creation_API = enums::context::Creation_API::Native) { Set_Hint(*enums::context::Hints::Creation_API, *context_creation_API); }
+				inline void Creation_API(enums::context::Creation_API context_creation_API = enums::context::Creation_API::Native) { Set_Hint(*enums::context::Hint::Creation_API, *context_creation_API); }
 
-				inline void Verion_Major(std::int32_t context_verion_major = 1) { Set_Hint(*enums::context::Hints::Verion_Major, context_verion_major); }
+				inline void Verion_Major(std::int32_t context_verion_major = 1) { Set_Hint(*enums::context::Hint::Verion_Major, context_verion_major); }
 
-				inline void Verion_Minor(std::int32_t context_verion_minor = 0) { Set_Hint(*enums::context::Hints::Verion_Minor, context_verion_minor); }
+				inline void Verion_Minor(std::int32_t context_verion_minor = 0) { Set_Hint(*enums::context::Hint::Verion_Minor, context_verion_minor); }
 
-				inline void OpenGL_Forward_Compat(bool openGL_forward_compat = false) { Set_Hint(*enums::context::Hints::OpenGL_Forward_Compat, openGL_forward_compat); }
+				inline void OpenGL_Forward_Compat(bool openGL_forward_compat = false) { Set_Hint(*enums::context::Hint::OpenGL_Forward_Compat, openGL_forward_compat); }
 
-				inline void OpenGL_Debug_Context(bool openGL_debug_context = false) { Set_Hint(*enums::context::Hints::OpenGL_Debug_Context, openGL_debug_context); }
+				inline void OpenGL_Debug_Context(bool openGL_debug_context = false) { Set_Hint(*enums::context::Hint::OpenGL_Debug_Context, openGL_debug_context); }
 
-				inline void OpenGL_Profile(enums::context::OpenGL_Profile openGL_profile = enums::context::OpenGL_Profile::Any) { Set_Hint(*enums::context::Hints::OpenGL_Profile, *openGL_profile); }
+				inline void OpenGL_Profile(enums::context::OpenGL_Profile openGL_profile = enums::context::OpenGL_Profile::Any) { Set_Hint(*enums::context::Hint::OpenGL_Profile, *openGL_profile); }
 
-				inline void Robustness(enums::context::Robustness context_robustness = enums::context::Robustness::No_Robustness) { Set_Hint(*enums::context::Hints::Robustness, *context_robustness); }
+				inline void Robustness(enums::context::Robustness context_robustness = enums::context::Robustness::No_Robustness) { Set_Hint(*enums::context::Hint::Robustness, *context_robustness); }
 
-				inline void Release_Behavior(enums::context::Release_Behavior context_release_behavior = enums::context::Release_Behavior::Any) { Set_Hint(*enums::context::Hints::Release_Behavior, *context_release_behavior); }
+				inline void Release_Behavior(enums::context::Release_Behavior context_release_behavior = enums::context::Release_Behavior::Any) { Set_Hint(*enums::context::Hint::Release_Behavior, *context_release_behavior); }
 
 			} // context
 
@@ -286,7 +286,7 @@ namespace tilia
 		namespace callbacks
 		{
 
-			template<enums::Callbacks Func_Type, typename Func_Parameters>
+			template<enums::Callback Func_Type, typename Func_Parameters>
 			struct Window_Func
 			{
 				using Parameters = Func_Parameters;
@@ -296,31 +296,31 @@ namespace tilia
 				Window_Func(Signature func) : function{ func } { }
 			}; // Window_Func
 
-			using Position = Window_Func<enums::Callbacks::Position,
+			using Position = Window_Func<enums::Callback::Position,
 				void(GLFWwindow*, std::int32_t, std::int32_t)>;
 
-			using Size = Window_Func<enums::Callbacks::Size,
+			using Size = Window_Func<enums::Callback::Size,
 				void(GLFWwindow*, std::int32_t, std::int32_t)>;
 
-			using Close = Window_Func<enums::Callbacks::Close,
+			using Close = Window_Func<enums::Callback::Close,
 				void(GLFWwindow*)>;
 
-			using Refresh = Window_Func<enums::Callbacks::Refresh,
+			using Refresh = Window_Func<enums::Callback::Refresh,
 				void(GLFWwindow*)>;
 
-			using Focus = Window_Func<enums::Callbacks::Focus,
+			using Focus = Window_Func<enums::Callback::Focus,
 				void(GLFWwindow*, std::int32_t)>;
 
-			using Inconify = Window_Func<enums::Callbacks::Iconify,
+			using Inconify = Window_Func<enums::Callback::Iconify,
 				void(GLFWwindow*, std::int32_t)>;
 
-			using Maximize = Window_Func<enums::Callbacks::Maximize,
+			using Maximize = Window_Func<enums::Callback::Maximize,
 				void(GLFWwindow*, std::int32_t)>;
 
-			using Framebuffer_Size = Window_Func<enums::Callbacks::Framebuffer_Size,
+			using Framebuffer_Size = Window_Func<enums::Callback::Framebuffer_Size,
 				void(GLFWwindow*, std::int32_t, std::int32_t)>;
 
-			using Content_Scale = Window_Func<enums::Callbacks::Content_Scale,
+			using Content_Scale = Window_Func<enums::Callback::Content_Scale,
 				void(GLFWwindow*, float, float)>;
 
 		} // callbacks
@@ -328,11 +328,11 @@ namespace tilia
 		namespace properties
 		{
 
-			template<enums::Properties Type>
+			template<enums::Property Type>
 			struct Window_Property {};
 
 			template<>
-			struct Window_Property<enums::Properties::Should_Close>
+			struct Window_Property<enums::Property::Should_Close>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -341,7 +341,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Size>
+			struct Window_Property<enums::Property::Size>
 			{
 				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
@@ -350,42 +350,42 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Frame_Size>
+			struct Window_Property<enums::Property::Frame_Size>
 			{
 				using Get_Parameters = std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Window& window);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Framebuffer_Size>
+			struct Window_Property<enums::Property::Framebuffer_Size>
 			{
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static Get_Parameters Get(Window& window);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Content_Scale>
+			struct Window_Property<enums::Property::Content_Scale>
 			{
 				using Get_Parameters = std::pair<float, float>;
 				static Get_Parameters Get(Window& window);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Size_Limits>
+			struct Window_Property<enums::Property::Size_Limits>
 			{
 				using Set_Parameters = std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Aspect_Ratio>
+			struct Window_Property<enums::Property::Aspect_Ratio>
 			{
 				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Position>
+			struct Window_Property<enums::Property::Position>
 			{
 				using Set_Parameters = std::pair<std::int32_t, std::int32_t>;
 				using Get_Parameters = std::pair<std::int32_t, std::int32_t>;
@@ -394,7 +394,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Title>
+			struct Window_Property<enums::Property::Title>
 			{
 				using Set_Parameters = std::string;
 				using Get_Parameters = std::string;
@@ -403,14 +403,14 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Icon>
+			struct Window_Property<enums::Property::Icon>
 			{
 				using Set_Parameters = std::vector<Image>;
 				static void Set(Window& window, Set_Parameters&& parameters);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Monitor>
+			struct Window_Property<enums::Property::Monitor>
 			{
 				using Set_Parameters = monitoring::Monitor;
 				using Get_Parameters = monitoring::Monitor;
@@ -419,7 +419,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Fullscreen>
+			struct Window_Property<enums::Property::Fullscreen>
 			{
 				using Set_Parameters = std::tuple<monitoring::Monitor, std::pair<std::uint32_t, std::uint32_t>, std::uint32_t>;
 				using Get_Parameters = bool;
@@ -428,7 +428,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Iconify>
+			struct Window_Property<enums::Property::Iconify>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -437,7 +437,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Maximize>
+			struct Window_Property<enums::Property::Maximize>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -446,7 +446,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Visible>
+			struct Window_Property<enums::Property::Visible>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -455,7 +455,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Focus>
+			struct Window_Property<enums::Property::Focus>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -464,13 +464,13 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Request_Attention>
+			struct Window_Property<enums::Property::Request_Attention>
 			{
 				static void Set(Window& window);
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Opacity>
+			struct Window_Property<enums::Property::Opacity>
 			{
 				using Set_Parameters = float;
 				using Get_Parameters = float;
@@ -479,7 +479,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Swap_Interval>
+			struct Window_Property<enums::Property::Swap_Interval>
 			{
 				using Set_Parameters = std::int32_t;
 				using Get_Parameters = std::int32_t;
@@ -488,7 +488,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Resizable>
+			struct Window_Property<enums::Property::Resizable>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -497,7 +497,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Decorated>
+			struct Window_Property<enums::Property::Decorated>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -506,7 +506,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Auto_Iconify>
+			struct Window_Property<enums::Property::Auto_Iconify>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -515,7 +515,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Floating>
+			struct Window_Property<enums::Property::Floating>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -524,7 +524,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Focus_On_Show>
+			struct Window_Property<enums::Property::Focus_On_Show>
 			{
 				using Set_Parameters = bool;
 				using Get_Parameters = bool;
@@ -533,7 +533,7 @@ namespace tilia
 			};
 
 			template<>
-			struct Window_Property<enums::Properties::Transparent_Framebuffer>
+			struct Window_Property<enums::Property::Transparent_Framebuffer>
 			{
 				using Get_Parameters = bool;
 				static Get_Parameters Get(Window& window);
@@ -541,7 +541,7 @@ namespace tilia
 
 			// TODO: implement when framebuffer abstraction is implemented.
 			template<>
-			struct Window_Property<enums::Properties::Framebuffer>
+			struct Window_Property<enums::Property::Framebuffer>
 			{
 
 			};
@@ -549,67 +549,67 @@ namespace tilia
 			namespace context
 			{
 
-				template<enums::context::Properties Type>
+				template<enums::context::Property Type>
 				struct Context_Property {};
 
 				template<>
-				struct Context_Property<enums::context::Properties::Client_API>
+				struct Context_Property<enums::context::Property::Client_API>
 				{
 					using Get_Parameters = enums::context::Client_API;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::Creation_API>
+				struct Context_Property<enums::context::Property::Creation_API>
 				{
 					using Get_Parameters = enums::context::Creation_API;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::Version>
+				struct Context_Property<enums::context::Property::Version>
 				{
 					using Get_Parameters = std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::OpenGL_Forward_Compatible>
+				struct Context_Property<enums::context::Property::OpenGL_Forward_Compatible>
 				{
 					using Get_Parameters = bool;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::OpenGL_Debug_Context>
+				struct Context_Property<enums::context::Property::OpenGL_Debug_Context>
 				{
 					using Get_Parameters = bool;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::OpenGL_Profile>
+				struct Context_Property<enums::context::Property::OpenGL_Profile>
 				{
 					using Get_Parameters = enums::context::OpenGL_Profile;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::Release_Behavior>
+				struct Context_Property<enums::context::Property::Release_Behavior>
 				{
 					using Get_Parameters = enums::context::Release_Behavior;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::No_Error>
+				struct Context_Property<enums::context::Property::No_Error>
 				{
 					using Get_Parameters = bool;
 					static Get_Parameters Get(Window& window);
 				};
 
 				template<>
-				struct Context_Property<enums::context::Properties::Robustness>
+				struct Context_Property<enums::context::Property::Robustness>
 				{
 					using Get_Parameters = enums::context::Robustness;
 					static Get_Parameters Get(Window& window);

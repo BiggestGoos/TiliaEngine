@@ -119,14 +119,14 @@ namespace tilia {
 		}; // Wrap_Sides
 
 		// Different types of openGL textures. Underlying value is the value defined by openGL.
-		enum class Texture_Type {
+		enum class Texture_Type_ {
 			// A 1-dimensional texture. Access with one value.
 			OneD	 = 0x0DE0, 
 			// A 2-dimensional texture. Access with two values.
 			TwoD	 = 0x0DE1, 
 			// A texture made up of six 2-dimensional textures. Access with three values.
 			Cube_Map = 0x8513  
-		}; // Texture_Type
+		}; // Texture_Type_
 
 		// The sides of the cube map. Underlying value is the value defined by openGL.
 		enum class Cube_Map_Sides {

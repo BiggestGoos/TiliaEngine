@@ -1,7 +1,7 @@
 /*****************************************************************//**
- * @file   Texture.cpp
+ * @file   Texture_.cpp
  * @brief  Defines all non-inline member functions and constructors/destructors of the @see
- * @Texture_2D_Def struct and @see @Texture_2D class.
+ * @Texture_2D_Def struct and @see @Texture_2D_ class.
  * 
  * Dependencies:
  * @include "dependencies/glad/include/glad/glad.h"
@@ -12,7 +12,7 @@
  * 
  * Headers:
  * @include "headers/Utils.h"
- * @include "headers/Texture.h"
+ * @include "headers/Texture_.h"
  * @include "headers/Error_Handling.h"
  * @include "headers/Logging.h"
  * 
@@ -28,7 +28,7 @@
 #include <cstring>
 
 // Headers
-#include "Texture_2D.hpp"
+#include "Texture_2D_.hpp"
 #include "Core/Values/Directories.hpp"
 #include TILIA_OPENGL_3_3_UTILS_INCLUDE
 #include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
@@ -43,7 +43,7 @@ extern tilia::utils::File_System file_system;
  * and filtering modes and sets some C-string with the information. Then
  * prints it all using Log_Indent.
  */
-void tilia::gfx::Texture_2D::Print_Information() const
+void tilia::gfx::Texture_2D_::Print_Information() const
 {
 
 	// Color format C-string
@@ -127,9 +127,9 @@ void tilia::gfx::Texture_2D::Print_Information() const
 /**
  * Calls Generate_Texture function
  */
-tilia::gfx::Texture_2D::Texture_2D()
+tilia::gfx::Texture_2D_::Texture_2D_()
 {
-	m_texture_type = enums::Texture_Type::TwoD;
+	m_texture_type = enums::Texture_Type_::TwoD;
 	Generate_Texture();
 }
 
@@ -148,7 +148,7 @@ tilia::gfx::Texture_2D::Texture_2D()
  * texture and then unbinds the texture. It also prints 
  * information about the texture
  */
-void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
+void tilia::gfx::Texture_2D_::Set_Texture(const Texture_2D_Def& texture_def)
 {
 	// Copies passed Texture_Def
 	m_texture_def = texture_def;
@@ -173,7 +173,7 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 			break;
 		default:
 			throw utils::Tilia_Exception{ { TILIA_LOCATION,
-				"Texture_2D { ID: ", m_ID, " } was given an invalid color format",
+				"Texture_2D_ { ID: ", m_ID, " } was given an invalid color format",
 				"\n>>> Format: ", *m_texture_def.color_format } };
 		}
 
@@ -182,7 +182,7 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 
 		if (!byte_count) {
 			throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D {ID: ", m_ID, "} failed to copy texture data" } };
+			"Texture_2D_ {ID: ", m_ID, "} failed to copy texture data" } };
 		}
 
 		m_texture_def.texture_data = std::make_unique<uint8_t[]>(static_cast<size_t>(byte_count));
@@ -192,7 +192,7 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 		if (!m_texture_def.texture_data)
 		{
 			throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D { ID: ", m_ID, " } failed to copy texture data" } };
+			"Texture_2D_ { ID: ", m_ID, " } failed to copy texture data" } };
 		}
 	}
 	else if (!texture_def.texture_data) {
@@ -206,13 +206,13 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 		catch (utils::Tilia_Exception& t_e)
 		{
 			throw t_e.Add_Message({ TILIA_LOCATION, 
-				"Texture_2D { ID: ", m_ID, " } data not loaded properly" });
+				"Texture_2D_ { ID: ", m_ID, " } data not loaded properly" });
 		}
 	}
 	
 	if (!m_texture_def.texture_data.get()) {
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D { ID: ", m_ID, " } data not set properly" } };
+			"Texture_2D_ { ID: ", m_ID, " } data not set properly" } };
 	}
 
 	// Sets load_color_format
@@ -267,7 +267,7 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
 	// Unbinds texture
 	Rebind();
 
-	//log::Log(log::Type::INFO, "TEXTURE_2D", "Texture { ID: %u } data has been set", m_ID);
+	//log::Log(log::Type::INFO, "TEXTURE_2D", "Texture_ { ID: %u } data has been set", m_ID);
 
 	//Print_Information();
 
@@ -277,11 +277,11 @@ void tilia::gfx::Texture_2D::Set_Texture(const Texture_2D_Def& texture_def)
  * Calls the overloaded version of Set_Texture that takes a texture def with the file path 
  * set to the given path.
  */
-void tilia::gfx::Texture_2D::Set_Texture(const std::string& texture_path)
+void tilia::gfx::Texture_2D_::Set_Texture(const std::string& texture_path)
 {
 	if (texture_path == "") {
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D { ID: ", m_ID, " } file path is invalid",
+			"Texture_2D_ { ID: ", m_ID, " } file path is invalid",
 			"\n>>> Path: ", texture_path } };
 	}
 		
@@ -293,19 +293,19 @@ void tilia::gfx::Texture_2D::Set_Texture(const std::string& texture_path)
 /**
  * Generates mipmaps for the openGL texture using glGenerateMipmap
  */
-void tilia::gfx::Texture_2D::Generate_Mipmaps()
+void tilia::gfx::Texture_2D_::Generate_Mipmaps()
 {
 	Unbind(true);
 	if (m_ID == 0) {
 		Rebind();
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D is not generated properly" } };
+			"Texture_2D_ is not generated properly" } };
 	}
 	if (!m_texture_def.texture_data)
 	{
 		Rebind();
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Texture_2D { ID: ", m_ID,
+			"Texture_2D_ { ID: ", m_ID,
 			" } failed to generate mipmaps because there is no data" } };
 	}
 	GL_CALL(glGenerateMipmap(GL_TEXTURE_2D));
@@ -317,7 +317,7 @@ void tilia::gfx::Texture_2D::Generate_Mipmaps()
 /**
  * Sets the filtering mode for the given size
  */
-void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size, 
+void tilia::gfx::Texture_2D_::Set_Filter(const enums::Filter_Size& filter_size, 
 	const enums::Filter_Mode& filter_mode)
 {
 	switch (filter_size)
@@ -337,7 +337,7 @@ void tilia::gfx::Texture_2D::Set_Filter(const enums::Filter_Size& filter_size,
 /**
  * Sets the wrapping mode for the given side
  */
-void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
+void tilia::gfx::Texture_2D_::Set_Wrapping(const enums::Wrap_Sides& wrap_side, 
 	const enums::Wrap_Mode& wrap_mode)
 {
 	switch (wrap_side)
@@ -350,7 +350,7 @@ void tilia::gfx::Texture_2D::Set_Wrapping(const enums::Wrap_Sides& wrap_side,
 		break;
 	default:
 		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Wrap side: ", *wrap_side, " is not allowed for Texture_2D" } };
+			"Wrap side: ", *wrap_side, " is not allowed for Texture_2D_" } };
 	}
 	Unbind(true);
 	GL_CALL(glTexParameteri(*m_texture_type, *wrap_side, *wrap_mode));

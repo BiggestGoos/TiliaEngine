@@ -113,6 +113,11 @@ namespace tilia
 		TILIA_GET_UNDERLYING_ENUM_VALUE
 	} // monitoring::enums
 
+	namespace texturing::enums
+	{
+		TILIA_GET_UNDERLYING_ENUM_VALUE
+	} // texturing::enums
+
 	constexpr std::int32_t DO_NOT_CARE{ -1 };
 
 } // tilia

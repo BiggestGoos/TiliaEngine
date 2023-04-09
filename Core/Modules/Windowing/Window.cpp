@@ -53,23 +53,23 @@ void tilia::windowing::Window::Init(std::int32_t width, std::int32_t height,
 
 	s_windows.insert({ m_window, *this });
 
-	Set_Callback(enums::Callbacks::Position, Position_Func);
+	Set_Callback(enums::Callback::Position, Position_Func);
 
-	Set_Callback(enums::Callbacks::Size, Size_Func);
+	Set_Callback(enums::Callback::Size, Size_Func);
 
-	Set_Callback(enums::Callbacks::Close, Close_Func);
+	Set_Callback(enums::Callback::Close, Close_Func);
 
-	Set_Callback(enums::Callbacks::Refresh, Refresh_Func);
+	Set_Callback(enums::Callback::Refresh, Refresh_Func);
 
-	Set_Callback(enums::Callbacks::Focus, Focus_Func);
+	Set_Callback(enums::Callback::Focus, Focus_Func);
 
-	Set_Callback(enums::Callbacks::Iconify, Inconify_Func);
+	Set_Callback(enums::Callback::Iconify, Inconify_Func);
 
-	Set_Callback(enums::Callbacks::Maximize, Maximize_Func);
+	Set_Callback(enums::Callback::Maximize, Maximize_Func);
 
-	Set_Callback(enums::Callbacks::Framebuffer_Size, Framebuffer_Size_Func);
+	Set_Callback(enums::Callback::Framebuffer_Size, Framebuffer_Size_Func);
 
-	Set_Callback(enums::Callbacks::Content_Scale, Content_Scale_Func);
+	Set_Callback(enums::Callback::Content_Scale, Content_Scale_Func);
 
 }
 
@@ -93,43 +93,43 @@ void tilia::windowing::Window::Swap_Buffers() const
 	glfwSwapBuffers(m_window);
 }
 
-void tilia::windowing::Window::Set_Callback(enums::Callbacks type, callback_ptr callback)
+void tilia::windowing::Window::Set_Callback(enums::Callback type, callback_ptr callback)
 {
 	switch (type)
 	{
-	case enums::Callbacks::Position:
+	case enums::Callback::Position:
 		glfwSetWindowPosCallback(m_window, 
 			static_cast<GLFWwindowposfun>(callback));
 		break;
-	case enums::Callbacks::Size:
+	case enums::Callback::Size:
 		glfwSetWindowSizeCallback(m_window, 
 			static_cast<GLFWwindowsizefun>(callback));
 		break;
-	case enums::Callbacks::Close:
+	case enums::Callback::Close:
 		glfwSetWindowCloseCallback(m_window, 
 			static_cast<GLFWwindowclosefun>(callback));
 		break;
-	case enums::Callbacks::Refresh:
+	case enums::Callback::Refresh:
 		glfwSetWindowRefreshCallback(m_window, 
 			static_cast<GLFWwindowrefreshfun>(callback));
 		break;
-	case enums::Callbacks::Focus:
+	case enums::Callback::Focus:
 		glfwSetWindowFocusCallback(m_window, 
 			static_cast<GLFWwindowfocusfun>(callback));
 		break;
-	case enums::Callbacks::Iconify:
+	case enums::Callback::Iconify:
 		glfwSetWindowIconifyCallback(m_window, 
 			static_cast<GLFWwindowiconifyfun>(callback));
 		break;
-	case enums::Callbacks::Maximize:
+	case enums::Callback::Maximize:
 		glfwSetWindowMaximizeCallback(m_window, 
 			static_cast<GLFWwindowmaximizefun>(callback));
 		break;
-	case enums::Callbacks::Framebuffer_Size:
+	case enums::Callback::Framebuffer_Size:
 		glfwSetFramebufferSizeCallback(m_window, 
 			static_cast<GLFWframebuffersizefun>(callback));
 		break;
-	case enums::Callbacks::Content_Scale:
+	case enums::Callback::Content_Scale:
 		glfwSetWindowContentScaleCallback(m_window, 
 			static_cast<GLFWwindowcontentscalefun>(callback));
 		break;
@@ -139,7 +139,7 @@ void tilia::windowing::Window::Set_Callback(enums::Callbacks type, callback_ptr 
 void tilia::windowing::Window::Position_Func(GLFWwindow* window, std::int32_t x_pos, std::int32_t y_pos)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Position>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Position>(instance.m_callbacks))
 	{
 		func.function(window, x_pos, y_pos);
 	}
@@ -148,7 +148,7 @@ void tilia::windowing::Window::Position_Func(GLFWwindow* window, std::int32_t x_
 void tilia::windowing::Window::Size_Func(GLFWwindow* window, std::int32_t width, std::int32_t height)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Size>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Size>(instance.m_callbacks))
 	{
 		func.function(window, width, height);
 	}
@@ -157,7 +157,7 @@ void tilia::windowing::Window::Size_Func(GLFWwindow* window, std::int32_t width,
 void tilia::windowing::Window::Close_Func(GLFWwindow* window)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Close>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Close>(instance.m_callbacks))
 	{
 		func.function(window);
 	}
@@ -166,7 +166,7 @@ void tilia::windowing::Window::Close_Func(GLFWwindow* window)
 void tilia::windowing::Window::Refresh_Func(GLFWwindow* window)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Refresh>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Refresh>(instance.m_callbacks))
 	{
 		func.function(window);
 	}
@@ -175,7 +175,7 @@ void tilia::windowing::Window::Refresh_Func(GLFWwindow* window)
 void tilia::windowing::Window::Focus_Func(GLFWwindow* window, std::int32_t focused)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Focus>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Focus>(instance.m_callbacks))
 	{
 		func.function(window, focused);
 	}
@@ -184,7 +184,7 @@ void tilia::windowing::Window::Focus_Func(GLFWwindow* window, std::int32_t focus
 void tilia::windowing::Window::Inconify_Func(GLFWwindow* window, std::int32_t iconified)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Iconify>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Iconify>(instance.m_callbacks))
 	{
 		func.function(window, iconified);
 	}
@@ -193,7 +193,7 @@ void tilia::windowing::Window::Inconify_Func(GLFWwindow* window, std::int32_t ic
 void tilia::windowing::Window::Maximize_Func(GLFWwindow* window, std::int32_t maximized)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Maximize>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Maximize>(instance.m_callbacks))
 	{
 		func.function(window, maximized);
 	}
@@ -202,7 +202,7 @@ void tilia::windowing::Window::Maximize_Func(GLFWwindow* window, std::int32_t ma
 void tilia::windowing::Window::Framebuffer_Size_Func(GLFWwindow* window, std::int32_t width, std::int32_t height)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Framebuffer_Size>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Framebuffer_Size>(instance.m_callbacks))
 	{
 		func.function(window, width, height);
 	}
@@ -211,7 +211,7 @@ void tilia::windowing::Window::Framebuffer_Size_Func(GLFWwindow* window, std::in
 void tilia::windowing::Window::Content_Scale_Func(GLFWwindow* window, float x_scale, float y_scale)
 {
 	Window& instance{ s_windows.at(window) };
-	for (auto& func : std::get<*enums::Callbacks::Content_Scale>(instance.m_callbacks))
+	for (auto& func : std::get<*enums::Callback::Content_Scale>(instance.m_callbacks))
 	{
 		func.function(window, x_scale, y_scale);
 	}

@@ -11,8 +11,8 @@ CXX_SRCS := \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Cube_Map_Data.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader_Part.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Shader.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture.cpp \
-	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_.cpp \
+	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Texture_files\Texture_2D_.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Abstractions\Shader_files\Uniform_Buffer.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Batch.cpp \
 	Core\Modules\Rendering\OpenGL\3.3\Error_Handling.cpp \

@@ -18,7 +18,7 @@
 tilia::gfx::Cube_Map::Cube_Map()
 {
 
-    m_texture_type = enums::Texture_Type::Cube_Map;
+    m_texture_type = enums::Texture_Type_::Cube_Map;
 
     Generate_Texture();
 

@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * @file   Cube_Map.hpp
  * 
- * @brief  Declares and defines a class called Cube_Map deriving from Texture in "Texture.hpp",
+ * @brief  Declares and defines a class called Cube_Map deriving from Texture_ in "Texture_.hpp",
  * which works as an abstraction for an openGL cube map texture as well as a struct called
  * Cube_Map_Data that holds some information about the class.
  * 
@@ -19,7 +19,7 @@
 
 // Tilia
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_TEXTURE_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE__INCLUDE
 #include TILIA_OPENGL_3_3_CUBE_MAP_DATA_INCLUDE
 
 namespace tilia {
@@ -27,10 +27,10 @@ namespace tilia {
     namespace gfx {
 
         /**
-         * @brief A class deriving from the "Texture.h" Texture class which works as an abstraction
+         * @brief A class deriving from the "Texture_.h" Texture_ class which works as an abstraction
          * for an openGL cube map. Also contains a Cube_Map_Data object.
          */
-        class Cube_Map : public Texture {
+        class Cube_Map : public Texture_ {
             public:
 
             /**
@@ -360,7 +360,7 @@ namespace tilia {
 
         private:
 
-            // The info pertaining to this Texture
+            // The info pertaining to this Texture_
             Cube_Map_Data m_cube_map_data{};
 
         }; // Cube_Map

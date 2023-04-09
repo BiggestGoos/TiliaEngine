@@ -18,7 +18,7 @@
 #include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 #include TILIA_OPENGL_3_3_SHADER_INCLUDE
 #include TILIA_OPENGL_3_3_SHADER_PART_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_2D_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D__INCLUDE
 #include TILIA_OPENGL_3_3_CUBE_MAP_INCLUDE
 #include TILIA_OPENGL_3_3_ERROR_HANDLING_INCLUDE
 #include TILIA_LOGGING_INCLUDE
@@ -495,30 +495,30 @@ int main()
 
         //window.Set<enums::Window_Properties::Floating>({ true });
 
-        window.Set<windowing::enums::Properties::Swap_Interval>(0);
+        window.Set<windowing::enums::Property::Swap_Interval>(0);
 
         monitoring::Monitor primary_monitor{ monitoring::Monitor::Get_Monitors()[0] };
 
-        auto resolution{ primary_monitor.Get<monitoring::enums::Properties::Resolution>() };
-        auto refresh_rate{ primary_monitor.Get<monitoring::enums::Properties::Refresh_Rate>() };
+        auto resolution{ primary_monitor.Get<monitoring::enums::Property::Resolution>() };
+        auto refresh_rate{ primary_monitor.Get<monitoring::enums::Property::Refresh_Rate>() };
 
         std::cout << "primary monitor: " << resolution.first << " : " << resolution.second << " : " << refresh_rate << '\n';
 
-        auto supported_refresh_rates{ primary_monitor.Get<monitoring::enums::Properties::Supported_Refresh_Rates>(resolution) };
+        auto supported_refresh_rates{ primary_monitor.Get<monitoring::enums::Property::Supported_Refresh_Rates>(resolution) };
         const auto s_r_r_count{ supported_refresh_rates.size() };
 
         for (std::size_t i{ 0 }; i < s_r_r_count; ++i)
         {
             std::cout << "Supported refresh rate #" << i << " : " << supported_refresh_rates[i] << '\n';
         }
+        
+        //window.Set<windowing::enums::Property::Monitor>(primary_monitor);
 
-        //window.Set<windowing::enums::Properties::Monitor>(primary_monitor);
+        //std::cout << std::boolalpha << window.Get<windowing::enums::Property::Fullscreen>() << '\n';
 
-        //std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
+        //window.Set<windowing::enums::Property::Monitor>(nullptr);
 
-        //window.Set<windowing::enums::Properties::Monitor>(nullptr);
-
-        //std::cout << std::boolalpha << window.Get<windowing::enums::Properties::Fullscreen>() << '\n';
+        //std::cout << std::boolalpha << window.Get<windowing::enums::Property::Fullscreen>() << '\n';
 
         //glfwSetWindowMonitor(window.Get<enums::Window_Properties::Underlying_Window>(), nullptr, 3840 >> 1, 2160 >> 1, 3840, 2160, GLFW_DONT_CARE);
 
@@ -530,9 +530,9 @@ int main()
         //window.Set(windowing::properties::Should_Close{ true });
         //window.Set(windowing::properties::Should_Close{ false });
 
-        std::cout << window.Get<windowing::enums::Properties::Underlying_Window>() << '\n';
+        std::cout << window.Get<windowing::enums::Property::Underlying_Window>() << '\n';
 
-        auto [content_scale_x, content_scale_y] { primary_monitor.Get<monitoring::enums::Properties::Content_Scale>() };
+        auto [content_scale_x, content_scale_y] { primary_monitor.Get<monitoring::enums::Property::Content_Scale>() };
 
         std::cout << content_scale_x << " : " << content_scale_y << '\n';
 
@@ -599,7 +599,7 @@ int main()
         //    std::cout << i << " : " << extension << '\n';
         //}
 
-        input.Init(window.Get<windowing::enums::Properties::Underlying_Window>());
+        input.Init(window.Get<windowing::enums::Property::Underlying_Window>());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -700,10 +700,10 @@ int main()
         unsigned int textureColorbuffer;
         glGenTextures(1, &textureColorbuffer);
         glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH >> 2, SCR_HEIGHT >> 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SCR_WIDTH >> 2, SCR_HEIGHT >> 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+        //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
         
         // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
         unsigned int rbo;
@@ -725,13 +725,13 @@ int main()
 
         float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
             // positions   // texCoords
-            -1.0f,  0.5f,  0.0f, 1.0f,
+            -1.0f,  1.0f,  0.0f, 1.0f,
             -1.0f, -1.0f,  0.0f, 0.0f,
-             0.5f, -1.0f,  1.0f, 0.0f,
+             1.0f, -1.0f,  1.0f, 0.0f,
 
-            -1.0f,  0.5f,  0.0f, 1.0f,
-             0.5f, -1.0f,  1.0f, 0.0f,
-             0.5f,  0.5f,  1.0f, 1.0f
+            -1.0f,  1.0f,  0.0f, 1.0f,
+             1.0f, -1.0f,  1.0f, 0.0f,
+             1.0f,  1.0f,  1.0f, 1.0f
         };
         
         // screen quad VAO
@@ -752,13 +752,19 @@ int main()
 
         glEnable(GL_BLEND);
 
-        Image image{ "res/textures/spaceInvader.png", enums::Image_Channels::Largest, false };
+        Image image{ "res/textures/spaceInvader.png", enums::Image_Channels::Largest };
 
-        window.Set<windowing::enums::Properties::Icon>({ image });
+        window.Set<windowing::enums::Property::Icon>({ image });
+
+        glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+
+        Image image_0{ "res/textures/spaceInvader.png", enums::Image_Channels::Largest, enums::Image_Data_Type::Float, true };
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image_0.Width(), image_0.Height(), 0, GL_RGBA, GL_FLOAT, image_0.Get_Data());
 
         // render loop
         // -----------
-        while (!window.Get<windowing::enums::Properties::Should_Close>())
+        while (!window.Get<windowing::enums::Property::Should_Close>())
         {
 
             glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -800,7 +806,7 @@ int main()
             logger.Remove_Output(&title);
             logger.Remove_Filter("title");
 
-            window.Set<windowing::enums::Properties::Title>(title.str());
+            window.Set<windowing::enums::Property::Title>(title.str());
             
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -811,14 +817,14 @@ int main()
 
             // pass projection matrix to shader (note that in this case it could change every frame)
             glm::mat4 projection{ 1.0f };
-            if (!window.Get<windowing::enums::Properties::Iconify>())
+            if (!window.Get<windowing::enums::Property::Iconify>())
             {
                 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
             }
 
             if (input.Get_Key_Pressed(KEY_RIGHT_SHIFT))
             {
-                window.Set<windowing::enums::Properties::Focus>(false);
+                window.Set<windowing::enums::Property::Focus>(false);
             }
 
             ub_2.Uniform("projection", projection);
@@ -1173,7 +1179,7 @@ int main()
         // }, true);
         // box_specular_texture->Reload();
         
-        //std::shared_ptr<Texture_2D> tex_2d{ std::make_shared<Texture_2D>() };
+        //std::shared_ptr<Texture_2D_> tex_2d{ std::make_shared<Texture_2D_>() };
         //tex_2d->Set_Texture("res/teures/container2.png");
 
         constexpr size_t cube_count{ 10 };

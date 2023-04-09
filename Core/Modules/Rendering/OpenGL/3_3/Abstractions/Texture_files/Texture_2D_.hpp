@@ -1,7 +1,7 @@
 /*****************************************************************//**
- * @file   Texture_2D.h
- * @brief  Declares and defines a class called @Texture_2D deriving from @Texture in @include
- * "headers/Texture.h", which works as an abstraction for an openGL 2d texture 
+ * @file   Texture_2D_.h
+ * @brief  Declares and defines a class called @Texture_2D_ deriving from @Texture_ in @include
+ * "headers/Texture_.h", which works as an abstraction for an openGL 2d texture 
  *		   as well as a struct called @Texture_2D_Def that holds some information about the class.
  * 
  * @define TILIA_TEXTURE_H
@@ -11,7 +11,7 @@
  * @include <memory>
  * 
  * Headers:
- * @include "headers/Texture.h"
+ * @include "headers/Texture_.h"
  * @include "headers/Enums.h"
  * 
  * @author Gustav Fagerlind
@@ -27,7 +27,7 @@
 
 // Headers
 #include "Core/Values/Directories.hpp"
-#include TILIA_OPENGL_3_3_TEXTURE_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE__INCLUDE
 #include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 
 namespace tilia {
@@ -35,7 +35,7 @@ namespace tilia {
 	namespace gfx {
 
 		/**
-		 * @brief A struct that holds information for the Texture_2D class
+		 * @brief A struct that holds information for the Texture_2D_ class
 		 *
 		 * @param file_path	        - The file path of the texture
 		 * @param texture_data      - The texel data of the texture
@@ -90,24 +90,24 @@ namespace tilia {
 		};
 
 		/**
-		 * @brief A class deriving from Texture class which works as an abstraction for an openGL
+		 * @brief A class deriving from Texture_ class which works as an abstraction for an openGL
 		 * texture. Also contains a Texture_Def struct
 		 */
-		class Texture_2D : public Texture {
+		class Texture_2D_ : public Texture_ {
 		public:
 
 			/**
 			 * @brief The default constructor which generates an openGL texture and sets the
 			 * texture id
 			 */
-			Texture_2D();
+			Texture_2D_();
 
 			/**
-			 * @brief Sets the Texture_Def of this Texture to the param Texture_Def.
+			 * @brief Sets the Texture_Def of this Texture_ to the param Texture_Def.
 			 * If the texture_data of the given texture_def is null then the texture data
 			 * is set to the loaded data from the given file_path
 			 *
-			 * @param texture_def - The Texture_Def for which to set this Texture's Texture_Def to
+			 * @param texture_def - The Texture_Def for which to set this Texture_'s Texture_Def to
 			 * 
 			 * @return A return code. If 0 success.
 			 * 
@@ -117,7 +117,7 @@ namespace tilia {
 			void Set_Texture(const Texture_2D_Def& texture_def);
 
 			/**
-			 * @brief Sets the Texture_Def of this Texture to have the path given.
+			 * @brief Sets the Texture_Def of this Texture_ to have the path given.
 			 * Then loads in the texture data from this file path.
 			 *
 			 * @param texture_path - The path of the texture to load
@@ -131,28 +131,28 @@ namespace tilia {
 			/**
 			 * @brief Generates all mipmap levels for the texture
 			 *
-			 * @exception Texture is not loaded
+			 * @exception Texture_ is not loaded
 			 * @exception There is no texture_data
 			 */
 			void Generate_Mipmaps() override;
 
 			/**
-			 * @brief Returns the Texture_Def of this Texture
+			 * @brief Returns the Texture_Def of this Texture_
 			 *
-			 * @return m_texture_def - The Texture_Def of this Texture
+			 * @return m_texture_def - The Texture_Def of this Texture_
 			 */
 			inline const Texture_2D_Def& Get_Texture_Def() const { return m_texture_def; }
 
 			/**
-			 * @brief Returns the width of this Texture's Texture_Def
+			 * @brief Returns the width of this Texture_'s Texture_Def
 			 *
-			 * @return m_texture_def.width - The width of this Texture's Texture_Def
+			 * @return m_texture_def.width - The width of this Texture_'s Texture_Def
 			 */
 			inline const int32_t& Get_Width() const { return m_texture_def.width; }
 			/**
-			 * @brief Returns the height of this Texture's Texture_Def
+			 * @brief Returns the height of this Texture_'s Texture_Def
 			 *
-			 * @return m_texture_def.height - The height of this Texture's Texture_Def
+			 * @return m_texture_def.height - The height of this Texture_'s Texture_Def
 			 */
 			inline const int32_t& Get_Height() const { return m_texture_def.height; }
 
@@ -176,7 +176,7 @@ namespace tilia {
 
 		private:
 
-			Texture_2D_Def m_texture_def; // The info pertaining to this Texture
+			Texture_2D_Def m_texture_def; // The info pertaining to this Texture_
 			
 			/**
 			 * @brief Prints information about the shader indented. Prints the dimensions, color

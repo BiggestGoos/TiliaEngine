@@ -8,8 +8,8 @@
  * 
  * Headers:
  * @include "headers/Vertex.h"
- * @include "headers/Texture_2D.h"
- * @include "headers/Texture.h"
+ * @include "headers/Texture_2D_.h"
+ * @include "headers/Texture_.h"
  * @include "headers/Shader.h"
  * @include "headers/Shader_Data.h"
  * @include "headers/Enums.h"
@@ -28,8 +28,8 @@
 // Headers
 #include "Core/Values/Directories.hpp"
 #include TILIA_OPENGL_3_3_VERTEX_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_2D_INCLUDE
-#include TILIA_OPENGL_3_3_TEXTURE_INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE_2D__INCLUDE
+#include TILIA_OPENGL_3_3_TEXTURE__INCLUDE
 #include TILIA_OPENGL_3_3_SHADER_INCLUDE
 #include TILIA_OPENGL_3_3_CONSTANTS_INCLUDE
 #include TILIA_LOGGING_INCLUDE
@@ -82,7 +82,7 @@ namespace tilia {
 			uint32_t*										   vertex_pos_start{};
 			uint32_t*										   vertex_pos_end{};
 			int32_t*										   texture_offset{};
-			std::vector<std::weak_ptr<Texture>>*			   textures{};
+			std::vector<std::weak_ptr<Texture_>>*			   textures{};
 			Vertex_Info* 									   vertex_info{};
 		};
 
@@ -105,14 +105,14 @@ namespace tilia {
 			 * 
 			 * @param texture - The texture to be added.
 			 */
-			inline void Add_Texture(std::weak_ptr<Texture> texture) {
+			inline void Add_Texture(std::weak_ptr<Texture_> texture) {
 				m_textures.push_back(texture); }
 			/**
 			 * @brief Removes the texture from the m_textures vector.
 			 * 
 			 * @param texture - The texture to be removed.
 			 */
-			inline void Remove_Texture(Texture* texture)
+			inline void Remove_Texture(Texture_* texture)
 			{ 
 				size_t size{ m_textures.size() };
 				size_t index{};
@@ -489,7 +489,7 @@ namespace tilia {
 
 			bool m_transparent{ false }; // Wheter or not the mesh is transparent.
 
-			std::vector<std::weak_ptr<Texture>> m_textures{}; // A vector of all of the textures
+			std::vector<std::weak_ptr<Texture_>> m_textures{}; // A vector of all of the textures
 			// used in the mesh. 
 
 			int32_t m_texture_index_offset{ -1 }; // The offset to the texture index.

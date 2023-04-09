@@ -34,61 +34,21 @@ namespace tilia {
 		 */
 		struct Exception_Data
 		{
-			friend class Tilia_Exception;
 
-			Exception_Data(const Exception_Data& other)
-				: m_message{ other.m_message }, m_file{ other.m_file },
-				m_line{ other.m_line } { }
-
-			Exception_Data(Exception_Data&& other) noexcept
-				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) },
-				m_line{ other.m_line } { }
-
-			Exception_Data& operator=(const Exception_Data& other)
-			{
-				if (this == &other)
-					return *this;
-				m_message = other.m_message;
-				m_file = other.m_file;
-				m_line = other.m_line;
-				return *this;
-			}
-
-			Exception_Data& operator=(Exception_Data&& other) noexcept
-			{
-				if (this == &other)
-					return *this;
-				m_message = std::move(other.m_message);
-				m_file = std::move(other.m_file);
-				m_line = other.m_line;
-				return *this;
-			}
-
+			/**
+			 * @brief Creates the exception data with just the location.
+			 */
 			Exception_Data(const std::string& file, std::size_t line)
 				: m_file{ file }, m_line{ line } { }
 
+			/**
+			 * @brief Creates the exception data with the location and a message.
+			 */
 			template<typename... T>
 			Exception_Data(const std::string& file, std::size_t line, T... message)
 				: Exception_Data(file, line)
 			{
 				Set_Message(message...);
-			}
-			 
-			friend bool operator==(const Exception_Data& lhs, const Exception_Data& rhs)
-			{
-				if (&lhs == &rhs)
-					return true;
-				if (lhs.m_message != lhs.m_message || lhs.m_file != rhs.m_file
-					|| lhs.m_line != rhs.m_line)
-					return false;
-				return true;
-			}
-
-			friend bool operator!=(const Exception_Data& lhs, const Exception_Data& rhs)
-			{
-				if (&lhs == &rhs)
-					return false;
-				return !(lhs == rhs);
 			}
 
 			/**
@@ -136,6 +96,55 @@ namespace tilia {
 			std::string m_file{};
 			// The line at which the exception message was created
 			std::size_t m_line{};
+
+		public:
+
+			friend class Tilia_Exception;
+
+			Exception_Data(const Exception_Data& other)
+				: m_message{ other.m_message }, m_file{ other.m_file },
+				m_line{ other.m_line } { }
+
+			Exception_Data(Exception_Data&& other) noexcept
+				: m_message{ std::move(other.m_message) }, m_file{ std::move(other.m_file) },
+				m_line{ other.m_line } { }
+
+			Exception_Data& operator=(const Exception_Data& other)
+			{
+				if (this == &other)
+					return *this;
+				m_message = other.m_message;
+				m_file = other.m_file;
+				m_line = other.m_line;
+				return *this;
+			}
+
+			Exception_Data& operator=(Exception_Data&& other) noexcept
+			{
+				if (this == &other)
+					return *this;
+				m_message = std::move(other.m_message);
+				m_file = std::move(other.m_file);
+				m_line = other.m_line;
+				return *this;
+			}
+
+			friend bool operator==(const Exception_Data& lhs, const Exception_Data& rhs)
+			{
+				if (&lhs == &rhs)
+					return true;
+				if (lhs.m_message != lhs.m_message || lhs.m_file != rhs.m_file
+					|| lhs.m_line != rhs.m_line)
+					return false;
+				return true;
+			}
+			friend bool operator!=(const Exception_Data& lhs, const Exception_Data& rhs)
+			{
+				if (&lhs == &rhs)
+					return false;
+				return !(lhs == rhs);
+			}
+
 		}; // Exception_Data
 
 		/**
@@ -145,35 +154,13 @@ namespace tilia {
 		class Tilia_Exception : public std::exception
 		{
 		public:
-
-			Tilia_Exception(const Tilia_Exception& other)
-				: m_messages{ other.m_messages } { }
-
-			Tilia_Exception(Tilia_Exception&& other) noexcept
-				: m_messages{ std::move(other.m_messages) } { }
-
+			
 			explicit Tilia_Exception(const Exception_Data& message)
 				: m_messages{ message } { }
 
 			explicit Tilia_Exception(Exception_Data&& message) noexcept
 				: m_messages{ std::move(message) } { }
 
-			friend bool operator==(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
-			{
-				if (&lhs == &rhs)
-					return true;
-				if (lhs.m_messages != rhs.m_messages)
-					return false;
-				return true;
-			}
-
-			friend bool operator!=(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
-			{
-				if (&lhs == &rhs)
-					return false;
-				return !(lhs == rhs);
-			}
-			
 			/**
 			 * @brief Gets all of the messages concatenated into one string.
 			 */
@@ -235,6 +222,29 @@ namespace tilia {
 
 			// A list of all of the messages added to the exception
 			std::vector<Exception_Data> m_messages{};
+
+		public:
+
+			Tilia_Exception(const Tilia_Exception& other)
+				: m_messages{ other.m_messages } { }
+
+			Tilia_Exception(Tilia_Exception&& other) noexcept
+				: m_messages{ std::move(other.m_messages) } { }
+
+			friend bool operator==(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
+			{
+				if (&lhs == &rhs)
+					return true;
+				if (lhs.m_messages != rhs.m_messages)
+					return false;
+				return true;
+			}
+			friend bool operator!=(const Tilia_Exception& lhs, const Tilia_Exception& rhs)
+			{
+				if (&lhs == &rhs)
+					return false;
+				return !(lhs == rhs);
+			}
 
 		}; // Tilia_Exception
 

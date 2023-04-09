@@ -1,6 +1,6 @@
 /*****************************************************************//**
- * @file   Texture.h
- * @brief  Contains the @Texture class which works as a base class for 
+ * @file   Texture_.h
+ * @brief  Contains the @Texture_ class which works as a base class for 
  *		   various different classes abstracting openGL texture objects
  * 
  * @define TILIA_TEXTURE_H
@@ -34,18 +34,18 @@ namespace tilia {
 	namespace gfx {
 
 		// Base class for texture classes
-		class Texture {
+		class Texture_ {
 		public:
 
 			/**
 			 * @brief The default destructor which deletes the openGL texture of this id
 			 */
-			~Texture();
+			~Texture_();
 
 			 /**
 			 * @brief Generates all mipmap levels for the texture
 			 *
-			 * @exception Texture is not loaded
+			 * @exception Texture_ is not loaded
 			 * @exception There is no texture_data
 			 */
 			virtual void Generate_Mipmaps() = 0;
@@ -55,7 +55,7 @@ namespace tilia {
 			 * 
 			 * @return m_texture_type - The type of texture
 			 */
-			inline const enums::Texture_Type& Get_Texture_Type() { return m_texture_type; }
+			inline const enums::Texture_Type_& Get_Texture_Type() { return m_texture_type; }
 
 			/**
 			 * @brief Binds the texture to the given texture slot. If slot is outside of 
@@ -79,7 +79,7 @@ namespace tilia {
 			 * 
 			 * @param texture_type - The type of texture to unbind.
 			 */
-			static void Unbind(const enums::Texture_Type& texture_type, 
+			static void Unbind(const enums::Texture_Type_& texture_type, 
 				const bool& save_id = false);
 
 			/**
@@ -93,7 +93,7 @@ namespace tilia {
 			 * 
 			 * @param texture_type - The type of texture to rebind.
 			 */
-			static void Rebind(const enums::Texture_Type& texture_type);
+			static void Rebind(const enums::Texture_Type_& texture_type);
 
 			/**
 			 * @brief Gets the id of the openGL texture
@@ -124,7 +124,7 @@ namespace tilia {
 
 			uint32_t m_ID{}; // The id of the openGL texture
 
-			enums::Texture_Type m_texture_type{ }; // The type of openGL texture
+			enums::Texture_Type_ m_texture_type{ }; // The type of openGL texture
 
 			/**
 			 * @brief Just generates an openGL texture of m_texture_type and sets m_ID
@@ -133,16 +133,16 @@ namespace tilia {
 
 		private:
 
-			static std::unordered_map<enums::Texture_Type, uint32_t> s_bound_ID; // The stored
+			static std::unordered_map<enums::Texture_Type_, uint32_t> s_bound_ID; // The stored
 			// perviously bound ids
 
-			static std::unordered_map<enums::Texture_Type, uint32_t> s_previous_ID; // The
+			static std::unordered_map<enums::Texture_Type_, uint32_t> s_previous_ID; // The
 			// previously bound ids
 
 			/**
 			 * @brief Gets the type of the texture as a string to be used for printing information.
 			 *
-			 * @return The type of Texture as a string
+			 * @return The type of Texture_ as a string
 			 */
 			std::string Get_Type_String() const;
 

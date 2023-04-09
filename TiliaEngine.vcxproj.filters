@@ -966,10 +966,10 @@
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Cube_Map_Data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture.hpp">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D.hpp">
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D_.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Buffer.hpp">
@@ -1014,6 +1014,12 @@
     <ClInclude Include="Core\Modules\Images\Image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\Textures\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Modules\Rendering\OpenGL\Textures\Texture_2D.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
@@ -1043,10 +1049,10 @@
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Cube_Map_Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D.cpp">
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Texture_files\Texture_2D_.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Modules\Rendering\OpenGL\3_3\Abstractions\Buffer.cpp">
@@ -1101,6 +1107,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\implementation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\Textures\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Modules\Rendering\OpenGL\Textures\Texture_2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

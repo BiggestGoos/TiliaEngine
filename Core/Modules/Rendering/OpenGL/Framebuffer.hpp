@@ -23,8 +23,8 @@ namespace tilia
 
 
 
-	};
+	}; // Framebuffer
 
-}
+} // tilia
 
 #endif // TILIA_FRAMEBUFFER_HPP

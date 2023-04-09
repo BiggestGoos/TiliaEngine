@@ -126,7 +126,7 @@ namespace tilia {
 				m_vbo{}, // The id to the openGL vertex buffer object
 				m_ebo{}; // The id to the openGL element buffer object
 
-			std::vector<std::weak_ptr<Texture>> m_textures{}; // The texture to be bound and used
+			std::vector<std::weak_ptr<Texture_>> m_textures{}; // The texture to be bound and used
 			// to draw with
 
 			// Misc

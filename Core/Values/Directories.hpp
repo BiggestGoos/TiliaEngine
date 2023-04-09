@@ -26,8 +26,8 @@
 
 #define TILIA_OPENGL_3_3_CUBE_MAP_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Cube_Map.hpp"
 #define TILIA_OPENGL_3_3_CUBE_MAP_DATA_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Cube_Map_Data.hpp"
-#define TILIA_OPENGL_3_3_TEXTURE_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture.hpp"
-#define TILIA_OPENGL_3_3_TEXTURE_2D_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_2D.hpp"
+#define TILIA_OPENGL_3_3_TEXTURE__INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_.hpp"
+#define TILIA_OPENGL_3_3_TEXTURE_2D__INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_2D_.hpp"
 
 #define TILIA_OPENGL_3_3_BUFFER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Buffer.hpp"
 
@@ -36,7 +36,10 @@
 #define TILIA_OPENGL_3_3_RENDERER_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #define TILIA_OPENGL_3_3_VERTEX_INCLUDE "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
 
-#define TILIA_FRAMEBUFFER_INCLUDE "Core/Modules/Rendering/Framebuffer.hpp"
+#define TILIA_TEXTURE_INCLUDE "Core/Modules/Rendering/OpenGL/Textures/Texture.hpp"
+#define TILIA_TEXTURE_2D_INCLUDE "Core/Modules/Rendering/OpenGL/Textures/Texture_2D.hpp"
+
+#define TILIA_FRAMEBUFFER_INCLUDE "Core/Modules/Rendering/OpenGL/Framebuffer.hpp"
 
 #define TILIA_MONITOR_INCLUDE "Core/Modules/Windowing/Monitor.hpp"
 #define TILIA_WINDOW_INCLUDE "Core/Modules/Windowing/Window.hpp"
@@ -75,8 +78,8 @@
 
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Cube_Map.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Cube_Map_Data.hpp"
-#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture.hpp"
-#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_2D.hpp"
+#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_.hpp"
+#include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Texture_Files/Texture_2D_.hpp"
 
 #include "Core/Modules/Rendering/OpenGL/3_3/Abstractions/Buffer.hpp"
 
@@ -84,6 +87,9 @@
 #include "Core/Modules/Rendering/OpenGL/3_3/Mesh.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Renderer.hpp"
 #include "Core/Modules/Rendering/OpenGL/3_3/Vertex.hpp"
+
+#include "Core/Modules/Rendering/Textures/Texture.hpp"
+#include "Core/Modules/Rendering/Textures/Texture_2D.hpp"
 
 #include "Core/Modules/Rendering/Framebuffer.hpp"
 

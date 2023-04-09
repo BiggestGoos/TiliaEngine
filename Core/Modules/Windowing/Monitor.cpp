@@ -4,41 +4,41 @@
 // Tilia
 #include "Monitor.hpp"
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Resolution>::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Resolution>::
 Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::
-	Properties::Resolution>::Get(Monitor& monitor)
+	Property::Resolution>::Get(Monitor& monitor)
 {
 	const GLFWvidmode* video_mode{ 
-		glfwGetVideoMode(monitor.Get<enums::Properties::Underlying_Monitor>()) };
+		glfwGetVideoMode(monitor.Get<enums::Property::Underlying_Monitor>()) };
 	return { video_mode->width, video_mode->height };
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Bit_Depths>::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Bit_Depths>::
 Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::
-	Properties::Bit_Depths>::Get(Monitor& monitor)
+	Property::Bit_Depths>::Get(Monitor& monitor)
 {
 	const GLFWvidmode* video_mode{ 
-		glfwGetVideoMode(monitor.Get<enums::Properties::Underlying_Monitor>()) };
+		glfwGetVideoMode(monitor.Get<enums::Property::Underlying_Monitor>()) };
 	return { video_mode->redBits, video_mode->greenBits, video_mode->blueBits };
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Refresh_Rate>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Refresh_Rate>::Get(Monitor& monitor)
+	monitoring::enums::Property::Refresh_Rate>::Get(Monitor& monitor)
 {
 	const GLFWvidmode* video_mode{ 
-		glfwGetVideoMode(monitor.Get<enums::Properties::Underlying_Monitor>()) };
+		glfwGetVideoMode(monitor.Get<enums::Property::Underlying_Monitor>()) };
 	return video_mode->refreshRate;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Supported_Resolutions>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Supported_Resolutions>::Get(Monitor& monitor)
+	monitoring::enums::Property::Supported_Resolutions>::Get(Monitor& monitor)
 {
 	Get_Parameters ret_val{};
 	std::int32_t count{};
 	const GLFWvidmode* video_modes{ 
-		glfwGetVideoModes(monitor.Get<enums::Properties::Underlying_Monitor>(), &count) };
+		glfwGetVideoModes(monitor.Get<enums::Property::Underlying_Monitor>(), &count) };
 	for (std::int32_t i{ 0 }; i < count; ++i)
 	{
 		ret_val.insert({ video_modes[i].width, video_modes[i].height });
@@ -46,14 +46,14 @@ tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Proper
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Supported_Bit_Depths>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Supported_Bit_Depths>::Get(Monitor& monitor, 
+	monitoring::enums::Property::Supported_Bit_Depths>::Get(Monitor& monitor, 
 		Get_Arguments&& get_arguments)
 {
 	std::int32_t count{};
 	const GLFWvidmode* video_modes{ 
-		glfwGetVideoModes(monitor.Get<enums::Properties::Underlying_Monitor>(), &count) };
+		glfwGetVideoModes(monitor.Get<enums::Property::Underlying_Monitor>(), &count) };
 	Get_Parameters ret_val{};
 	for (std::int32_t i{ 0 }; i < count; ++i)
 	{
@@ -67,14 +67,14 @@ tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Proper
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Supported_Refresh_Rates>::Get_Parameters tilia::monitoring::properties::Monitor_Property<
-	tilia::monitoring::enums::Properties::Supported_Refresh_Rates>::Get(Monitor& monitor, 
+	tilia::monitoring::enums::Property::Supported_Refresh_Rates>::Get(Monitor& monitor, 
 		Get_Arguments&& get_arguments)
 {
 	std::int32_t count{};
 	const GLFWvidmode* video_modes{ 
-		glfwGetVideoModes(monitor.Get<enums::Properties::Underlying_Monitor>(), &count) };
+		glfwGetVideoModes(monitor.Get<enums::Property::Underlying_Monitor>(), &count) };
 	Get_Parameters ret_val{};
 	for (std::int32_t i{ 0 }; i < count; ++i)
 	{
@@ -87,55 +87,55 @@ tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Proper
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Physical_Size>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Physical_Size>::Get(Monitor& monitor)
+	monitoring::enums::Property::Physical_Size>::Get(Monitor& monitor)
 {
 	Get_Parameters ret_val{};
-	glfwGetMonitorPhysicalSize(monitor.Get<enums::Properties::Underlying_Monitor>(), 
+	glfwGetMonitorPhysicalSize(monitor.Get<enums::Property::Underlying_Monitor>(), 
 		&ret_val.first, &ret_val.second);
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Content_Scale>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Content_Scale>::Get(Monitor& monitor)
+	monitoring::enums::Property::Content_Scale>::Get(Monitor& monitor)
 {
 	Get_Parameters ret_val{};
-	glfwGetMonitorContentScale(monitor.Get<enums::Properties::Underlying_Monitor>(), 
+	glfwGetMonitorContentScale(monitor.Get<enums::Property::Underlying_Monitor>(), 
 		&ret_val.first, &ret_val.second);
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Virtual_Position>::Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::
-	monitoring::enums::Properties::Virtual_Position>::Get(Monitor& monitor)
+	monitoring::enums::Property::Virtual_Position>::Get(Monitor& monitor)
 {
 	Get_Parameters ret_val{};
-	glfwGetMonitorPos(monitor.Get<enums::Properties::Underlying_Monitor>(), 
+	glfwGetMonitorPos(monitor.Get<enums::Property::Underlying_Monitor>(), 
 		&ret_val.first, &ret_val.second);
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Workarea>::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Workarea>::
 Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::
-	Properties::Workarea>::Get(Monitor& monitor)
+	Property::Workarea>::Get(Monitor& monitor)
 {
 	Get_Parameters ret_val{};
-	glfwGetMonitorWorkarea(monitor.Get<enums::Properties::Underlying_Monitor>(), 
+	glfwGetMonitorWorkarea(monitor.Get<enums::Property::Underlying_Monitor>(), 
 		&std::get<0>(ret_val), &std::get<1>(ret_val), 
 		&std::get<2>(ret_val), &std::get<3>(ret_val));
 	return ret_val;
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Name>::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Name>::
 Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::
-	Properties::Name>::Get(Monitor& monitor)
+	Property::Name>::Get(Monitor& monitor)
 {
-	return glfwGetMonitorName(monitor.Get<enums::Properties::Underlying_Monitor>());
+	return glfwGetMonitorName(monitor.Get<enums::Property::Underlying_Monitor>());
 }
 
-void tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::
+void tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::
 	Gamma_Ramp>::Set(Monitor& monitor, Set_Parameters&& parameters)
 {
 	GLFWgammaramp gamma_ramp{};
@@ -154,15 +154,15 @@ void tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::P
 	gamma_ramp.red = red_bits.data();
 	gamma_ramp.green = red_bits.data();
 	gamma_ramp.blue = red_bits.data();
-	glfwSetGammaRamp(monitor.Get<enums::Properties::Underlying_Monitor>(), &gamma_ramp);
+	glfwSetGammaRamp(monitor.Get<enums::Property::Underlying_Monitor>(), &gamma_ramp);
 }
 
-tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Gamma_Ramp>::
+tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Gamma_Ramp>::
 Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::
-	Properties::Gamma_Ramp>::Get(Monitor& monitor)
+	Property::Gamma_Ramp>::Get(Monitor& monitor)
 {
 	const GLFWgammaramp* gamma_ramp{ 
-		glfwGetGammaRamp(monitor.Get<enums::Properties::Underlying_Monitor>()) };
+		glfwGetGammaRamp(monitor.Get<enums::Property::Underlying_Monitor>()) };
 	Get_Parameters ret_val(gamma_ramp->size);
 	for (std::size_t i{ 0 }; i < gamma_ramp->size; ++i)
 	{
@@ -171,10 +171,10 @@ Get_Parameters tilia::monitoring::properties::Monitor_Property<tilia::monitoring
 	return ret_val;
 }
 
-void tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Properties::Gamma>::
+void tilia::monitoring::properties::Monitor_Property<tilia::monitoring::enums::Property::Gamma>::
 Set(Monitor& monitor, Set_Parameters&& parameters)
 {
-	glfwSetGamma(monitor.Get<enums::Properties::Underlying_Monitor>(), parameters);
+	glfwSetGamma(monitor.Get<enums::Property::Underlying_Monitor>(), parameters);
 }
 
 /* Monitor class starts here */
@@ -298,7 +298,7 @@ void tilia::monitoring::Monitor::Test()
 
 	Monitor primary_monitor_0{ Monitor::Get_Monitors()[0] };
 
-	REQUIRE(primary_monitor_0.Get<enums::Properties::Underlying_Monitor>() 
+	REQUIRE(primary_monitor_0.Get<enums::Property::Underlying_Monitor>() 
 		== base_primary_monitor_0);
 
 	// Test that the monitor is recognized as connected
@@ -353,7 +353,7 @@ void tilia::monitoring::Monitor::Test()
 
 		// Resolution
 
-	auto [res_x_0, res_y_0] { primary_monitor_0.Get<enums::Properties::Resolution>() };
+	auto [res_x_0, res_y_0] { primary_monitor_0.Get<enums::Property::Resolution>() };
 
 	REQUIRE(res_x_0 == video_mode_0->width);
 	REQUIRE(res_y_0 == video_mode_0->height);
@@ -361,7 +361,7 @@ void tilia::monitoring::Monitor::Test()
 		// Bit depths
 
 	auto [red_bits_0, green_bits_0, blue_bits_0]{ 
-		primary_monitor_0.Get<enums::Properties::Bit_Depths>() };
+		primary_monitor_0.Get<enums::Property::Bit_Depths>() };
 
 	REQUIRE(red_bits_0 == video_mode_0->redBits);
 	REQUIRE(green_bits_0 == video_mode_0->blueBits);
@@ -369,7 +369,7 @@ void tilia::monitoring::Monitor::Test()
 
 		// Refresh rate
 
-	auto refresh_rate_0{ primary_monitor_0.Get<enums::Properties::Refresh_Rate>() };
+	auto refresh_rate_0{ primary_monitor_0.Get<enums::Property::Refresh_Rate>() };
 
 	REQUIRE(refresh_rate_0 == video_mode_0->refreshRate);
 
@@ -378,7 +378,7 @@ void tilia::monitoring::Monitor::Test()
 		// Resolutions
 		
 	auto supported_resolutions_0{ 
-		primary_monitor_0.Get<enums::Properties::Supported_Resolutions>() };
+		primary_monitor_0.Get<enums::Property::Supported_Resolutions>() };
 
 	REQUIRE(supported_resolutions_0.size() > 0);
 
@@ -388,14 +388,14 @@ void tilia::monitoring::Monitor::Test()
 		// Bit depths
 
 		auto supported_bit_depths_0{ 
-			primary_monitor_0.Get<enums::Properties::Supported_Bit_Depths>(resolution_0) };
+			primary_monitor_0.Get<enums::Property::Supported_Bit_Depths>(resolution_0) };
 
 		REQUIRE(supported_bit_depths_0.size() > 0);
 
 		// Refresh rates
 
 		auto supported_refresh_rates_0{ 
-			primary_monitor_0.Get<enums::Properties::Supported_Refresh_Rates>(
+			primary_monitor_0.Get<enums::Property::Supported_Refresh_Rates>(
 				resolution_0) };
 
 		REQUIRE(supported_refresh_rates_0.size() > 0);
@@ -407,7 +407,7 @@ void tilia::monitoring::Monitor::Test()
 		// Physical size
 
 	auto [physical_width_0, physical_height_0] { 
-		primary_monitor_0.Get<enums::Properties::Physical_Size>() };
+		primary_monitor_0.Get<enums::Property::Physical_Size>() };
 
 	std::int32_t physical_width_1{}, physical_height_1{};
 
@@ -419,7 +419,7 @@ void tilia::monitoring::Monitor::Test()
 		// Content scale
 
 	auto [content_scale_x_0, content_scale_y_0] {
-		primary_monitor_0.Get<enums::Properties::Content_Scale>() };
+		primary_monitor_0.Get<enums::Property::Content_Scale>() };
 
 	float content_scale_x_1{}, content_scale_y_1{};
 
@@ -431,7 +431,7 @@ void tilia::monitoring::Monitor::Test()
 		// Virtual position
 
 	auto [virtual_pos_x_0, virtual_pos_y_0] {
-		primary_monitor_0.Get<enums::Properties::Virtual_Position>() };
+		primary_monitor_0.Get<enums::Property::Virtual_Position>() };
 
 	std::int32_t virtual_pos_x_1{}, virtual_pos_y_1{};
 
@@ -443,7 +443,7 @@ void tilia::monitoring::Monitor::Test()
 		// Workarea
 
 	auto [work_area_pos_x_0, work_area_pos_y_0, work_area_width_0, work_area_height_0] {
-		primary_monitor_0.Get<enums::Properties::Workarea>() };
+		primary_monitor_0.Get<enums::Property::Workarea>() };
 
 	std::int32_t 
 		work_area_pos_x_1{}, work_area_pos_y_1{}, work_area_width_1{}, work_area_height_1{};
@@ -458,7 +458,7 @@ void tilia::monitoring::Monitor::Test()
 
 		// Name
 
-	auto name_0{ primary_monitor_0.Get<enums::Properties::Name>() };
+	auto name_0{ primary_monitor_0.Get<enums::Property::Name>() };
 
 	std::string name_1{ glfwGetMonitorName(base_primary_monitor_0) };
 
@@ -467,11 +467,11 @@ void tilia::monitoring::Monitor::Test()
 		// Gamma ramp
 
 	// get the gamma ramp from before testing
-	auto original_gamma_ramp{ primary_monitor_0.Get<enums::Properties::Gamma_Ramp>() };
+	auto original_gamma_ramp{ primary_monitor_0.Get<enums::Property::Gamma_Ramp>() };
 
 		// Test getting
 
-	auto gamma_ramp_0{ primary_monitor_0.Get<enums::Properties::Gamma_Ramp>() };
+	auto gamma_ramp_0{ primary_monitor_0.Get<enums::Property::Gamma_Ramp>() };
 
 	auto compare_gamma_ramps{
 		[](const Gamma_Ramp& lhs, const GLFWgammaramp* rhs)
@@ -510,7 +510,7 @@ void tilia::monitoring::Monitor::Test()
 
 	generate_gamma_ramp(gamma_ramp_0, 2.2f);
 
-	primary_monitor_0.Set<enums::Properties::Gamma_Ramp>(gamma_ramp_0);
+	primary_monitor_0.Set<enums::Property::Gamma_Ramp>(gamma_ramp_0);
 
 	gamma_ramp_1 = glfwGetGammaRamp(base_primary_monitor_0);
 
@@ -520,14 +520,14 @@ void tilia::monitoring::Monitor::Test()
 
 	generate_gamma_ramp(gamma_ramp_0, 1.0f);
 
-	primary_monitor_0.Set<enums::Properties::Gamma>(1.0f);
+	primary_monitor_0.Set<enums::Property::Gamma>(1.0f);
 
 	gamma_ramp_1 = glfwGetGammaRamp(base_primary_monitor_0);
 
 	compare_gamma_ramps(gamma_ramp_0, gamma_ramp_1);
 
 	// reset gamma ramp to original
-	primary_monitor_0.Set<enums::Properties::Gamma_Ramp>(original_gamma_ramp);
+	primary_monitor_0.Set<enums::Property::Gamma_Ramp>(original_gamma_ramp);
 
 }
 

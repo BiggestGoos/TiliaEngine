@@ -13,21 +13,44 @@ static inline bool Is_Gif(const std::string& filename)
 }
 
 tilia::Image::Image(const std::string& filename, enums::Image_Channels image_channels, 
-	bool flip_vertical)
+	enums::Image_Data_Type data_type, bool flip_vertical, float gamma)
 	: m_image_data{ nullptr, Free_Image }
 {
-	Reload(filename, image_channels, flip_vertical);
+	Reload(filename, image_channels, data_type, flip_vertical, gamma);
 }
 
-void tilia::Image::Reload(const std::string& filename, enums::Image_Channels image_channels, 
-	bool flip_vertical)
+void tilia::Image::Reload(const std::string& filename, enums::Image_Channels image_channels,
+	enums::Image_Data_Type data_type, bool flip_vertical, float gamma)
 {
 	Free();
 	stbi_set_flip_vertically_on_load(flip_vertical);
+	stbi_ldr_to_hdr_gamma(gamma);
 	std::int32_t channel_count{};
-	m_image_data = { 
-		stbi_load(filename.c_str(), &m_width, &m_height, 
-		&channel_count, *image_channels), Free_Image };
+	if (data_type == enums::Image_Data_Type::Unsigned_Byte)
+	{
+		m_image_data = {
+			stbi_load(filename.c_str(), &m_width, &m_height,
+			&channel_count, *image_channels), Free_Image };
+	}
+	else if (data_type == enums::Image_Data_Type::Float)
+	{
+		m_image_data = { static_cast<Byte*>(
+			static_cast<void*>(stbi_loadf(filename.c_str(), &m_width, &m_height,
+			&channel_count, *image_channels))), Free_Image };
+	}
+
+	if (m_image_data == nullptr)
+	{
+		const std::string message{ stbi_failure_reason() };
+		throw utils::Tilia_Exception{ { TILIA_LOCATION,
+			"Failed to load image: ",
+			"\nFilename: ", filename,
+			"\nImage channels: ", *image_channels,
+			"\nMessage: ", message } };
+	}
+
+	m_data_type = data_type;
+
 	// https://github.com/nothings/stb/blob/master/stb_image.h (135)
 	// 'GIF always returns *comp=4'
 	if (Is_Gif(filename))
@@ -42,15 +65,6 @@ void tilia::Image::Reload(const std::string& filename, enums::Image_Channels ima
 	{
 		m_image_channels = static_cast<enums::Image_Channels>(channel_count);
 	}
-	if (m_image_data == nullptr)
-	{
-		const std::string message{ stbi_failure_reason() };
-		throw utils::Tilia_Exception{ { TILIA_LOCATION,
-			"Failed to load image: ",
-			"\nFilename: ", filename,
-			"\nImage channels: ", *image_channels,
-			"\nMessage: ", message } };
-	}
 }
 
 void tilia::Image::Free()
@@ -59,6 +73,7 @@ void tilia::Image::Free()
 	m_width = 0;
 	m_height = 0;
 	m_image_channels = enums::Image_Channels::Largest;
+	m_data_type = enums::Image_Data_Type::Unsigned_Byte;
 }
 
 void tilia::Image::Free_Image(Byte* image_data)
@@ -73,7 +88,7 @@ void tilia::Image::Free_Image(Byte* image_data)
 
 void tilia::Image::Test()
 {
-
+	
 	const auto filename_0{ "res/textures/spaceInvader.png" };
 	const auto filename_1{ "res/textures/spaceInvader.jpg" };
 	const auto filename_2{ "res/textures/spaceInvader.gif" };
@@ -85,22 +100,23 @@ void tilia::Image::Test()
 	REQUIRE(image_0.Width() > 0);
 	REQUIRE(image_0.Height() > 0);
 	REQUIRE(image_0.Channels() == enums::Image_Channels::RGBA);
+	REQUIRE(image_0.Data_Type() == enums::Image_Data_Type::Unsigned_Byte);
 	REQUIRE(image_0.Get_Data() != nullptr);
 
 		// Test with different image channels
 
-			// Gray:
+			// Grey:
 
-	image_0.Reload(filename_0, enums::Image_Channels::Gray);
+	image_0.Reload(filename_0, enums::Image_Channels::Grey);
 
-	REQUIRE(image_0.Channels() == enums::Image_Channels::Gray);
+	REQUIRE(image_0.Channels() == enums::Image_Channels::Grey);
 	REQUIRE(image_0.Get_Data() != nullptr);
 
-			// Gray alpha:
+			// Grey alpha:
 
-	image_0.Reload(filename_0, enums::Image_Channels::Gray_Alpha);
+	image_0.Reload(filename_0, enums::Image_Channels::Grey_Alpha);
 
-	REQUIRE(image_0.Channels() == enums::Image_Channels::Gray_Alpha);
+	REQUIRE(image_0.Channels() == enums::Image_Channels::Grey_Alpha);
 	REQUIRE(image_0.Get_Data() != nullptr);
 
 			// RGB:
@@ -137,16 +153,16 @@ void tilia::Image::Test()
 
 		// Loading GIF always gives RGBA as image channels
 
-			// Gray:
+			// Grey:
 
-	image_2.Reload(filename_2, enums::Image_Channels::Gray);
+	image_2.Reload(filename_2, enums::Image_Channels::Grey);
 
 	REQUIRE(image_2.Channels() == enums::Image_Channels::RGBA);
 	REQUIRE(image_2.Get_Data() != nullptr);
 
-			// Gray alpha:
+			// Grey alpha:
 
-	image_2.Reload(filename_2, enums::Image_Channels::Gray_Alpha);
+	image_2.Reload(filename_2, enums::Image_Channels::Grey_Alpha);
 
 	REQUIRE(image_2.Channels() == enums::Image_Channels::RGBA);
 	REQUIRE(image_2.Get_Data() != nullptr);
@@ -164,6 +180,16 @@ void tilia::Image::Test()
 
 	REQUIRE(image_2.Channels() == enums::Image_Channels::RGBA);
 	REQUIRE(image_2.Get_Data() != nullptr);
+
+	// Test loading with float as data type
+
+	image_0.Reload(filename_0, enums::Image_Channels::Largest, enums::Image_Data_Type::Float);
+
+	REQUIRE(image_0.Width() > 0);
+	REQUIRE(image_0.Height() > 0);
+	REQUIRE(image_0.Channels() == enums::Image_Channels::RGBA);
+	REQUIRE(image_0.Data_Type() == enums::Image_Data_Type::Float);
+	REQUIRE(image_0.Get_Data() != nullptr);
 
 	// Test freeing
 
@@ -223,7 +249,7 @@ void tilia::Image::Test()
 
 	const auto size_2{ image_0.Width() * image_0.Height() * (*image_0.Channels()) };
 
-	REQUIRE(std::memcmp(image_3.Get_Data(), image_0.Get_Data(), size_0) == 0);
+	REQUIRE(std::memcmp(image_3.Get_Data(), image_0.Get_Data(), size_2) == 0);
 
 	// Test move-assignment
 
@@ -241,8 +267,100 @@ void tilia::Image::Test()
 
 	const auto size_3{ image_0.Width() * image_0.Height() * (*image_0.Channels()) };
 
-	REQUIRE(std::memcmp(image_4.Get_Data(), image_0.Get_Data(), size_0) == 0);
+	REQUIRE(std::memcmp(image_4.Get_Data(), image_0.Get_Data(), size_3) == 0);
 
+	// Test copy-constructor taking raw pixel data and dimensions
+
+	image_0.Reload(filename_0);
+
+	Image image_5{ image_0.Get_Data(), image_0.Width(), image_0.Height(), image_0.Channels(), 
+		image_0.Data_Type() };
+
+	REQUIRE(image_5.Width() == image_0.Width());
+	REQUIRE(image_5.Height() == image_0.Height());
+	REQUIRE(image_5.Channels() == image_0.Channels());
+
+	const auto size_4{ image_0.Width() * image_0.Height() * (*image_0.Channels()) };
+
+	REQUIRE(std::memcmp(image_5.Get_Data(), image_0.Get_Data(), size_4) == 0);
+
+	// Test move-constructor taking raw pixel data and dimensions
+
+	image_0.Reload(filename_0);
+
+	const auto size_5{ image_0.Size() };
+	
+	Data_Ptr image_data_0{ new Byte[size_5], [](Byte* image_data) { delete[] image_data; } };
+	std::copy(image_0.Get_Data(), image_0.Get_Data() + size_5, image_data_0.get());
+
+	Image image_6{ std::move(image_data_0), image_0.Width(), image_0.Height(), 
+		image_0.Channels(), image_0.Data_Type() };
+
+	REQUIRE(image_6.Width() == image_0.Width());
+	REQUIRE(image_6.Height() == image_0.Height());
+	REQUIRE(image_6.Channels() == image_0.Channels());
+
+	REQUIRE(std::memcmp(image_6.Get_Data(), image_0.Get_Data(), size_5) == 0);
+
+	// Test '.Size' == width * height * channels
+
+	image_0.Reload(filename_0);
+
+	const auto size_6{ image_0.Width() * image_0.Height() * (*image_0.Channels()) };
+
+	REQUIRE(image_0.Size() == size_6);
+
+	// Test comparison operators
+
+		// ==
+
+			// Both valid
+
+	image_0.Reload(filename_0, enums::Image_Channels::RGBA, enums::Image_Data_Type::Unsigned_Byte, true);
+
+	image_1.Reload(filename_0, enums::Image_Channels::RGBA, enums::Image_Data_Type::Unsigned_Byte, true);
+
+	REQUIRE(image_0 == image_1);
+
+			// Both invalid
+
+	image_0.Free();
+
+	image_1.Free();
+
+	REQUIRE(image_0 == image_1);
+
+		// !=
+
+			// Both valid
+
+	image_0.Reload(filename_0, enums::Image_Channels::RGBA, enums::Image_Data_Type::Unsigned_Byte, true);
+
+	image_1.Reload(filename_0, enums::Image_Channels::RGBA, enums::Image_Data_Type::Unsigned_Byte, false);
+
+	REQUIRE(image_0 != image_1);
+
+			// One invalid
+
+	image_0.Reload(filename_0, enums::Image_Channels::RGBA, enums::Image_Data_Type::Unsigned_Byte, true);
+
+	image_1.Free();
+
+	REQUIRE(image_0 != image_1);
+
+	// Test '.Free' resulst in same as '= {}'
+
+	image_0.Reload(filename_0);
+
+	image_1.Reload(filename_0);
+
+	image_0.Free();
+
+	image_1 = {};
+
+	REQUIRE(image_0 == image_1);
+	
+	
 }
 
 #endif // TILIA_UNIT_TESTS == 1
